@@ -29,7 +29,7 @@ public class WandFinder {
         return Math.abs(cluster.width() - cluster.height()) < 7;
     }
 
-    public static PointCluster nearestNearbyWandPointTo(PointCluster cluster, LinkedList<PointCluster> pointClusters) {
+    static PointCluster nearestNearbyWandPointTo(PointCluster cluster, LinkedList<PointCluster> pointClusters) {
         if(pointClusters.isEmpty())
             return cluster;
         pointClusters.sort(Comparator.comparingInt(cluster::distanceTo));
@@ -43,6 +43,7 @@ public class WandFinder {
             LinkedList<PointCluster> previousFramePointClusters = iterator.next();
             PointCluster nearestCluster = nearestNearbyWandPointTo(currentCluster, previousFramePointClusters);
             if(currentCluster.distanceTo(nearestCluster) < UserSettings.MOTION_DETECTION_DISTANCE &&
+                    currentCluster.distanceTo(nearestCluster) > 1 &&
                     isPossibleWandPoint(nearestCluster)){
                 pastClusters.add(nearestCluster);
                 currentCluster = nearestCluster;

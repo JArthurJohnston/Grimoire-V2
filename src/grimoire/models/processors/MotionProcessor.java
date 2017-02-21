@@ -8,11 +8,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static grimoire.models.ImageHelper.pixelIntensity;
+import static grimoire.models.processors.Identification.WandFinder.findPastWandPointsFor;
 import static grimoire.models.processors.Identification.WandFinder.isPossibleWandPoint;
-import static grimoire.models.processors.Identification.WandFinder.nearestNearbyWandPointTo;
 
 public class MotionProcessor {
-    Buffer<LinkedList<PointCluster>> frameMotionBuffer;
+    private final Buffer<LinkedList<PointCluster>> frameMotionBuffer;
     private static final int FPS = 30;
     private static final double TIME = 1.5;
     private static final int BUFFER_SIZE = (int)(FPS * TIME);
@@ -49,26 +49,11 @@ public class MotionProcessor {
         List<WandMotion> wandMotions = new LinkedList<>();
         for (PointCluster pointCluster : clusters) {
             if(isPossibleWandPoint(pointCluster)){
-                List<PointCluster> pastWandClusters = findPastWandClusters(pointCluster);
+                List<PointCluster> pastWandClusters = findPastWandPointsFor(pointCluster, frameMotionBuffer.iterator());
                 wandMotions.add(new WandMotion(pointCluster, pastWandClusters));
             }
         }
         return wandMotions;
-    }
-
-    private List<PointCluster> findPastWandClusters(PointCluster cluster) {
-        LinkedList<PointCluster> pointClusters = new LinkedList<>();
-        PointCluster currentCluster = cluster;
-        BufferIterator<LinkedList<PointCluster>> iterator = frameMotionBuffer.iterator();
-        while (iterator.hasNext()){
-            LinkedList<PointCluster> previousClusters = iterator.next();
-            PointCluster lastNearbyCluster = nearestNearbyWandPointTo(currentCluster, previousClusters);
-            if(cluster.distanceTo(lastNearbyCluster) < UserSettings.MOTION_DETECTION_DISTANCE){
-                pointClusters.add(lastNearbyCluster);
-                currentCluster = lastNearbyCluster;
-            }
-        }
-        return pointClusters;
     }
 
 }

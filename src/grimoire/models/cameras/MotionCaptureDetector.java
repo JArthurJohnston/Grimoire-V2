@@ -54,13 +54,12 @@ public class MotionCaptureDetector implements DetectorInterface{
         return bufferedImage;
     }
 
-    public void drawMotionsTo(BufferedImage image, List<WandMotion> wandMotions){
+    private void drawMotionsTo(BufferedImage image, List<WandMotion> wandMotions){
         Graphics graphics = image.getGraphics();
         for (WandMotion wandMotion : wandMotions) {
             PointCluster cluster = wandMotion.getCluster();
             MotionDrawings.drawCluster(graphics, cluster, Color.CYAN);
             MotionDrawings.drawMotionTail(wandMotion.getPastWandPoints(), graphics, cluster);
-
         }
     }
 
