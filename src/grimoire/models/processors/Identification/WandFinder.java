@@ -5,6 +5,7 @@ import grimoire.models.clusters.PointCluster;
 import grimoire.models.processors.BufferIterator;
 
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 public class WandFinder {
@@ -36,7 +37,7 @@ public class WandFinder {
         return pointClusters.getFirst();
     }
 
-    public static LinkedList<PointCluster> findPastWandPointsFor(PointCluster cluster, BufferIterator<LinkedList<PointCluster>> iterator) {
+    public static LinkedList<PointCluster> findPastWandPointsFor(PointCluster cluster, Iterator<LinkedList<PointCluster>> iterator) {
         LinkedList<PointCluster> pastClusters = new LinkedList<>();
         PointCluster currentCluster = cluster;
         while (iterator.hasNext()){
@@ -45,7 +46,7 @@ public class WandFinder {
             if(currentCluster.distanceTo(nearestCluster) < UserSettings.MOTION_DETECTION_DISTANCE &&
                     currentCluster.distanceTo(nearestCluster) > 1 &&
                     isPossibleWandPoint(nearestCluster)){
-                pastClusters.add(nearestCluster);
+                pastClusters.addLast(nearestCluster);
                 currentCluster = nearestCluster;
             }
         }

@@ -1,5 +1,7 @@
 package grimoire.models.processors;
 
+import java.util.Iterator;
+
 public class Buffer<T> {
 
     private int firstIndex;
@@ -59,9 +61,19 @@ public class Buffer<T> {
         return values[lastIndex];
     }
 
-    public BufferIterator<T> iterator(){
-        return new BufferIterator(this);
+    public Iterator<T> iterator(){
+        return new BufferIterator<T>(firstIndex, lastIndex, values);
     }
 
+    public int getFirstIndex() {
+        return firstIndex;
+    }
 
+    public int getLastIndex() {
+        return lastIndex;
+    }
+
+    public T[] getValues() {
+        return values;
+    }
 }

@@ -92,30 +92,6 @@ public class BufferTest {
     }
 
     @Test
-    public void testIterator_afterCapacityReached() throws Exception{
-        Buffer<String> buffer = new Buffer<String>(3);
-        String value1 = "hello";
-        String value2 = "world";
-        String value3 = "foo";
-        String value4 = "bar";
-        addArrayToBuffer(buffer, new String[]{value1, value2, value3});
-        buffer.add(value4);
-
-        Iterator<String> iterator = buffer.iterator();
-
-        assertTrue(iterator.hasNext());
-        assertSame(value2, iterator.next());
-
-        assertTrue(iterator.hasNext());
-        assertSame(value3, iterator.next());
-
-        assertTrue(iterator.hasNext());
-        assertSame(value4, iterator.next());
-
-        assertFalse(iterator.hasNext());
-    }
-
-    @Test
     public void testIteratorStartsAtFirstValueEachTimeCalled() throws Exception{
         Buffer<String> buffer = new Buffer<String>(3);
         String value1 = "hello";
@@ -153,54 +129,11 @@ public class BufferTest {
     }
 
 
-    @Test
-    public void testIteratorBeforeCapacityReached() throws Exception{
-        Buffer<String> buffer = new Buffer<String>(5);
-        String value1 = "hello";
-        String value2 = "world";
-        String value3 = "foo";
-        addArrayToBuffer(buffer, new String[]{value1, value2, value3});
-
-        Iterator<String> iterator = buffer.iterator();
-
-        assertTrue(iterator.hasNext());
-        assertEquals(value1, iterator.next());
-
-        assertTrue(iterator.hasNext());
-        assertEquals(value2, iterator.next());
-
-        assertTrue(iterator.hasNext());
-        assertEquals(value3, iterator.next());
-
-        assertFalse(iterator.hasNext());
-    }
-
-    @Test
-    public void testIteratorWhenCapacityReached() throws Exception{
-        Buffer<String> buffer = new Buffer<String>(3);
-        String value1 = "hello";
-        String value2 = "world";
-        String value3 = "foo";
-        addArrayToBuffer(buffer, new String[]{value1, value2, value3});
-
-        Iterator<String> iterator = buffer.iterator();
-
-        assertTrue(iterator.hasNext());
-        assertEquals(value1, iterator.next());
-
-        assertTrue(iterator.hasNext());
-        assertEquals(value2, iterator.next());
-
-        assertTrue(iterator.hasNext());
-        assertEquals(value3, iterator.next());
-
-        assertFalse(iterator.hasNext());
-    }
 
     @Test
     public void testIteratorWhenEmpty() throws Exception{
         Buffer<String> buffer = new Buffer<String>(3);
-        BufferIterator iterator = buffer.iterator();
+        Iterator iterator = buffer.iterator();
         assertFalse(iterator.hasNext());
     }
 
