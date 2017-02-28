@@ -101,7 +101,7 @@ public class BufferTest {
         addArrayToBuffer(buffer, new String[]{value1, value2, value3});
         buffer.add(value4);
 
-        Iterator<String> iterator = buffer.iterator();
+        Iterator<String> iterator = buffer.fifoIterator();
 
         assertTrue(iterator.hasNext());
         assertSame(value2, iterator.next());
@@ -114,7 +114,7 @@ public class BufferTest {
 
         assertFalse(iterator.hasNext());
 
-        Iterator<String> newIterator = buffer.iterator();
+        Iterator<String> newIterator = buffer.fifoIterator();
 
         assertTrue(newIterator.hasNext());
         assertSame(value2, newIterator.next());
@@ -133,7 +133,7 @@ public class BufferTest {
     @Test
     public void testIteratorWhenEmpty() throws Exception{
         Buffer<String> buffer = new Buffer<String>(3);
-        Iterator iterator = buffer.iterator();
+        Iterator iterator = buffer.fifoIterator();
         assertFalse(iterator.hasNext());
     }
 
@@ -146,6 +146,35 @@ public class BufferTest {
             assertEquals("Cannot instantiate Buffer with capacity of 0", e.getMessage());
         }
     }
+
+    @Test
+    public void testLifoIteratorWithOneElement() throws Exception{
+        Buffer<String> buffer = new Buffer<String>(3);
+        buffer.add("hello");
+        Iterator<String> stringIterator = buffer.lifoIterator();
+
+        assertTrue(stringIterator.hasNext());
+        assertEquals("hello", stringIterator.next());
+    }
+
+
+    @Test
+    public void testSnapshot() throws Exception{
+        Buffer<String> buffer = new Buffer<>(5);
+        buffer.add("foo");
+        buffer.add("bar");
+        buffer.add("roo");
+
+        assertEquals(new String[]{"foo", "bar", "roo"}, buffer.getSnapshot());
+
+        buffer.add("hello");
+        buffer.add("world");
+
+        assertEquals(new String[]{"foo", "bar", "roo", "hello", "world"}, buffer.getSnapshot());
+
+        buffer.add("foo two");
+    }
+
 
     private void addArrayToBuffer(Buffer buffer, Object[] clusters){
         for (Object cluster : clusters) {

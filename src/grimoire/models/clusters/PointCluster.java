@@ -1,9 +1,13 @@
 package grimoire.models.clusters;
 
 import grimoire.models.UserSettings;
+import grimoire.models.processors.PointMath;
+
 import java.awt.*;
 
 public class PointCluster {
+
+    private Point centerPoint;
 
     public static PointCluster newWith(int x, int y){
         PointCluster newCluster = new PointCluster();
@@ -46,7 +50,14 @@ public class PointCluster {
             bottomBoundary = y;
     }
 
-    public Point centerPoint(){
+    public Point getCenterPoint(){
+        if(centerPoint == null){
+            centerPoint = initializeCenterPoint();
+        }
+        return centerPoint;
+    }
+
+    private Point initializeCenterPoint() {
         int xDiff = Math.abs(rightBoundary - leftBoundary);
         int yDiff = Math.abs(bottomBoundary - topBoundary);
         return new Point(rightBoundary - (xDiff/2), bottomBoundary - (yDiff/2));
@@ -60,22 +71,6 @@ public class PointCluster {
         return bottomBoundary - topBoundary;
     }
 
-    public int area(){
-        return width() * height();
-    }
-
-    public int distanceTo(PointCluster anotherPoint){
-        Point thisCenter = centerPoint();
-        Point thatCenter = anotherPoint.centerPoint();
-        return (int)Math.sqrt(
-                Math.pow(thisCenter.getX() - thatCenter.getX(), 2) +
-                        Math.pow(thisCenter.getY() - thatCenter.getY(), 2));
-    }
-
-    public boolean overlaps(PointCluster otherCluster){
-        return distanceTo(otherCluster) >= width()/2;
-    }
-
     public int xCoord(){
         return leftBoundary;
     }
@@ -86,5 +81,9 @@ public class PointCluster {
 
     public String toString(){
         return "PointCluster: L: " + leftBoundary + "\tT: " + topBoundary + "\tR: " + rightBoundary + "\tB: " + bottomBoundary;
+    }
+
+    public double distanceTo(PointCluster otherCluster){
+        return PointMath.distanceBetween(this.getCenterPoint(), otherCluster.getCenterPoint());
     }
 }

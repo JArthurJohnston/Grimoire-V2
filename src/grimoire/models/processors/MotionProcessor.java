@@ -4,6 +4,8 @@ import grimoire.models.UserSettings;
 import grimoire.models.clusters.ClusterCreator;
 import grimoire.models.clusters.PointCluster;
 import org.opencv.core.Mat;
+
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -21,11 +23,6 @@ public class MotionProcessor {
         frameMotionBuffer = new Buffer<>(BUFFER_SIZE);
     }
 
-    /*
-    rgb[0] is blue
-    rgb[1] is green
-    rgb[2] is red
-     */
     public List<WandMotion> scanFrame(Mat motionFrame, Mat originalFrame){
         ClusterCreator clusterCreator = new ClusterCreator();
 
@@ -49,7 +46,8 @@ public class MotionProcessor {
         List<WandMotion> wandMotions = new LinkedList<>();
         for (PointCluster pointCluster : clusters) {
             if(isPossibleWandPoint(pointCluster)){
-                List<PointCluster> pastWandClusters = findPastWandPointsFor(pointCluster, frameMotionBuffer.iterator());
+                Iterator<LinkedList<PointCluster>> iterator = frameMotionBuffer.fifoIterator();
+                LinkedList<PointCluster> pastWandClusters = findPastWandPointsFor(pointCluster, iterator);
                 wandMotions.add(new WandMotion(pointCluster, pastWandClusters));
             }
         }

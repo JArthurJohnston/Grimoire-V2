@@ -2,7 +2,6 @@ package grimoire.models.processors.Identification;
 
 import grimoire.models.UserSettings;
 import grimoire.models.clusters.PointCluster;
-import grimoire.models.processors.BufferIterator;
 
 import java.util.Comparator;
 import java.util.Iterator;
@@ -33,7 +32,7 @@ public class WandFinder {
     static PointCluster nearestNearbyWandPointTo(PointCluster cluster, LinkedList<PointCluster> pointClusters) {
         if(pointClusters.isEmpty())
             return cluster;
-        pointClusters.sort(Comparator.comparingInt(cluster::distanceTo));
+        pointClusters.sort(Comparator.comparingDouble(cluster::distanceTo));
         return pointClusters.getFirst();
     }
 
@@ -46,7 +45,7 @@ public class WandFinder {
             if(currentCluster.distanceTo(nearestCluster) < UserSettings.MOTION_DETECTION_DISTANCE &&
                     currentCluster.distanceTo(nearestCluster) > 1 &&
                     isPossibleWandPoint(nearestCluster)){
-                pastClusters.addLast(nearestCluster);
+                pastClusters.add(nearestCluster);
                 currentCluster = nearestCluster;
             }
         }

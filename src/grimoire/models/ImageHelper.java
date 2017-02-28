@@ -28,6 +28,11 @@ public class ImageHelper {
         return rgbValues.length == 1 ? grayscaleBrightness(rgbValues) : colorBrightness(rgbValues);
     }
 
+    /**
+     *
+     * @param rgbValues 0 = blue 1 = green 2 = red
+     * @return brightness percentage
+     */
     public static double colorBrightness(double[] rgbValues){
         return (rgbValues[2] * 0.216 + rgbValues[1] * 0.7152 + rgbValues[0] * 0.0722) / 255.0;
 

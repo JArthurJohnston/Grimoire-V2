@@ -4,10 +4,8 @@ import grimoire.models.UserSettings;
 import grimoire.models.clusters.PointCluster;
 import grimoire.models.processors.Buffer;
 import org.junit.Test;
-import org.opencv.core.Point;
 
 import java.util.LinkedList;
-import java.util.List;
 
 import static grimoire.models.processors.Identification.WandFinder.*;
 import static org.junit.Assert.*;
@@ -143,7 +141,7 @@ public class WandFinderTest {
 
         PointCluster currentCluster = createCluster(1, 2, 5, 6);
 
-        LinkedList<PointCluster> pastWandPoints = findPastWandPointsFor(currentCluster, listBuffer.iterator());
+        LinkedList<PointCluster> pastWandPoints = findPastWandPointsFor(currentCluster, listBuffer.fifoIterator());
 
         assertEquals(4, pastWandPoints.size());
         assertSame(frame1WandPoint, pastWandPoints.get(0));

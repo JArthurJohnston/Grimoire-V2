@@ -15,9 +15,9 @@ public class BufferIteratorTest {
         int expectedFirstIndex = 0;
         String[] expectedValues = {"one", "two"};
 
-        BufferIterator<String> iterator = new BufferIterator<>(0, 1, expectedValues);
+        FifoBufferIterator<String> iterator = new FifoBufferIterator<>(0, 1, expectedValues);
 
-//        assertSame(expectedBuffer, iterator.getBuffer());
+//        assertSame(expectedBuffer, fifoIterator.getBuffer());
         assertEquals(expectedLastIndex, iterator.getIndex());
     }
 
@@ -29,7 +29,7 @@ public class BufferIteratorTest {
         String value3 = "foo";
         addArrayToBuffer(buffer, new String[]{value1, value2, value3});
 
-        Iterator<String> iterator = buffer.iterator();
+        Iterator<String> iterator = buffer.fifoIterator();
 
         assertTrue(iterator.hasNext());
         assertEquals(value3, iterator.next());
@@ -51,7 +51,7 @@ public class BufferIteratorTest {
         String value3 = "foo";
         addArrayToBuffer(buffer, new String[]{value1, value2, value3});
 
-        Iterator<String> iterator = buffer.iterator();
+        Iterator<String> iterator = buffer.fifoIterator();
 
         assertTrue(iterator.hasNext());
         assertEquals(value3, iterator.next());
@@ -79,7 +79,7 @@ public class BufferIteratorTest {
         assertEquals(0, buffer.getLastIndex());
         assertEquals(1, buffer.getFirstIndex());
 
-        Iterator<String> iterator = buffer.iterator();
+        Iterator<String> iterator = buffer.fifoIterator();
 
         assertTrue(iterator.hasNext());
         assertSame(value4, iterator.next());
@@ -95,7 +95,7 @@ public class BufferIteratorTest {
 
     @Test
     public void testHasNextIsFalseWhenValuesIsEmpty() throws Exception{
-        BufferIterator<Object> iterator = new BufferIterator<>(0, -1, new Object[0]);
+        FifoBufferIterator<Object> iterator = new FifoBufferIterator<>(0, -1, new Object[0]);
 
         assertFalse(iterator.hasNext());
     }

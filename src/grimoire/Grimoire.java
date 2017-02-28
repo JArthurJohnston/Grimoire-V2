@@ -1,12 +1,14 @@
 package grimoire;
 
 import grimoire.models.cameras.*;
+import grimoire.models.processors.gestures.Gesture;
+import grimoire.runes.Rune;
+import grimoire.runes.RuneInterface;
 import grimoire.views.CameraUI;
 import org.opencv.core.Core;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.io.InputStreamReader;
-import java.util.Scanner;
+import java.util.ArrayList;
 
 public class Grimoire {
 
@@ -30,7 +32,14 @@ public class Grimoire {
             view.setVisible(true);
         });
 
-        recorder = new MotionCaptureDetector(view, camera);
+        ArrayList<RuneInterface> runes = new ArrayList<>();
+        runes.add(new Rune("rhythmbox-client --play", Gesture.UPWARDS, Gesture.DOWNWARDS_RIGHT, Gesture.DOWNWARDS_LEFT));
+        runes.add(new Rune("rhythmbox-client --play", Gesture.UPWARDS, Gesture.DOWNWARDS_RIGHT, Gesture.DOWNWARDS_LEFT));
+        runes.add(new Rune("rhythmbox-client --pause", Gesture.UPWARDS, Gesture.DOWNWARDS_RIGHT, Gesture.UPWARDS));
+
+        RuneKeeper runeKeeper = new RuneKeeper(runes);
+
+        recorder = new MotionCaptureDetector(view, camera, runeKeeper);
 
         videoThread.start();
         recorder.start();

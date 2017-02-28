@@ -2,13 +2,13 @@ package grimoire.models.processors;
 
 import java.util.Iterator;
 
-public class BufferIterator<T> implements Iterator<T> {
+public class FifoBufferIterator<T> implements Iterator<T> {
     private boolean firstElementHasBeenReturned;
     private int firstIndex;
     private int index;
     private T[] values;
 
-    BufferIterator(int firstIndex, int lastIndex, T[] values){
+    FifoBufferIterator(int firstIndex, int lastIndex, T[] values){
         this.firstIndex = firstIndex;
         index = lastIndex;
         this.values = values;

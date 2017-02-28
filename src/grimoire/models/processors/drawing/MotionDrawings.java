@@ -21,8 +21,8 @@ public class MotionDrawings {
 
     public static void drawLineBetweenClusters(Graphics graphics, PointCluster firstCluster, PointCluster lastCluster) {
         graphics.setColor(Color.MAGENTA);
-        Point first = firstCluster.centerPoint();
-        Point last = lastCluster.centerPoint();
+        Point first = firstCluster.getCenterPoint();
+        Point last = lastCluster.getCenterPoint();
         graphics.drawLine(first.x, first.y, last.x, last.y);
     }
 }

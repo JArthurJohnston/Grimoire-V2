@@ -1,10 +1,12 @@
 package grimoire.models.cameras;
 
+import grimoire.RuneKeeper;
 import grimoire.models.clusters.PointCluster;
-import grimoire.models.processors.BufferIterator;
 import grimoire.models.processors.MotionProcessor;
 import grimoire.models.processors.WandMotion;
 import grimoire.models.processors.drawing.MotionDrawings;
+import grimoire.models.processors.gestures.Gesture;
+import grimoire.models.processors.gestures.GestureDetector;
 import grimoire.views.CameraUI;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -17,19 +19,19 @@ import java.util.List;
 import static grimoire.models.ImageFilterer.*;
 import static grimoire.models.ImageHelper.matToBufferedImage;
 import static grimoire.models.cameras.CameraHelper.blurredAndGrayscaleFrame;
-import static grimoire.models.processors.Identification.WandFinder.findPastWandPointsFor;
-import static grimoire.models.processors.Identification.WandFinder.isPossibleWandPoint;
 
 public class MotionCaptureDetector implements DetectorInterface{
 
     private final CameraInterface camera;
+    private RuneKeeper runeKeeper;
     private boolean isRunning = false;
     private Mat frameFromCamera, previousImage, currentImage, nextImage, temp1, temp2, motion;
     private final MotionProcessor processor;
     private final CameraUI view;
 
-    public MotionCaptureDetector(CameraUI view, CameraInterface camera){
+    public MotionCaptureDetector(CameraUI view, CameraInterface camera, RuneKeeper runeKeeper){
         this.camera = camera;
+        this.runeKeeper = runeKeeper;
         processor = new MotionProcessor();
         this.view = view;
     }
@@ -42,7 +44,13 @@ public class MotionCaptureDetector implements DetectorInterface{
             if(camera.read(frameFromCamera)){
                 scanForMotion();
                 List<WandMotion> wandMotions = processor.scanFrame(motion, frameFromCamera);
+                wandMotions.sort(Comparator.naturalOrder());
+                if(!wandMotions.isEmpty()){
+                    Gesture[] gestures = GestureDetector.getGestureDirections(wandMotions.get(0));
+                    runeKeeper.trackWand(gestures);
+                }
                 view.drawFrame(drawMotionFrame(wandMotions));
+
                 updateFrames();
             }
         }
@@ -57,7 +65,7 @@ public class MotionCaptureDetector implements DetectorInterface{
     private void drawMotionsTo(BufferedImage image, List<WandMotion> wandMotions){
         Graphics graphics = image.getGraphics();
         for (WandMotion wandMotion : wandMotions) {
-            PointCluster cluster = wandMotion.getCluster();
+            PointCluster cluster = wandMotion.getCurrentWandPoint();
             MotionDrawings.drawCluster(graphics, cluster, Color.CYAN);
             MotionDrawings.drawMotionTail(wandMotion.getPastWandPoints(), graphics, cluster);
         }

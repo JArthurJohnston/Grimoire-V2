@@ -61,8 +61,12 @@ public class Buffer<T> {
         return values[lastIndex];
     }
 
-    public Iterator<T> iterator(){
-        return new BufferIterator<T>(firstIndex, lastIndex, values);
+    public Iterator<T> fifoIterator(){
+        return new FifoBufferIterator<T>(firstIndex, lastIndex, values);
+    }
+
+    public Iterator<T> lifoIterator(){
+        return new LifoBufferIterator<T>(this);
     }
 
     public int getFirstIndex() {
@@ -73,7 +77,7 @@ public class Buffer<T> {
         return lastIndex;
     }
 
-    public T[] getValues() {
-        return values;
+    public String[] getSnapshot() {
+        return new String[0];
     }
 }
