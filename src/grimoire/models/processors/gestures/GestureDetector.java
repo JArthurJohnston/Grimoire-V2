@@ -10,21 +10,17 @@ import static grimoire.models.processors.PointMath.*;
 
 public class GestureDetector {
 
-    public static Gesture[] getGestureDirections(WandMotion motion){
+    public static Gesture getMostRecentGesture(WandMotion motion){
         Point currentPoint = motion.getCurrentWandPoint().getCenterPoint();
         LinkedList<PointCluster> pastWandPoints = motion.getPastWandPoints();
-        LinkedList<Gesture> gestures = new LinkedList<>();
 
         for (PointCluster pastWandPoint : pastWandPoints) {
             Point eachPoint = pastWandPoint.getCenterPoint();
             if(distanceBetween(currentPoint, eachPoint) >= UserSettings.GESTURE_DETECTION_DISTANCE){
-                Gesture gesture = calculateDirectionBetweenPoints(currentPoint, eachPoint);
-//                System.out.print(gesture.label + "\t");
-                gestures.add(gesture);
+                return calculateDirectionBetweenPoints(currentPoint, eachPoint);
             }
         }
-//        System.out.println();
-        return gestures.toArray(new Gesture[gestures.size()]);
+        return Gesture.NONE;
     }
 
     private static Gesture calculateDirectionBetweenPoints(Point currentPoint, Point firstPoint) {

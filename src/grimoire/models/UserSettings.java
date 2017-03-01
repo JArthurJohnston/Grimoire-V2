@@ -9,7 +9,6 @@ public class UserSettings {
     public static int MAX_MOTION_SIZE_LIMIT = 50;
     public static int MIN_MOTION_SIZE_LIMIT = 1;
     public static int GESTURE_DETECTION_DISTANCE = 40;
-    public static int RUNE_BUFFER_SIZE = 100;
-    public static int SPELLCAST_COOLDOWN_TIME = 5;
-    public static int SPELLCASTING_THRESHOLD = 10;
+    public static int SPELLCAST_COOLDOWN_TIME = 5 * 1000;
+    public static int SPELLCASTING_THRESHOLD = 5;
 }

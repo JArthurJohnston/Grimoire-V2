@@ -157,25 +157,6 @@ public class BufferTest {
         assertEquals("hello", stringIterator.next());
     }
 
-
-    @Test
-    public void testSnapshot() throws Exception{
-        Buffer<String> buffer = new Buffer<>(5);
-        buffer.add("foo");
-        buffer.add("bar");
-        buffer.add("roo");
-
-        assertEquals(new String[]{"foo", "bar", "roo"}, buffer.getSnapshot());
-
-        buffer.add("hello");
-        buffer.add("world");
-
-        assertEquals(new String[]{"foo", "bar", "roo", "hello", "world"}, buffer.getSnapshot());
-
-        buffer.add("foo two");
-    }
-
-
     private void addArrayToBuffer(Buffer buffer, Object[] clusters){
         for (Object cluster : clusters) {
             buffer.add(cluster);

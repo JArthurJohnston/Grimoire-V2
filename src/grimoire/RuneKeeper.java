@@ -1,69 +1,29 @@
 package grimoire;
 
-import grimoire.models.UserSettings;
-import grimoire.models.processors.Buffer;
 import grimoire.models.processors.gestures.Gesture;
-import grimoire.runes.RuneInterface;
+import grimoire.spells.Rune;
+import grimoire.spells.Spell;
+import grimoire.spells.SpellCaster;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RuneKeeper {
 
-    private final Buffer<Gesture> gestureBuffer;
-    private final List<RuneInterface> runes;
+    public static List<Spell> readSpellsFromTome(){
+        ArrayList<Spell> spells = new ArrayList<>();
+        SpellCaster caster = new SpellCaster();
+        spells.add(createSpell(caster, "rhythmbox-client --play",
+                Gesture.UPWARDS, Gesture.DOWNWARDS_LEFT, Gesture.DOWNWARDS_RIGHT));
+        spells.add(createSpell(caster, "rhythmbox-client --pause",
+                Gesture.UPWARDS, Gesture.DOWNWARDS_RIGHT, Gesture.UPWARDS));
 
-    public RuneKeeper(List<RuneInterface> runes){
-        this.runes = runes;
-        gestureBuffer = new Buffer<>(UserSettings.RUNE_BUFFER_SIZE);
+        return spells;
     }
 
-    public RuneKeeper(){
-        this(new ArrayList<>());
+    private static Spell createSpell(SpellCaster caster, String magicWords, Gesture... gestures) {
+        Rune rune = new Rune(gestures);
+        return new Spell(magicWords, rune, caster);
     }
-
-    public void trackWand(Gesture gesture){
-        castSpell(handleWandGesture(gesture));
-    }
-
-    public void trackWand(Gesture... gestures){
-        for (Gesture gesture : gestures) {
-            trackWand(gesture);
-        }
-    }
-
-    public void castSpell(Gesture[] gestures){
-        for (int i = 0; i < gestures.length; i++) {
-            for (int j = 0; j < runes.size(); j++) {
-                RuneInterface eachRune = runes.get(j);
-                if(eachRune.matchesGestures(Arrays.copyOfRange(gestures, i, gestures.length - 1))){
-                    eachRune.cast();
-                    return;
-                }
-            }
-        }
-    }
-
-    public Gesture[] handleWandGesture(Gesture gesture){
-        gestureBuffer.add(gesture);
-        return aggregateBufferedGestures();
-    }
-
-    private Gesture[] aggregateBufferedGestures() {
-        List<Gesture> pattern = new ArrayList<>(UserSettings.RUNE_BUFFER_SIZE);
-        Iterator<Gesture> iterator = gestureBuffer.lifoIterator();
-        if(iterator.hasNext()){
-            pattern.add(iterator.next());
-        }
-        int patternIndex = 0;
-        while (iterator.hasNext()){
-            Gesture gesture = iterator.next();
-            if(gesture != pattern.get(patternIndex)){
-                pattern.add(gesture);
-                patternIndex++;
-            }
-        }
-        return pattern.toArray(new Gesture[patternIndex]);
-    }
-
 
 }

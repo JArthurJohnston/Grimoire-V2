@@ -1,22 +1,19 @@
 package grimoire;
 
 import grimoire.models.cameras.*;
-import grimoire.models.processors.gestures.Gesture;
-import grimoire.runes.Rune;
-import grimoire.runes.RuneInterface;
+import grimoire.spells.Spellbook;
 import grimoire.views.CameraUI;
 import org.opencv.core.Core;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.util.ArrayList;
 
 public class Grimoire {
 
     static {System.loadLibrary(Core.NATIVE_LIBRARY_NAME);}
 
-    static CameraUI view;
-    static DetectorInterface recorder;
-    static CameraInterface camera;
+    private static CameraUI view;
+    private static DetectorInterface recorder;
+    private static CameraInterface camera;
 
     public static void main(String[] args){
         System.out.println("*****GRIMOIRE*****");
@@ -32,14 +29,9 @@ public class Grimoire {
             view.setVisible(true);
         });
 
-        ArrayList<RuneInterface> runes = new ArrayList<>();
-        runes.add(new Rune("rhythmbox-client --play", Gesture.UPWARDS, Gesture.DOWNWARDS_RIGHT, Gesture.DOWNWARDS_LEFT));
-        runes.add(new Rune("rhythmbox-client --play", Gesture.UPWARDS, Gesture.DOWNWARDS_RIGHT, Gesture.DOWNWARDS_LEFT));
-        runes.add(new Rune("rhythmbox-client --pause", Gesture.UPWARDS, Gesture.DOWNWARDS_RIGHT, Gesture.UPWARDS));
+        Spellbook spellbook = new Spellbook(RuneKeeper.readSpellsFromTome());
 
-        RuneKeeper runeKeeper = new RuneKeeper(runes);
-
-        recorder = new MotionCaptureDetector(view, camera, runeKeeper);
+        recorder = new MotionCaptureDetector(view, camera, spellbook);
 
         videoThread.start();
         recorder.start();

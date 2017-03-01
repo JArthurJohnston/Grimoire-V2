@@ -9,7 +9,7 @@ public class Buffer<T> {
     private T[] values;
     private final int capacity;
     private boolean capacityHasBeenReached;
-    boolean isEmpty = true;
+    private boolean isEmpty = true;
 
     public Buffer(int capacity){
         if(capacity == 0){
@@ -77,7 +77,4 @@ public class Buffer<T> {
         return lastIndex;
     }
 
-    public String[] getSnapshot() {
-        return new String[0];
-    }
 }

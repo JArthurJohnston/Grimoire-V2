@@ -1,12 +1,12 @@
 package grimoire.models.cameras;
 
-import grimoire.RuneKeeper;
 import grimoire.models.clusters.PointCluster;
 import grimoire.models.processors.MotionProcessor;
 import grimoire.models.processors.WandMotion;
 import grimoire.models.processors.drawing.MotionDrawings;
 import grimoire.models.processors.gestures.Gesture;
 import grimoire.models.processors.gestures.GestureDetector;
+import grimoire.spells.Spellbook;
 import grimoire.views.CameraUI;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -23,15 +23,15 @@ import static grimoire.models.cameras.CameraHelper.blurredAndGrayscaleFrame;
 public class MotionCaptureDetector implements DetectorInterface{
 
     private final CameraInterface camera;
-    private RuneKeeper runeKeeper;
+    private Spellbook spellbook;
     private boolean isRunning = false;
     private Mat frameFromCamera, previousImage, currentImage, nextImage, temp1, temp2, motion;
     private final MotionProcessor processor;
     private final CameraUI view;
 
-    public MotionCaptureDetector(CameraUI view, CameraInterface camera, RuneKeeper runeKeeper){
+    public MotionCaptureDetector(CameraUI view, CameraInterface camera, Spellbook spellbook){
         this.camera = camera;
-        this.runeKeeper = runeKeeper;
+        this.spellbook = spellbook;
         processor = new MotionProcessor();
         this.view = view;
     }
@@ -46,8 +46,9 @@ public class MotionCaptureDetector implements DetectorInterface{
                 List<WandMotion> wandMotions = processor.scanFrame(motion, frameFromCamera);
                 wandMotions.sort(Comparator.naturalOrder());
                 if(!wandMotions.isEmpty()){
-                    Gesture[] gestures = GestureDetector.getGestureDirections(wandMotions.get(0));
-                    runeKeeper.trackWand(gestures);
+                    WandMotion largestWandMotion = wandMotions.get(0);
+                    Gesture gesture = GestureDetector.getMostRecentGesture(largestWandMotion);
+                    spellbook.handle(gesture);
                 }
                 view.drawFrame(drawMotionFrame(wandMotions));
 

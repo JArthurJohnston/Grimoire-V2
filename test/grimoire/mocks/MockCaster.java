@@ -1,7 +1,7 @@
 package grimoire.mocks;
 
-import grimoire.CasterInterface;
-import grimoire.views.Spell;
+import grimoire.spells.CasterInterface;
+import grimoire.spells.Spell;
 
 public class MockCaster implements CasterInterface {
     public Spell lastSpellPassedToCast;

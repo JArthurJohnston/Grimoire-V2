@@ -1,6 +1,4 @@
-package grimoire;
-
-import grimoire.views.Spell;
+package grimoire.spells;
 
 public interface CasterInterface {
 

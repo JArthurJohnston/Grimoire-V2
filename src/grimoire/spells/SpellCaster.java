@@ -1,10 +1,8 @@
-package grimoire;
-
-import grimoire.views.Spell;
+package grimoire.spells;
 
 import java.io.IOException;
 
-public class SpellCaster implements CasterInterface{
+public class SpellCaster implements CasterInterface {
 
     public boolean cast(Spell spell){
         try {
