@@ -8,7 +8,7 @@ public class MotionDrawings {
 
     public static void drawCluster(Graphics graphics, PointCluster cluster, Color color){
         graphics.setColor(color);
-        graphics.drawRect(cluster.xCoord(), cluster.yCoord(), cluster.width(), cluster.height());
+        graphics.drawRect(cluster.xCoordinate(), cluster.yCoordinate(), cluster.width(), cluster.height());
     }
 
     public static void drawMotionTail(List<PointCluster> clusters, Graphics graphics, PointCluster startingCluster) {

@@ -19,14 +19,11 @@ public class PointCluster {
         return newCluster;
     }
 
-    int rightBoundary, leftBoundary, topBoundary, bottomBoundary;
-    public boolean hasBeenFound;
+    private int rightBoundary, leftBoundary, topBoundary, bottomBoundary;
 
-    private PointCluster(){
-        hasBeenFound = false;
-    }
+    private PointCluster(){}
 
-    public boolean contains(int x, int y){
+    boolean contains(int x, int y){
         int containsDistance = UserSettings.CLUSTER_CONTAINS_DISTANCE;
         boolean withinHorizontalBounds = x <= rightBoundary + containsDistance
                 && x >= leftBoundary - containsDistance;
@@ -71,11 +68,11 @@ public class PointCluster {
         return bottomBoundary - topBoundary;
     }
 
-    public int xCoord(){
+    public int xCoordinate(){
         return leftBoundary;
     }
 
-    public int yCoord(){
+    public int yCoordinate(){
         return topBoundary;
     }
 

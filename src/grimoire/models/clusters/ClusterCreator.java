@@ -7,7 +7,7 @@ public class ClusterCreator {
     private final LinkedList<PointCluster> clusters;
 
     public ClusterCreator(){
-        clusters = new LinkedList();
+        clusters = new LinkedList<>();
     }
 
     public void handle(int xCoord, int yCoord){

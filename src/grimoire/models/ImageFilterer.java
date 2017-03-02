@@ -1,6 +1,5 @@
 package grimoire.models;
 
-import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
@@ -26,10 +25,5 @@ public class ImageFilterer {
         //WOW this is REALLY slow
 //        Photo.fastNlMeansDenoising(frame, frame, 3, 7, 13);
         return outpurtFrame;
-    }
-
-    public static Mat absoluteDiff(Mat background, Mat inputImage, Mat outputImage){
-        Core.absdiff(background, inputImage, outputImage);
-        return outputImage;
     }
 }

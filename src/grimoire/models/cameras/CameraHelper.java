@@ -5,9 +5,9 @@ import static grimoire.models.ImageFilterer.applyGaussianBlur;
 import static grimoire.models.ImageFilterer.applyGrayscale;
 
 
-public class CameraHelper {
+class CameraHelper {
 
-    public static Mat blurredAndGrayscaleFrame(Mat input, Mat output){
+    static Mat blurredAndGrayscaleFrame(Mat input, Mat output){
         applyGrayscale(input, output);
         applyGaussianBlur(output, output);
         return output;
