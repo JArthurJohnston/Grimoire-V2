@@ -1,0 +1,7 @@
+To distribute the jar file.
+
+    -building the project should create a Jar file.
+    -this will NOT include the .so file needed for OpenCV
+    -To run the jar you must first include the so file, found in the lib folder, in the java.library.path variable.
+    -The easiest way to do this is by copying it into a folder already included in the library.path
+        for example /usr/lib/

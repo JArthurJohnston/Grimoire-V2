@@ -9,7 +9,11 @@ import java.awt.event.WindowListener;
 
 public class Grimoire {
 
-    static {System.loadLibrary(Core.NATIVE_LIBRARY_NAME);}
+    static {
+//        String property = System.getProperty("java.library.path");
+//        System.out.println("Library Path: " + property);
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+    }
 
     private static CameraUI view;
     private static DetectorInterface recorder;
