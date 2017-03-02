@@ -14,13 +14,13 @@ public class Rune {
         manaPools = createManaPools(gestures);
     }
 
-    public void sense(Gesture gesture){
+    void sense(Gesture gesture){
         for (ManaPool manaPool : manaPools) {
             manaPool.handle(gesture);
         }
     }
 
-    public boolean priceHasBeenPaid(){
+    boolean priceHasBeenPaid(){
         for (ManaPool manaPool : manaPools) {
             if(!manaPool.isReady())
                 return false;
@@ -28,7 +28,7 @@ public class Rune {
         return true;
     }
 
-    public void emptyMana(){
+    void emptyMana(){
         timeSinceRuneStarted = 0;
         for (ManaPool manaPool : manaPools) {
             manaPool.empty();
@@ -66,7 +66,7 @@ public class Rune {
                 }
                 gestureMatched = true;
             }
-            if(gestureMatched && this.gesture.isCloseTo(gesture)){
+            if(gestureMatched && this.gesture.equals(gesture)){
                 this.mana++;
             } else {
                 if(timeSinceRuneStarted + UserSettings.SPELLCAST_COOLDOWN_TIME < System.currentTimeMillis())
@@ -83,6 +83,8 @@ public class Rune {
         }
 
         void empty(){
+            gestureMatched = false;
+            timeSinceRuneStarted = 0;
             this.mana = 0;
         }
     }

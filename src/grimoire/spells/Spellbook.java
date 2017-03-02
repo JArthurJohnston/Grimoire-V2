@@ -15,13 +15,13 @@ public class Spellbook {
     }
 
     public void handle(Gesture wandGesture){
-        for (Spell eachRune : spells) {
-            eachRune.handle(wandGesture);
-            if(System.currentTimeMillis() > globalSpellCooldown + UserSettings.SPELLCAST_COOLDOWN_TIME){
+        if(System.currentTimeMillis() > globalSpellCooldown + UserSettings.SPELLCAST_COOLDOWN_TIME){
+            for (Spell eachRune : spells) {
+                eachRune.handle(wandGesture);
                 if(eachRune.canBeCast()){
-                    globalSpellCooldown = System.currentTimeMillis();
                     eachRune.cast();
                     fizzleSpells();
+                    globalSpellCooldown = System.currentTimeMillis();
                     return;
                 }
             }

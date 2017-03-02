@@ -33,12 +33,4 @@ public enum Gesture {
         this.label = label;
     }
 
-    public boolean isCloseTo(Gesture otherGesture){
-        Gesture[] neighbours = gestureNeighbourMap.get(this);
-        return otherGesture == this ||
-                otherGesture == neighbours[0] ||
-                otherGesture == neighbours[1];
-    }
-
-
 }
