@@ -1,8 +1,9 @@
 package grimoire;
 
-import grimoire.models.cameras.*;
-import grimoire.spells.Spellbook;
-import grimoire.views.CameraUI;
+import grimoire.gesture_analysis.RuneKeeper;
+import grimoire.image_analysis.cameras.*;
+import grimoire.gesture_analysis.spells.Spellbook;
+import grimoire.image_viewing.views.CameraUI;
 import org.opencv.core.Core;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -59,7 +60,7 @@ public class Grimoire {
         return null;
     }
 
-    static WindowListener closeListener(DetectorInterface capture){
+    private static WindowListener closeListener(DetectorInterface capture){
         return new WindowListener() {
             @Override
             public void windowOpened(WindowEvent e) {
@@ -96,5 +97,18 @@ public class Grimoire {
 
             }
         };
+    }
+
+    public static class UserSettings {
+        public static double MOTION_THRESHOLD = 25;
+        public static int GAUSSIAN_KERNEL_SIZE = 9;
+        public static double INTENSITY_THRESHOLD = 0.2;
+        public static int CLUSTER_CONTAINS_DISTANCE = 10;
+        public static int MOTION_DETECTION_DISTANCE = 40;
+        public static int MAX_MOTION_SIZE_LIMIT = 50;
+        public static int MIN_MOTION_SIZE_LIMIT = 1;
+        public static int GESTURE_DETECTION_DISTANCE = 40;
+        public static int SPELLCAST_COOLDOWN_TIME = 3 * 1000;
+        public static int SPELLCASTING_THRESHOLD = 5;
     }
 }
