@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package grimoire.image_viewing.views;
+package grimoire.ui.views;
 
 import grimoire.Grimoire;
 

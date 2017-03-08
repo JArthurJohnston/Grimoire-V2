@@ -1,4 +1,4 @@
-package grimoire.image_viewing.drawing;
+package grimoire.ui.drawing;
 
 import grimoire.image_analysis.clusters.PointCluster;
 import grimoire.image_analysis.processors.WandMotion;

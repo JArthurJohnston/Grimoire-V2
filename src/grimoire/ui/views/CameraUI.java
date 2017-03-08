@@ -3,24 +3,27 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package grimoire.image_viewing.views;
+package grimoire.ui.views;
 
 import grimoire.Grimoire;
+import grimoire.image_analysis.cameras.DetectorInterface;
 import grimoire.image_analysis.processors.WandMotion;
 import org.opencv.core.Mat;
 
 import java.awt.Graphics;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.util.List;
 import javax.swing.*;
 
-import static grimoire.image_viewing.drawing.MotionDrawings.drawMotionFrame;
+import static grimoire.ui.drawing.MotionDrawings.drawMotionFrame;
 
 /**
  *
  * @author arthur
  */
-public class CameraUI extends javax.swing.JFrame {
+public class CameraUI extends javax.swing.JFrame implements GrimoireViewInterface {
     
     /**
      * Creates new form CameraUI
@@ -28,6 +31,7 @@ public class CameraUI extends javax.swing.JFrame {
     public CameraUI() {
         initComponents();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(closeListener());
         this.setDefaultValues();
     }
     
@@ -266,4 +270,43 @@ public class CameraUI extends javax.swing.JFrame {
     private javax.swing.JPanel videoPanel;
     // End of variables declaration//GEN-END:variables
 
+
+    private static WindowListener closeListener(){
+        return new WindowListener() {
+            @Override
+            public void windowOpened(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                Grimoire.stop();
+            }
+
+            @Override
+            public void windowClosed(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowIconified(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowDeiconified(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowActivated(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowDeactivated(WindowEvent e) {
+
+            }
+        };
+    }
 }

@@ -3,10 +3,8 @@ package grimoire;
 import grimoire.gesture_analysis.RuneKeeper;
 import grimoire.image_analysis.cameras.*;
 import grimoire.gesture_analysis.spells.Spellbook;
-import grimoire.image_viewing.views.CameraUI;
+import grimoire.ui.views.CameraUI;
 import org.opencv.core.Core;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 
 public class Grimoire {
 
@@ -16,30 +14,35 @@ public class Grimoire {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
     }
 
-    private static CameraUI view;
     private static DetectorInterface recorder;
     private static CameraInterface camera;
 
     public static void main(String[] args){
-        System.out.println("*****GRIMOIRE*****");
+//        System.out.println("*****GRIMOIRE*****");
 //        Scanner userInputScanner = new Scanner(new InputStreamReader(System.in));
 //        System.out.println("Enter Camera Index: ");
 //        String camIndex = userInputScanner.nextLine();
 
         camera = setupCameraWithArgs(args);
 
-        view = new CameraUI();
-        Thread videoThread = new Thread(() -> {
-            view.addWindowListener(closeListener(recorder));
-            view.setVisible(true);
-        });
-
         Spellbook spellbook = new Spellbook(RuneKeeper.readSpellsFromTome());
 
-        recorder = new MotionCaptureDetector(view, camera, spellbook);
-
-        videoThread.start();
+        recorder = new MotionCaptureDetector(camera, spellbook);
+        startDebugUI();
         recorder.start();
+    }
+
+    public static void stop(){
+        recorder.stop();
+    }
+
+    public static void startDebugUI(){
+        Thread videoThread = new Thread(() -> {
+            CameraUI view = new CameraUI();
+            recorder.viewOpened(view);
+            view.setVisible(true);
+        });
+        videoThread.start();
     }
 
     private static CameraInterface setupCameraWithArgs(String[] args) {
@@ -58,45 +61,6 @@ public class Grimoire {
             }
         }
         return null;
-    }
-
-    private static WindowListener closeListener(DetectorInterface capture){
-        return new WindowListener() {
-            @Override
-            public void windowOpened(WindowEvent e) {
-
-            }
-
-            @Override
-            public void windowClosing(WindowEvent e) {
-                capture.stop();
-            }
-
-            @Override
-            public void windowClosed(WindowEvent e) {
-
-            }
-
-            @Override
-            public void windowIconified(WindowEvent e) {
-
-            }
-
-            @Override
-            public void windowDeiconified(WindowEvent e) {
-
-            }
-
-            @Override
-            public void windowActivated(WindowEvent e) {
-
-            }
-
-            @Override
-            public void windowDeactivated(WindowEvent e) {
-
-            }
-        };
     }
 
     public static class UserSettings {

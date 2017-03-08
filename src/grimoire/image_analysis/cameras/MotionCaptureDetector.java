@@ -5,7 +5,8 @@ import grimoire.image_analysis.processors.WandMotion;
 import grimoire.gesture_analysis.gestures.Gesture;
 import grimoire.gesture_analysis.gestures.GestureDetector;
 import grimoire.gesture_analysis.spells.Spellbook;
-import grimoire.image_viewing.views.CameraUI;
+import grimoire.ui.views.CameraUI;
+import grimoire.ui.views.GrimoireViewInterface;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 
@@ -22,12 +23,16 @@ public class MotionCaptureDetector implements DetectorInterface{
     private boolean isRunning = false;
     private Mat frameFromCamera, previousImage, currentImage, nextImage, temp1, temp2, motion;
     private final MotionProcessor processor;
-    private final CameraUI view;
+    private GrimoireViewInterface view;
 
-    public MotionCaptureDetector(CameraUI view, CameraInterface camera, Spellbook spellbook){
+    public MotionCaptureDetector(CameraInterface camera, Spellbook spellbook){
         this.camera = camera;
         this.spellbook = spellbook;
         processor = new MotionProcessor();
+        this.view = new NullView();
+    }
+
+    public void viewOpened(GrimoireViewInterface view){
         this.view = view;
     }
 
@@ -85,5 +90,13 @@ public class MotionCaptureDetector implements DetectorInterface{
         applyGrayscale(currentImage, currentImage);
         camera.read(nextImage);
         applyGrayscale(nextImage, nextImage);
+    }
+
+    private class NullView implements GrimoireViewInterface {
+
+        @Override
+        public void drawFrame(Mat frame, List<WandMotion> motion) {
+
+        }
     }
 }
