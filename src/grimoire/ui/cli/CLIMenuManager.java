@@ -13,10 +13,13 @@ public class CLIMenuManager {
     }
 
     public void showMainMenu(){
-        System.out.println("******* Main Menu ********");
-        System.out.println("1: Start");
-        System.out.println("2: Start");
-        System.out.println("0: Exit");
+        String mainMenuContent = "\n******* Main Menu ********";
+        mainMenuContent += "\n1: Start";
+        mainMenuContent += "\n2: Start Debug UI";
+        mainMenuContent += "\n0: Exit";
+        mainMenuContent += "\n";
+
+        System.out.println(mainMenuContent);
         handleInput();
     }
 
@@ -25,18 +28,39 @@ public class CLIMenuManager {
         executeUserChoice(input);
     }
 
+    private void clearTheScreen(){
+        System.out.print(String.format("\033[H\033[2J"));
+
+//        final String ESC = "\033[";
+//        System.out.print(ESC + "2J");
+
+//        final String ANSI_CLS = "\u001b[2J";
+//        final String ANSI_HOME = "\u001b[H";
+//        System.out.print(ANSI_CLS + ANSI_HOME);
+//        System.out.flush();
+
+//        try {
+//            Runtime.getRuntime().exec("clear\n\r");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+    }
 
     private void executeUserChoice(String userChoice){
+//        clearTheScreen();
         switch (userChoice){
             case "0":
                 System.out.println("Goodbye");
                 System.exit(0);
                 break;
             case "1":
-                System.out.println("Coming soon...");
+                System.out.println("Enter the camera index");
+                String cameraIndex = inputScanner.nextLine();
+                Grimoire.main(new String[]{cameraIndex});
                 break;
             case "2":
-                Grimoire.startDebugUI();
+                System.out.println("Coming soon");
+//                Grimoire.startDebugUI();
                 break;
             default:
                 System.out.println("Invalid Input");
