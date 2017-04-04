@@ -1,29 +1,18 @@
 package grimoire.gesture_analysis;
 
-import grimoire.gesture_analysis.gestures.Gesture;
-import grimoire.gesture_analysis.spells.Rune;
+import grimoire.Grimoire;
 import grimoire.gesture_analysis.spells.Spell;
 import grimoire.gesture_analysis.spells.SpellCaster;
+import grimoire.gesture_analysis.spells.serialization.SpellSerializer;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class RuneKeeper {
 
     public static List<Spell> readSpellsFromTome(){
-        ArrayList<Spell> spells = new ArrayList<>();
         SpellCaster caster = new SpellCaster();
-        spells.add(createSpell(caster, "rhythmbox-client --play",
-                Gesture.UPWARDS, Gesture.DOWNWARDS_LEFT, Gesture.DOWNWARDS_RIGHT));
-        spells.add(createSpell(caster, "rhythmbox-client --pause",
-                Gesture.UPWARDS, Gesture.RIGHTWARDS, Gesture.DOWNWARDS));
-
+        SpellSerializer spellSerializer = new SpellSerializer();
+        List<Spell> spells = spellSerializer.read(Grimoire.UserSettings.SPELLFILE_LOCATION, caster);
         return spells;
     }
-
-    private static Spell createSpell(SpellCaster caster, String magicWords, Gesture... gestures) {
-        Rune rune = new Rune(gestures);
-        return new Spell(magicWords, rune, caster);
-    }
-
 }
