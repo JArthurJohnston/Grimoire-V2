@@ -3,15 +3,29 @@ package grimoire;
 import grimoire.gesture_analysis.RuneKeeper;
 import grimoire.image_analysis.cameras.*;
 import grimoire.gesture_analysis.spells.Spellbook;
+import grimoire.threads.CameraRunner;
 import grimoire.ui.views.CameraUI;
 import org.opencv.core.Core;
+
+import java.io.File;
+import java.nio.file.Paths;
 
 public class Grimoire {
 
     static {
 //        String property = System.getProperty("java.library.path");
 //        System.out.println("Library Path: " + property);
-        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+        System.out.println("Working Direcotry: " + Paths.get("").toAbsolutePath());
+        String libraryName = "libopencv_java2413.so";
+        File file = new File("/lib/" + libraryName);
+        if(file.getAbsoluteFile().exists()){
+
+            System.load(file.getAbsolutePath());
+            System.loadLibrary(libraryName);
+        } else {
+            System.out.println("Failed to load file");
+            System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+        }
     }
 
     private static DetectorInterface recorder;
@@ -27,9 +41,12 @@ public class Grimoire {
 
         Spellbook spellbook = new Spellbook(RuneKeeper.readSpellsFromTome());
 
+
         recorder = new MotionCaptureDetector(camera, spellbook);
+        Thread cameraThread = new Thread(new CameraRunner(0, recorder), "Camera-Thread");
         startDebugUI();
-        recorder.start();
+        cameraThread.start();
+//        recorder.start();
     }
 
     public static void stop(){
@@ -74,5 +91,6 @@ public class Grimoire {
         public static int GESTURE_DETECTION_DISTANCE = 40;
         public static int SPELLCAST_COOLDOWN_TIME = 3 * 1000;
         public static int SPELLCASTING_THRESHOLD = 5;
+        public static String SPELLFILE_LOCATION = "./res/spells.grim";
     }
 }

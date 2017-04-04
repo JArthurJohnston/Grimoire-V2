@@ -8,10 +8,12 @@ import java.util.List;
 
 public class Rune {
     private List<ManaPool> manaPools;
+    public Gesture[] gestures;
     private long timeSinceRuneStarted = 0;
 
     public Rune(Gesture... gestures){
         manaPools = createManaPools(gestures);
+        this.gestures = gestures;
     }
 
     void sense(Gesture gesture){

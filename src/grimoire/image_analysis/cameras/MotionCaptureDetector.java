@@ -56,6 +56,34 @@ public class MotionCaptureDetector implements DetectorInterface{
             }
         }
     }
+
+    public void detect(Mat cameraFrame){
+        if(readyToProcessImages()){
+            scanForMotion();
+            List<WandMotion> wandMotions = processor.scanFrame(motion, cameraFrame);
+            wandMotions.sort(Comparator.naturalOrder());
+            if(!wandMotions.isEmpty()){
+                WandMotion largestWandMotion = wandMotions.get(0);
+                Gesture gesture = GestureDetector.getMostRecentGesture(largestWandMotion);
+                spellbook.handle(gesture);
+            }
+            view.drawFrame(cameraFrame,wandMotions);
+            updateFrames(cameraFrame);
+        } else {
+            initFrames(cameraFrame);
+        }
+    }
+
+    void initFrames(Mat frame){
+        if(previousImage == null){
+            previousImage = frame;
+        } else if(currentImage == null){
+            currentImage = frame;
+        } else if(nextImage == null){
+            nextImage = frame;
+        }
+    }
+
     public void stop(){
         isRunning = false;
         camera.release();
@@ -67,14 +95,25 @@ public class MotionCaptureDetector implements DetectorInterface{
         blurredAndGrayscaleFrame(frameFromCamera, nextImage);
     }
 
-    private void scanForMotion() {
-        Core.absdiff(nextImage, currentImage, temp1);
-        Core.absdiff(currentImage, previousImage, temp2);
-        Core.bitwise_and(temp1, temp2, motion);
-        applyThreshold(motion, motion);
+    private void updateFrames(Mat cameraFrame){
+
+        currentImage.copyTo(previousImage);
+        nextImage.copyTo(currentImage);
+        blurredAndGrayscaleFrame(cameraFrame, nextImage);
     }
 
-    private void initializeFrames(){
+    private void scanForMotion() {
+        try {
+            Core.absdiff(nextImage, currentImage, temp1);
+            Core.absdiff(currentImage, previousImage, temp2);
+            Core.bitwise_and(temp1, temp2, motion);
+            applyThreshold(motion, motion);
+        } catch (Exception e){
+            System.out.println(e);
+        }
+    }
+
+    public void initializeFrames(){
         frameFromCamera = new Mat();
 
         temp1 = new Mat();
@@ -90,6 +129,30 @@ public class MotionCaptureDetector implements DetectorInterface{
         applyGrayscale(currentImage, currentImage);
         camera.read(nextImage);
         applyGrayscale(nextImage, nextImage);
+    }
+
+    public void init(){
+//        frameFromCamera = new Mat();
+
+        temp1 = new Mat();
+        temp2 = new Mat();
+        motion = new Mat();
+
+//        previousImage = new Mat();
+//        currentImage = new Mat();
+//        nextImage = new Mat();
+//        camera.read(previousImage);
+//        applyGrayscale(previousImage, previousImage);
+//        camera.read(currentImage);
+//        applyGrayscale(currentImage, currentImage);
+//        camera.read(nextImage);
+//        applyGrayscale(nextImage, nextImage);
+    }
+
+    private boolean readyToProcessImages(){
+        return previousImage != null &&
+                currentImage != null &&
+                nextImage != null;
     }
 
     private class NullView implements GrimoireViewInterface {

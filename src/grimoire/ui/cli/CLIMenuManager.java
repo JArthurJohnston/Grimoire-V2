@@ -13,13 +13,15 @@ public class CLIMenuManager {
     }
 
     public void showMainMenu(){
-        String mainMenuContent = "\n******* Main Menu ********";
+        String mainMenuContent = "\n\n******* Main Menu ********";
         mainMenuContent += "\n1: Start";
         mainMenuContent += "\n2: Start Debug UI";
+        mainMenuContent += "\n3: Run Demo";
         mainMenuContent += "\n0: Exit";
         mainMenuContent += "\n";
+        mainMenuContent += "Enter your selection: ";
 
-        System.out.println(mainMenuContent);
+        System.out.print(mainMenuContent);
         handleInput();
     }
 
@@ -54,13 +56,18 @@ public class CLIMenuManager {
                 System.exit(0);
                 break;
             case "1":
-                System.out.println("Enter the camera index");
+                System.out.print("Enter the camera index: ");
                 String cameraIndex = inputScanner.nextLine();
                 Grimoire.main(new String[]{cameraIndex});
                 break;
             case "2":
                 System.out.println("Coming soon");
 //                Grimoire.startDebugUI();
+                break;
+            case "3":
+                System.out.print("Enter your image directory: ");
+                String imageDirectory = inputScanner.nextLine();
+                Grimoire.main(new String[]{"-demo", imageDirectory});
                 break;
             default:
                 System.out.println("Invalid Input");

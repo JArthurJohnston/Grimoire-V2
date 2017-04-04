@@ -1,0 +1,2 @@
+UPWARDS,DOWNWARDS_LEFT,DOWNWARDS_RIGHT:rhythmbox-client --play
+UPWARDS,RIGHTWARDS,DOWNWARDS:rhythmbox-client --pause

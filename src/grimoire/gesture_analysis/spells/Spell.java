@@ -4,13 +4,14 @@ import grimoire.gesture_analysis.gestures.Gesture;
 
 public class Spell {
 
-    private final String magicWords;
-    private final Rune rune;
+    public final String magicWords;
+    public final Rune rune;
     private CasterInterface caster;
 
     public Spell(String magicWords, Rune rune, CasterInterface caster){
         this.magicWords = magicWords;
         this.rune = rune;
+
         this.caster = caster;
     }
 
