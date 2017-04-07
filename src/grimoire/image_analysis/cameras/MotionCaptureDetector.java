@@ -5,7 +5,6 @@ import grimoire.image_analysis.processors.WandMotion;
 import grimoire.gesture_analysis.gestures.Gesture;
 import grimoire.gesture_analysis.gestures.GestureDetector;
 import grimoire.gesture_analysis.spells.Spellbook;
-import grimoire.ui.views.CameraUI;
 import grimoire.ui.views.GrimoireViewInterface;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -30,6 +29,7 @@ public class MotionCaptureDetector implements DetectorInterface{
         this.spellbook = spellbook;
         processor = new MotionProcessor();
         this.view = new NullView();
+        initializeTempFrames();
     }
 
     public void viewOpened(GrimoireViewInterface view){
@@ -42,6 +42,7 @@ public class MotionCaptureDetector implements DetectorInterface{
         initializeFrames();
         while (isRunning){
             if(camera.read(frameFromCamera)){
+//            if(true){
                 scanForMotion();
                 List<WandMotion> wandMotions = processor.scanFrame(motion, frameFromCamera);
                 wandMotions.sort(Comparator.naturalOrder());
@@ -116,9 +117,7 @@ public class MotionCaptureDetector implements DetectorInterface{
     public void initializeFrames(){
         frameFromCamera = new Mat();
 
-        temp1 = new Mat();
-        temp2 = new Mat();
-        motion = new Mat();
+        initializeTempFrames();
 
         previousImage = new Mat();
         currentImage = new Mat();
@@ -131,12 +130,16 @@ public class MotionCaptureDetector implements DetectorInterface{
         applyGrayscale(nextImage, nextImage);
     }
 
-    public void init(){
-//        frameFromCamera = new Mat();
-
+    private void initializeTempFrames() {
         temp1 = new Mat();
         temp2 = new Mat();
         motion = new Mat();
+    }
+
+    public void init(){
+//        frameFromCamera = new Mat();
+
+        initializeTempFrames();
 
 //        previousImage = new Mat();
 //        currentImage = new Mat();

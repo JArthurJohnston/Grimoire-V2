@@ -4,11 +4,15 @@ import grimoire.gesture_analysis.RuneKeeper;
 import grimoire.image_analysis.cameras.*;
 import grimoire.gesture_analysis.spells.Spellbook;
 import grimoire.threads.CameraRunner;
+import grimoire.threads.DetectionRunner;
 import grimoire.ui.views.CameraUI;
 import org.opencv.core.Core;
+import org.opencv.core.Mat;
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class Grimoire {
 
@@ -28,7 +32,7 @@ public class Grimoire {
         }
     }
 
-    private static DetectorInterface recorder;
+    private static DetectorInterface detector;
     private static CameraInterface camera;
 
     public static void main(String[] args){
@@ -41,22 +45,25 @@ public class Grimoire {
 
         Spellbook spellbook = new Spellbook(RuneKeeper.readSpellsFromTome());
 
+        BlockingQueue<Mat> matBlockingQueue = new LinkedBlockingQueue<Mat>();
 
-        recorder = new MotionCaptureDetector(camera, spellbook);
-        Thread cameraThread = new Thread(new CameraRunner(0, recorder), "Camera-Thread");
+        detector = new MotionCaptureDetector(camera, spellbook);
+        Thread cameraThread = new Thread(new CameraRunner(0, matBlockingQueue), "Camera-Thread");
+        Thread detectionThread = new Thread(new DetectionRunner(detector, matBlockingQueue));
         startDebugUI();
         cameraThread.start();
-//        recorder.start();
+        detectionThread.start();
+//        detector.start();
     }
 
     public static void stop(){
-        recorder.stop();
+        detector.stop();
     }
 
     public static void startDebugUI(){
         Thread videoThread = new Thread(() -> {
             CameraUI view = new CameraUI();
-            recorder.viewOpened(view);
+            detector.viewOpened(view);
             view.setVisible(true);
         });
         videoThread.start();

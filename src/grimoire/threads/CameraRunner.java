@@ -1,19 +1,21 @@
 package grimoire.threads;
 
-import grimoire.image_analysis.cameras.DetectorInterface;
 import org.opencv.core.Mat;
 import org.opencv.highgui.VideoCapture;
+
+import java.util.concurrent.BlockingQueue;
 
 public class CameraRunner implements Runnable {
 
     private VideoCapture capture;
     private final int cameraIndex;
-    private DetectorInterface detector;
+    private BlockingQueue<Mat> coms;
     private boolean isRunning;
 
-    public CameraRunner(int cameraIndex, DetectorInterface detector){
+    public CameraRunner(int cameraIndex, BlockingQueue<Mat> coms){
         this.cameraIndex = cameraIndex;
-        this.detector = detector;
+        this.coms = coms;
+//        this.detector = detector;
         isRunning = false;
     }
 
@@ -22,11 +24,16 @@ public class CameraRunner implements Runnable {
         isRunning = true;
         capture = new VideoCapture();
         capture.open(this.cameraIndex);
-        detector.init();
+//        detector.init();
         while (isRunning){
             Mat cameraFrame = new Mat();
             if(capture.read(cameraFrame)){
-                detector.detect(cameraFrame);
+//                detector.detect(cameraFrame);
+                try {
+                    coms.put(cameraFrame);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
         capture.release();
