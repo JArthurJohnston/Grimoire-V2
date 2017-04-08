@@ -36,10 +36,6 @@ public class Grimoire {
     private static CameraInterface camera;
 
     public static void main(String[] args){
-//        System.out.println("*****GRIMOIRE*****");
-//        Scanner userInputScanner = new Scanner(new InputStreamReader(System.in));
-//        System.out.println("Enter Camera Index: ");
-//        String camIndex = userInputScanner.nextLine();
 
         camera = setupCameraWithArgs(args);
 
@@ -53,7 +49,6 @@ public class Grimoire {
         startDebugUI();
         cameraThread.start();
         detectionThread.start();
-//        detector.start();
     }
 
     public static void stop(){
@@ -99,5 +94,6 @@ public class Grimoire {
         public static int SPELLCAST_COOLDOWN_TIME = 3 * 1000;
         public static int SPELLCASTING_THRESHOLD = 5;
         public static String SPELLFILE_LOCATION = "./res/spells.grim";
+        public static int SCAN_RESOLUTION = 2;
     }
 }

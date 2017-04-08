@@ -18,9 +18,9 @@ import static grimoire.image_analysis.cameras.CameraHelper.blurredAndGrayscaleFr
 public class MotionCaptureDetector implements DetectorInterface{
 
     private final CameraInterface camera;
-    private Spellbook spellbook;
+    private final Spellbook spellbook;
     private boolean isRunning = false;
-    private Mat frameFromCamera, previousImage, currentImage, nextImage, temp1, temp2, motion;
+    private Mat previousImage, currentImage, nextImage, temp1, temp2, motion;
     private final MotionProcessor processor;
     private GrimoireViewInterface view;
 
@@ -34,28 +34,6 @@ public class MotionCaptureDetector implements DetectorInterface{
 
     public void viewOpened(GrimoireViewInterface view){
         this.view = view;
-    }
-
-    public void start(){
-        isRunning = true;
-        camera.open();
-        initializeFrames();
-        while (isRunning){
-            if(camera.read(frameFromCamera)){
-//            if(true){
-                scanForMotion();
-                List<WandMotion> wandMotions = processor.scanFrame(motion, frameFromCamera);
-                wandMotions.sort(Comparator.naturalOrder());
-                if(!wandMotions.isEmpty()){
-                    WandMotion largestWandMotion = wandMotions.get(0);
-                    Gesture gesture = GestureDetector.getMostRecentGesture(largestWandMotion);
-                    spellbook.handle(gesture);
-                }
-                view.drawFrame(frameFromCamera,wandMotions);
-
-                updateFrames();
-            }
-        }
     }
 
     public void detect(Mat cameraFrame){
@@ -90,12 +68,6 @@ public class MotionCaptureDetector implements DetectorInterface{
         camera.release();
     }
 
-    private void updateFrames() {
-        currentImage.copyTo(previousImage);
-        nextImage.copyTo(currentImage);
-        blurredAndGrayscaleFrame(frameFromCamera, nextImage);
-    }
-
     private void updateFrames(Mat cameraFrame){
 
         currentImage.copyTo(previousImage);
@@ -114,42 +86,10 @@ public class MotionCaptureDetector implements DetectorInterface{
         }
     }
 
-    public void initializeFrames(){
-        frameFromCamera = new Mat();
-
-        initializeTempFrames();
-
-        previousImage = new Mat();
-        currentImage = new Mat();
-        nextImage = new Mat();
-        camera.read(previousImage);
-        applyGrayscale(previousImage, previousImage);
-        camera.read(currentImage);
-        applyGrayscale(currentImage, currentImage);
-        camera.read(nextImage);
-        applyGrayscale(nextImage, nextImage);
-    }
-
     private void initializeTempFrames() {
         temp1 = new Mat();
         temp2 = new Mat();
         motion = new Mat();
-    }
-
-    public void init(){
-//        frameFromCamera = new Mat();
-
-        initializeTempFrames();
-
-//        previousImage = new Mat();
-//        currentImage = new Mat();
-//        nextImage = new Mat();
-//        camera.read(previousImage);
-//        applyGrayscale(previousImage, previousImage);
-//        camera.read(currentImage);
-//        applyGrayscale(currentImage, currentImage);
-//        camera.read(nextImage);
-//        applyGrayscale(nextImage, nextImage);
     }
 
     private boolean readyToProcessImages(){
@@ -161,8 +101,6 @@ public class MotionCaptureDetector implements DetectorInterface{
     private class NullView implements GrimoireViewInterface {
 
         @Override
-        public void drawFrame(Mat frame, List<WandMotion> motion) {
-
-        }
+        public void drawFrame(Mat frame, List<WandMotion> motion) {}
     }
 }

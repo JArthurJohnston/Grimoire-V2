@@ -27,8 +27,8 @@ public class MotionProcessor {
     public List<WandMotion> scanFrame(Mat motionFrame, Mat originalFrame){
         ClusterCreator clusterCreator = new ClusterCreator();
 
-        for (int columnIndex = 0; columnIndex < motionFrame.cols(); columnIndex++) {
-            for (int rowIndex = 0; rowIndex < motionFrame.rows(); rowIndex++) {
+        for (int columnIndex = 0; columnIndex < motionFrame.cols(); columnIndex += Grimoire.UserSettings.SCAN_RESOLUTION) {
+            for (int rowIndex = 0; rowIndex < motionFrame.rows(); rowIndex += Grimoire.UserSettings.SCAN_RESOLUTION) {
                 if (motionFrame.get(rowIndex, columnIndex)[0] > 0) {
                     double pixelIntensity = pixelIntensity(originalFrame.get(rowIndex, columnIndex));
                     if(pixelIntensity > Grimoire.UserSettings.INTENSITY_THRESHOLD){

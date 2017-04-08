@@ -15,7 +15,6 @@ public class CameraRunner implements Runnable {
     public CameraRunner(int cameraIndex, BlockingQueue<Mat> coms){
         this.cameraIndex = cameraIndex;
         this.coms = coms;
-//        this.detector = detector;
         isRunning = false;
     }
 
@@ -24,11 +23,9 @@ public class CameraRunner implements Runnable {
         isRunning = true;
         capture = new VideoCapture();
         capture.open(this.cameraIndex);
-//        detector.init();
         while (isRunning){
             Mat cameraFrame = new Mat();
             if(capture.read(cameraFrame)){
-//                detector.detect(cameraFrame);
                 try {
                     coms.put(cameraFrame);
                 } catch (InterruptedException e) {
