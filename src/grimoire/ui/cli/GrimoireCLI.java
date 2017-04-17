@@ -8,7 +8,7 @@ public class GrimoireCLI {
 
     private static final String TITLE_FILE_NAME = "./lib/grimoire_title.txt";
 
-    public static void main(String[] args){
+    public static void startGrimoireCLI(String[] args){
         showTitle();
         CLIMenuManager cliMenuManager = new CLIMenuManager();
         while (true){

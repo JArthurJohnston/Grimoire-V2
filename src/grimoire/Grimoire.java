@@ -5,6 +5,7 @@ import grimoire.image_analysis.cameras.*;
 import grimoire.gesture_analysis.spells.Spellbook;
 import grimoire.threads.CameraRunner;
 import grimoire.threads.DetectionRunner;
+import grimoire.ui.cli.GrimoireCLI;
 import grimoire.ui.views.CameraUI;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -36,6 +37,10 @@ public class Grimoire {
     private static CameraInterface camera;
 
     public static void main(String[] args){
+        GrimoireCLI.startGrimoireCLI(args);
+    }
+
+    public static void startDefaultApp(String[] args){
 
         camera = setupCameraWithArgs(args);
 
@@ -93,7 +98,7 @@ public class Grimoire {
         public static int GESTURE_DETECTION_DISTANCE = 40;
         public static int SPELLCAST_COOLDOWN_TIME = 3 * 1000;
         public static int SPELLCASTING_THRESHOLD = 5;
-        public static String SPELLFILE_LOCATION = "./res/spells.grim";
+        public static String SPELLFILE_LOCATION = "./lib/spells.grim";
         public static int SCAN_RESOLUTION = 2;
     }
 }

@@ -30,26 +30,7 @@ public class CLIMenuManager {
         executeUserChoice(input);
     }
 
-    private void clearTheScreen(){
-        System.out.print(String.format("\033[H\033[2J"));
-
-//        final String ESC = "\033[";
-//        System.out.print(ESC + "2J");
-
-//        final String ANSI_CLS = "\u001b[2J";
-//        final String ANSI_HOME = "\u001b[H";
-//        System.out.print(ANSI_CLS + ANSI_HOME);
-//        System.out.flush();
-
-//        try {
-//            Runtime.getRuntime().exec("clear\n\r");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-    }
-
     private void executeUserChoice(String userChoice){
-//        clearTheScreen();
         switch (userChoice){
             case "0":
                 System.out.println("Goodbye");
@@ -58,16 +39,15 @@ public class CLIMenuManager {
             case "1":
                 System.out.print("Enter the camera index: ");
                 String cameraIndex = inputScanner.nextLine();
-                Grimoire.main(new String[]{cameraIndex});
+                Grimoire.startDefaultApp(new String[]{cameraIndex});
                 break;
             case "2":
                 System.out.println("Coming soon");
-//                Grimoire.startDebugUI();
                 break;
             case "3":
                 System.out.print("Enter your image directory: ");
                 String imageDirectory = inputScanner.nextLine();
-                Grimoire.main(new String[]{"-demo", imageDirectory});
+                Grimoire.startDefaultApp(new String[]{"-demo", imageDirectory});
                 break;
             default:
                 System.out.println("Invalid Input");

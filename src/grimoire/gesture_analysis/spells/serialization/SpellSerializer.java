@@ -52,8 +52,9 @@ public class SpellSerializer {
             while ((line = br.readLine()) != null) {
                 String[] spellComponents = line.split(":");
                 Gesture[] gestureArray = gesturesFrom(spellComponents[0]);
-                spells.add(new Spell(spellComponents[1], new Rune(gestureArray), caster));
-
+                Spell loadedSpell = new Spell(spellComponents[1], new Rune(gestureArray), caster);
+                spells.add(loadedSpell);
+                System.out.println("Loaded Spell: " + loadedSpell.magicWords);
             }
         } catch (IOException e) {
             e.printStackTrace();
