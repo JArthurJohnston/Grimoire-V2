@@ -5,11 +5,12 @@ import grimoire.image_analysis.cameras.*;
 import grimoire.gesture_analysis.spells.Spellbook;
 import grimoire.threads.CameraRunner;
 import grimoire.threads.DetectionRunner;
+import grimoire.threads.ProcessedFrameData;
+import grimoire.threads.ViewRunner;
 import grimoire.ui.cli.GrimoireCLI;
 import grimoire.ui.views.CameraUI;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
-
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.concurrent.BlockingQueue;
@@ -33,40 +34,39 @@ public class Grimoire {
         }
     }
 
-    private static DetectorInterface detector;
-    private static CameraInterface camera;
+    private static CameraRunner cameraRunner;
+    private static DetectionRunner detectionRunner;
+    private static ViewRunner viewRunner;
+
 
     public static void main(String[] args){
         GrimoireCLI.startGrimoireCLI(args);
     }
 
     public static void startDefaultApp(String[] args){
-
-        camera = setupCameraWithArgs(args);
-
         Spellbook spellbook = new Spellbook(RuneKeeper.readSpellsFromTome());
 
         BlockingQueue<Mat> matBlockingQueue = new LinkedBlockingQueue<Mat>();
+        LinkedBlockingQueue<ProcessedFrameData> frameDataQueue = new LinkedBlockingQueue<>();
 
-        detector = new MotionCaptureDetector(camera, spellbook);
-        Thread cameraThread = new Thread(new CameraRunner(0, matBlockingQueue), "Camera-Thread");
-        Thread detectionThread = new Thread(new DetectionRunner(detector, matBlockingQueue));
-        startDebugUI();
+        cameraRunner= new CameraRunner(0, matBlockingQueue);
+        detectionRunner = new DetectionRunner(new MotionCaptureDetector(setupCameraWithArgs(args),
+                spellbook, frameDataQueue), matBlockingQueue);
+        viewRunner = new ViewRunner(new CameraUI(), frameDataQueue);
+
+        Thread cameraThread = new Thread(cameraRunner, "Camera-Thread");
+        Thread detectionThread = new Thread(detectionRunner, "Detection-Thread");
+        Thread viewThread = new Thread(viewRunner, "View-Thread");
+
         cameraThread.start();
         detectionThread.start();
+        viewThread.start();
     }
 
     public static void stop(){
-        detector.stop();
-    }
-
-    public static void startDebugUI(){
-        Thread videoThread = new Thread(() -> {
-            CameraUI view = new CameraUI();
-            detector.viewOpened(view);
-            view.setVisible(true);
-        });
-        videoThread.start();
+        viewRunner.stop();
+        detectionRunner.stop();
+        cameraRunner.stop();
     }
 
     private static CameraInterface setupCameraWithArgs(String[] args) {

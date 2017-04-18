@@ -8,13 +8,12 @@ import java.util.concurrent.BlockingQueue;
 public class DetectionRunner implements Runnable {
 
     private DetectorInterface detector;
-    private BlockingQueue<Mat> coms;
+    private BlockingQueue<Mat> imageQueue;
     private boolean isRunning;
-    private Mat lastFrame;
 
-    public DetectionRunner(DetectorInterface detector, BlockingQueue<Mat> coms){
+    public DetectionRunner(DetectorInterface detector, BlockingQueue<Mat> imageQueue){
         this.detector = detector;
-        this.coms = coms;
+        this.imageQueue = imageQueue;
     }
 
     @Override
@@ -22,9 +21,9 @@ public class DetectionRunner implements Runnable {
         isRunning = true;
         while (isRunning){
             try {
-                detector.detect(coms.take());
+                detector.detect(imageQueue.take());
             } catch (InterruptedException e) {
-                e.printStackTrace();
+
             }
         }
     }

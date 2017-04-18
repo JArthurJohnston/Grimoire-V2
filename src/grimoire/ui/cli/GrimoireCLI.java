@@ -22,9 +22,7 @@ public class GrimoireCLI {
             while ((line = br.readLine()) != null) {
                 System.out.println(line);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (IOException e) {}
     }
 
 }

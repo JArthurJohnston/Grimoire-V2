@@ -34,6 +34,7 @@ public class CLIMenuManager {
         switch (userChoice){
             case "0":
                 System.out.println("Goodbye");
+                Grimoire.stop();
                 System.exit(0);
                 break;
             case "1":

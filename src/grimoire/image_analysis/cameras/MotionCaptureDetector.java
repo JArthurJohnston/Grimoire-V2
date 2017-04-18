@@ -5,12 +5,14 @@ import grimoire.image_analysis.processors.WandMotion;
 import grimoire.gesture_analysis.gestures.Gesture;
 import grimoire.gesture_analysis.gestures.GestureDetector;
 import grimoire.gesture_analysis.spells.Spellbook;
+import grimoire.threads.ProcessedFrameData;
 import grimoire.ui.views.GrimoireViewInterface;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
 
 import static grimoire.image_analysis.ImageFilterer.*;
 import static grimoire.image_analysis.cameras.CameraHelper.blurredAndGrayscaleFrame;
@@ -19,14 +21,16 @@ public class MotionCaptureDetector implements DetectorInterface{
 
     private final CameraInterface camera;
     private final Spellbook spellbook;
+    private BlockingQueue<ProcessedFrameData> processedFrameData;
     private boolean isRunning = false;
     private Mat previousImage, currentImage, nextImage, temp1, temp2, motion;
     private final MotionProcessor processor;
     private GrimoireViewInterface view;
 
-    public MotionCaptureDetector(CameraInterface camera, Spellbook spellbook){
+    public MotionCaptureDetector(CameraInterface camera, Spellbook spellbook, BlockingQueue<ProcessedFrameData> processedFrameData){
         this.camera = camera;
         this.spellbook = spellbook;
+        this.processedFrameData = processedFrameData;
         processor = new MotionProcessor();
         this.view = new NullView();
         initializeTempFrames();
@@ -46,7 +50,9 @@ public class MotionCaptureDetector implements DetectorInterface{
                 Gesture gesture = GestureDetector.getMostRecentGesture(largestWandMotion);
                 spellbook.handle(gesture);
             }
-            view.drawFrame(cameraFrame,wandMotions);
+            try {
+                this.processedFrameData.put(new ProcessedFrameData(cameraFrame, wandMotions));
+            } catch (InterruptedException e) {}
             updateFrames(cameraFrame);
         } else {
             initFrames(cameraFrame);

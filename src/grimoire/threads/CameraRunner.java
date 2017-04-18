@@ -9,12 +9,12 @@ public class CameraRunner implements Runnable {
 
     private VideoCapture capture;
     private final int cameraIndex;
-    private BlockingQueue<Mat> coms;
+    private BlockingQueue<Mat> frameQueue;
     private boolean isRunning;
 
-    public CameraRunner(int cameraIndex, BlockingQueue<Mat> coms){
+    public CameraRunner(int cameraIndex, BlockingQueue<Mat> frameQueue){
         this.cameraIndex = cameraIndex;
-        this.coms = coms;
+        this.frameQueue = frameQueue;
         isRunning = false;
     }
 
@@ -27,9 +27,8 @@ public class CameraRunner implements Runnable {
             Mat cameraFrame = new Mat();
             if(capture.read(cameraFrame)){
                 try {
-                    coms.put(cameraFrame);
+                    frameQueue.put(cameraFrame);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
                 }
             }
         }
