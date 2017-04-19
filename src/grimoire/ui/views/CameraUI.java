@@ -30,7 +30,7 @@ public class CameraUI extends javax.swing.JFrame implements GrimoireViewInterfac
      */
     public CameraUI() {
         initComponents();
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(closeListener());
         this.setDefaultValues();
     }
@@ -280,7 +280,7 @@ public class CameraUI extends javax.swing.JFrame implements GrimoireViewInterfac
 
             @Override
             public void windowClosing(WindowEvent e) {
-                Grimoire.stop();
+                Grimoire.stopUI();
             }
 
             @Override

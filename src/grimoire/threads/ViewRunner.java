@@ -9,19 +9,20 @@ public class ViewRunner implements Runnable{
 
     private CameraUI view;
     private BlockingQueue<ProcessedFrameData> processedDataQueue;
-    private boolean isRunning;
+    public boolean isRunning;
 
-    public ViewRunner(CameraUI view, BlockingQueue<ProcessedFrameData> processedDataQueue){
+    public ViewRunner(BlockingQueue<ProcessedFrameData> processedDataQueue){
         isRunning = false;
-        this.view = view;
         this.processedDataQueue = processedDataQueue;
     }
 
     @Override
     public void run() {
+        this.processedDataQueue.clear();
+        this.view = new CameraUI();
         isRunning = true;
         this.view.setVisible(true);
-        while (isRunning){
+        while (isRunning && view != null){
             try {
                 ProcessedFrameData processedData = this.processedDataQueue.take();
                 this.view.drawFrame(processedData.frame, processedData.motions);
@@ -31,5 +32,8 @@ public class ViewRunner implements Runnable{
 
     public void stop(){
         isRunning = false;
+        this.view.setVisible(false);
+        this.view.dispose();
+        this.view = null;
     }
 }

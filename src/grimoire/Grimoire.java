@@ -52,21 +52,29 @@ public class Grimoire {
         cameraRunner= new CameraRunner(0, matBlockingQueue);
         detectionRunner = new DetectionRunner(new MotionCaptureDetector(setupCameraWithArgs(args),
                 spellbook, frameDataQueue), matBlockingQueue);
-        viewRunner = new ViewRunner(new CameraUI(), frameDataQueue);
+        viewRunner = new ViewRunner(frameDataQueue);
 
         Thread cameraThread = new Thread(cameraRunner, "Camera-Thread");
         Thread detectionThread = new Thread(detectionRunner, "Detection-Thread");
-        Thread viewThread = new Thread(viewRunner, "View-Thread");
 
         cameraThread.start();
         detectionThread.start();
-        viewThread.start();
     }
 
     public static void stop(){
-        viewRunner.stop();
         detectionRunner.stop();
         cameraRunner.stop();
+    }
+
+    public static void startUI(){
+        if(!viewRunner.isRunning){
+            Thread viewThread = new Thread(viewRunner, "View-Thread");
+            viewThread.start();
+        }
+    }
+
+    public static void stopUI(){
+        viewRunner.stop();
     }
 
     private static CameraInterface setupCameraWithArgs(String[] args) {
