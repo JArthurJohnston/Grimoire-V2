@@ -40,7 +40,7 @@ public class CLIMenuManager {
             case "1":
                 System.out.print("Enter the camera index: ");
                 String cameraIndex = inputScanner.nextLine();
-                Grimoire.startDefaultApp(new String[]{cameraIndex});
+                Grimoire.startDetection(Integer.parseInt(cameraIndex));
                 break;
             case "2":
                 Grimoire.startUI();

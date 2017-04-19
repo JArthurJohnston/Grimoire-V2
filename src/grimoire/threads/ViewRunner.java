@@ -1,7 +1,6 @@
 package grimoire.threads;
 
 import grimoire.ui.views.CameraUI;
-import grimoire.ui.views.GrimoireViewInterface;
 
 import java.util.concurrent.BlockingQueue;
 

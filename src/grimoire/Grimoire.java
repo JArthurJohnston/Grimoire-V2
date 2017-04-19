@@ -8,7 +8,6 @@ import grimoire.threads.DetectionRunner;
 import grimoire.threads.ProcessedFrameData;
 import grimoire.threads.ViewRunner;
 import grimoire.ui.cli.GrimoireCLI;
-import grimoire.ui.views.CameraUI;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import java.io.File;
@@ -21,7 +20,7 @@ public class Grimoire {
     static {
 //        String property = System.getProperty("java.library.path");
 //        System.out.println("Library Path: " + property);
-        System.out.println("Working Direcotry: " + Paths.get("").toAbsolutePath());
+//        System.out.println("Working Direcotry: " + Paths.get("").toAbsolutePath());
         String libraryName = "libopencv_java2413.so";
         File file = new File("/lib/" + libraryName);
         if(file.getAbsoluteFile().exists()){
@@ -38,61 +37,50 @@ public class Grimoire {
     private static DetectionRunner detectionRunner;
     private static ViewRunner viewRunner;
 
+    private static LinkedBlockingQueue<ProcessedFrameData> frameQueue;
+
 
     public static void main(String[] args){
         GrimoireCLI.startGrimoireCLI(args);
     }
 
-    public static void startDefaultApp(String[] args){
-        Spellbook spellbook = new Spellbook(RuneKeeper.readSpellsFromTome());
-
-        BlockingQueue<Mat> matBlockingQueue = new LinkedBlockingQueue<Mat>();
-        LinkedBlockingQueue<ProcessedFrameData> frameDataQueue = new LinkedBlockingQueue<>();
-
-        cameraRunner= new CameraRunner(0, matBlockingQueue);
-        detectionRunner = new DetectionRunner(new MotionCaptureDetector(setupCameraWithArgs(args),
-                spellbook, frameDataQueue), matBlockingQueue);
-        viewRunner = new ViewRunner(frameDataQueue);
-
-        Thread cameraThread = new Thread(cameraRunner, "Camera-Thread");
-        Thread detectionThread = new Thread(detectionRunner, "Detection-Thread");
-
-        cameraThread.start();
-        detectionThread.start();
-    }
-
     public static void stop(){
-        detectionRunner.stop();
-        cameraRunner.stop();
-    }
-
-    public static void startUI(){
-        if(!viewRunner.isRunning){
-            Thread viewThread = new Thread(viewRunner, "View-Thread");
-            viewThread.start();
-        }
+        stopUI();
+        stopDetection();
     }
 
     public static void stopUI(){
         viewRunner.stop();
     }
 
-    private static CameraInterface setupCameraWithArgs(String[] args) {
-        if(args.length == 0){
-            return new CameraWrapper(0);
-        } else if(args.length == 1) {
-            return new CameraWrapper(Integer.parseInt(args[0]));
-        }else {
-            switch (args[0]){
-                case "-demo":
-                    String imageDirectory = args[1];
-                    return new MockCamera(imageDirectory, false);
-                default:
-                    System.out.println("Invalid Input");
-                    System.exit(1);
-            }
+    public static void stopDetection(){
+        cameraRunner.stop();
+        detectionRunner.stop();
+    }
+
+    public static void startUI(){
+        viewRunner = new ViewRunner(frameQueue);
+        if(!viewRunner.isRunning){
+            Thread viewThread = new Thread(viewRunner, "View-Thread");
+            viewThread.start();
         }
-        return null;
+    }
+
+    public static void startDetection(int cameraId){
+
+        Spellbook spellbook = new Spellbook(RuneKeeper.readSpellsFromTome());
+        BlockingQueue<Mat> matBlockingQueue = new LinkedBlockingQueue<Mat>();
+        frameQueue = new LinkedBlockingQueue<>();
+
+        cameraRunner= new CameraRunner(cameraId, matBlockingQueue);
+        detectionRunner = new DetectionRunner(new MotionCaptureDetector(null,
+                spellbook, frameQueue), matBlockingQueue);
+
+        Thread cameraThread = new Thread(cameraRunner, "Camera-Thread");
+        Thread detectionThread = new Thread(detectionRunner, "Detection-Thread");
+
+        cameraThread.start();
+        detectionThread.start();
     }
 
     public static class UserSettings {
