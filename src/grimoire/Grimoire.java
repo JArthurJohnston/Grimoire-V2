@@ -73,7 +73,7 @@ public class Grimoire {
         frameQueue = new LinkedBlockingQueue<>();
 
         cameraRunner= new CameraRunner(cameraId, matBlockingQueue);
-        detectionRunner = new DetectionRunner(new MotionCaptureDetector(null,
+        detectionRunner = new DetectionRunner(new MotionCaptureDetector(
                 spellbook, frameQueue), matBlockingQueue);
 
         Thread cameraThread = new Thread(cameraRunner, "Camera-Thread");

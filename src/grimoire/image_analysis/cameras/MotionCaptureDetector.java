@@ -19,59 +19,52 @@ import static grimoire.image_analysis.cameras.CameraHelper.blurredAndGrayscaleFr
 
 public class MotionCaptureDetector implements DetectorInterface{
 
-    private final CameraInterface camera;
     private final Spellbook spellbook;
     private BlockingQueue<ProcessedFrameData> processedFrameData;
     private boolean isRunning = false;
     private Mat previousImage, currentImage, nextImage, temp1, temp2, motion;
     private final MotionProcessor processor;
-    private GrimoireViewInterface view;
+    private boolean hasBeenInitialized;
 
-    public MotionCaptureDetector(CameraInterface camera, Spellbook spellbook, BlockingQueue<ProcessedFrameData> processedFrameData){
-        this.camera = camera;
+    public MotionCaptureDetector(Spellbook spellbook, BlockingQueue<ProcessedFrameData> processedFrameData){
         this.spellbook = spellbook;
         this.processedFrameData = processedFrameData;
         processor = new MotionProcessor();
-        this.view = new NullView();
-        initializeTempFrames();
-    }
-
-    public void viewOpened(GrimoireViewInterface view){
-        this.view = view;
+        hasBeenInitialized = false;
     }
 
     public void detect(Mat cameraFrame){
-        if(readyToProcessImages()){
+        if(!hasBeenInitialized) {
+            hasBeenInitialized = true;
+            initFrames(cameraFrame);
+        } else {
             scanForMotion();
             List<WandMotion> wandMotions = processor.scanFrame(motion, cameraFrame);
             wandMotions.sort(Comparator.naturalOrder());
-            if(!wandMotions.isEmpty()){
+            if (!wandMotions.isEmpty()) {
                 WandMotion largestWandMotion = wandMotions.get(0);
                 Gesture gesture = GestureDetector.getMostRecentGesture(largestWandMotion);
                 spellbook.handle(gesture);
             }
             try {
                 this.processedFrameData.put(new ProcessedFrameData(cameraFrame, wandMotions));
-            } catch (InterruptedException e) {}
+            } catch (InterruptedException e) {
+            }
             updateFrames(cameraFrame);
-        } else {
-            initFrames(cameraFrame);
         }
     }
 
     void initFrames(Mat frame){
-        if(previousImage == null){
-            previousImage = frame;
-        } else if(currentImage == null){
-            currentImage = frame;
-        } else if(nextImage == null){
-            nextImage = frame;
-        }
+        previousImage = frame;
+        currentImage = frame;
+        nextImage = frame;
+        temp1 = frame;
+        temp2 = frame;
+        motion = frame;
     }
 
     public void stop(){
         isRunning = false;
-        camera.release();
     }
 
     private void updateFrames(Mat cameraFrame){
@@ -88,25 +81,7 @@ public class MotionCaptureDetector implements DetectorInterface{
             Core.bitwise_and(temp1, temp2, motion);
             applyThreshold(motion, motion);
         } catch (Exception e){
-            System.out.println(e);
+//            System.out.println(e);
         }
-    }
-
-    private void initializeTempFrames() {
-        temp1 = new Mat();
-        temp2 = new Mat();
-        motion = new Mat();
-    }
-
-    private boolean readyToProcessImages(){
-        return previousImage != null &&
-                currentImage != null &&
-                nextImage != null;
-    }
-
-    private class NullView implements GrimoireViewInterface {
-
-        @Override
-        public void drawFrame(Mat frame, List<WandMotion> motion) {}
     }
 }

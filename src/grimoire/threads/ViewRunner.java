@@ -27,12 +27,12 @@ public class ViewRunner implements Runnable{
                 this.view.drawFrame(processedData.frame, processedData.motions);
             } catch (InterruptedException e) {}
         }
+        this.view.setVisible(false);
+        this.view.dispose();
+        this.view = null;
     }
 
     public void stop(){
         isRunning = false;
-        this.view.setVisible(false);
-        this.view.dispose();
-        this.view = null;
     }
 }
