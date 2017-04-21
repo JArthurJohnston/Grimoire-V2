@@ -271,7 +271,7 @@ public class CameraUI extends javax.swing.JFrame implements GrimoireViewInterfac
     // End of variables declaration//GEN-END:variables
 
 
-    private static WindowListener closeListener(){
+    private WindowListener closeListener(){
         return new WindowListener() {
             @Override
             public void windowOpened(WindowEvent e) {
@@ -280,7 +280,8 @@ public class CameraUI extends javax.swing.JFrame implements GrimoireViewInterfac
 
             @Override
             public void windowClosing(WindowEvent e) {
-                Grimoire.stopUI();
+                CameraUI.this.dispose();
+                Grimoire.stop();
             }
 
             @Override

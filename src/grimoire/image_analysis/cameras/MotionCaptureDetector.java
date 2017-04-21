@@ -1,27 +1,24 @@
 package grimoire.image_analysis.cameras;
 
-import grimoire.image_analysis.processors.MotionProcessor;
-import grimoire.image_analysis.processors.WandMotion;
 import grimoire.gesture_analysis.gestures.Gesture;
 import grimoire.gesture_analysis.gestures.GestureDetector;
 import grimoire.gesture_analysis.spells.Spellbook;
+import grimoire.image_analysis.processors.MotionProcessor;
+import grimoire.image_analysis.processors.WandMotion;
 import grimoire.threads.ProcessedFrameData;
-import grimoire.ui.views.GrimoireViewInterface;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 
-import java.util.*;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
-import static grimoire.image_analysis.ImageFilterer.*;
-import static grimoire.image_analysis.cameras.CameraHelper.blurredAndGrayscaleFrame;
+import static grimoire.image_analysis.ImageFilterer.applyThreshold;
 
 public class MotionCaptureDetector implements DetectorInterface{
 
     private final Spellbook spellbook;
     private BlockingQueue<ProcessedFrameData> processedFrameData;
-    private boolean isRunning = false;
     private Mat previousImage, currentImage, nextImage, temp1, temp2, motion;
     private final MotionProcessor processor;
     private boolean hasBeenInitialized;
@@ -38,8 +35,10 @@ public class MotionCaptureDetector implements DetectorInterface{
             hasBeenInitialized = true;
             initFrames(cameraFrame);
         } else {
-            scanForMotion();
-            List<WandMotion> wandMotions = processor.scanFrame(motion, cameraFrame);
+            Mat motionFrame = applyMotionFilters(cameraFrame);
+
+//            List<WandMotion> wandMotions = new LinkedList<>();
+            List<WandMotion> wandMotions = processor.scanFrame(motionFrame, cameraFrame);
             wandMotions.sort(Comparator.naturalOrder());
             if (!wandMotions.isEmpty()) {
                 WandMotion largestWandMotion = wandMotions.get(0);
@@ -48,40 +47,46 @@ public class MotionCaptureDetector implements DetectorInterface{
             }
             try {
                 this.processedFrameData.put(new ProcessedFrameData(cameraFrame, wandMotions));
-            } catch (InterruptedException e) {
-            }
+            } catch (InterruptedException e) {}
             updateFrames(cameraFrame);
         }
     }
 
     void initFrames(Mat frame){
-        previousImage = frame;
-        currentImage = frame;
-        nextImage = frame;
-        temp1 = frame;
-        temp2 = frame;
-        motion = frame;
+        //all of these need to be greyscaled if i want to use the grayscale feature, or even the blur feature
+
+        previousImage = new Mat();
+        currentImage = new Mat();
+        nextImage = new Mat();
+        temp2 = new Mat();
+        temp1 = new Mat();
+        motion = new Mat();
+
+        frame.copyTo(previousImage);
+        frame.copyTo(currentImage);
+        frame.copyTo(nextImage);
+        frame.copyTo(temp1);
+        frame.copyTo(temp2);
+        frame.copyTo(motion);
     }
 
-    public void stop(){
-        isRunning = false;
-    }
 
     private void updateFrames(Mat cameraFrame){
-
         currentImage.copyTo(previousImage);
         nextImage.copyTo(currentImage);
-        blurredAndGrayscaleFrame(cameraFrame, nextImage);
+        cameraFrame.copyTo(nextImage);
+//        Imgproc.cvtColor(cameraFrame, nextImage, Imgproc.COLOR_BGR2GRAY);
+
+//        int kernelSize = Grimoire.UserSettings.GAUSSIAN_KERNEL_SIZE;
+//        Imgproc.GaussianBlur(nextImage, nextImage, new Size(kernelSize, kernelSize), 1.5);
+//        blurredAndGrayscaleFrame(cameraFrame, nextImage);
     }
 
-    private void scanForMotion() {
-        try {
+    private Mat applyMotionFilters(Mat frame) {
             Core.absdiff(nextImage, currentImage, temp1);
             Core.absdiff(currentImage, previousImage, temp2);
             Core.bitwise_and(temp1, temp2, motion);
             applyThreshold(motion, motion);
-        } catch (Exception e){
-//            System.out.println(e);
-        }
+        return motion;
     }
 }
