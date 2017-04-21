@@ -47,6 +47,7 @@ public class Grimoire {
     public static void stop(){
         stopUI();
         stopDetection();
+        System.exit(0);
     }
 
     public static void stopUI(){

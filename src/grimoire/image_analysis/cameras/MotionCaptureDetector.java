@@ -1,5 +1,6 @@
 package grimoire.image_analysis.cameras;
 
+import grimoire.Grimoire;
 import grimoire.gesture_analysis.gestures.Gesture;
 import grimoire.gesture_analysis.gestures.GestureDetector;
 import grimoire.gesture_analysis.spells.Spellbook;
@@ -8,6 +9,8 @@ import grimoire.image_analysis.processors.WandMotion;
 import grimoire.threads.ProcessedFrameData;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
+import org.opencv.core.Size;
+import org.opencv.imgproc.Imgproc;
 
 import java.util.Comparator;
 import java.util.List;
@@ -37,7 +40,6 @@ public class MotionCaptureDetector implements DetectorInterface{
         } else {
             Mat motionFrame = applyMotionFilters(cameraFrame);
 
-//            List<WandMotion> wandMotions = new LinkedList<>();
             List<WandMotion> wandMotions = processor.scanFrame(motionFrame, cameraFrame);
             wandMotions.sort(Comparator.naturalOrder());
             if (!wandMotions.isEmpty()) {
@@ -53,14 +55,14 @@ public class MotionCaptureDetector implements DetectorInterface{
     }
 
     void initFrames(Mat frame){
-        //all of these need to be greyscaled if i want to use the grayscale feature, or even the blur feature
-
         previousImage = new Mat();
         currentImage = new Mat();
         nextImage = new Mat();
         temp2 = new Mat();
         temp1 = new Mat();
         motion = new Mat();
+
+        Imgproc.cvtColor(frame, frame, Imgproc.COLOR_BGR2GRAY);
 
         frame.copyTo(previousImage);
         frame.copyTo(currentImage);
@@ -74,19 +76,16 @@ public class MotionCaptureDetector implements DetectorInterface{
     private void updateFrames(Mat cameraFrame){
         currentImage.copyTo(previousImage);
         nextImage.copyTo(currentImage);
-        cameraFrame.copyTo(nextImage);
-//        Imgproc.cvtColor(cameraFrame, nextImage, Imgproc.COLOR_BGR2GRAY);
-
-//        int kernelSize = Grimoire.UserSettings.GAUSSIAN_KERNEL_SIZE;
-//        Imgproc.GaussianBlur(nextImage, nextImage, new Size(kernelSize, kernelSize), 1.5);
-//        blurredAndGrayscaleFrame(cameraFrame, nextImage);
+        Imgproc.cvtColor(cameraFrame, nextImage, Imgproc.COLOR_BGR2GRAY);
+        int kernelSize = Grimoire.UserSettings.GAUSSIAN_KERNEL_SIZE;
+        Imgproc.GaussianBlur(nextImage, nextImage, new Size(kernelSize, kernelSize), 1.5);
     }
 
     private Mat applyMotionFilters(Mat frame) {
-            Core.absdiff(nextImage, currentImage, temp1);
-            Core.absdiff(currentImage, previousImage, temp2);
-            Core.bitwise_and(temp1, temp2, motion);
-            applyThreshold(motion, motion);
+        Core.absdiff(nextImage, currentImage, temp1);
+        Core.absdiff(currentImage, previousImage, temp2);
+        Core.bitwise_and(temp1, temp2, motion);
+        applyThreshold(motion, motion);
         return motion;
     }
 }
