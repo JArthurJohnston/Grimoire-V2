@@ -18,6 +18,7 @@ import java.util.List;
 import javax.swing.*;
 
 import static grimoire.ui.drawing.MotionDrawings.drawMotionFrame;
+import static grimoire.ui.drawing.MotionDrawings.drawMotionsTo;
 
 /**
  *
@@ -51,6 +52,10 @@ public class CameraUI extends javax.swing.JFrame implements GrimoireViewInterfac
 
     public void drawFrame(Mat image, List<WandMotion> motions){
         drawFrame(drawMotionFrame(motions, image));
+    }
+
+    public void drawFrame(BufferedImage image, List<WandMotion> motions){
+        drawFrame(drawMotionsTo(image, motions));
     }
 
 

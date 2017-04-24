@@ -7,6 +7,7 @@ import grimoire.gesture_analysis.spells.Spellbook;
 import grimoire.image_analysis.processors.MotionProcessor;
 import grimoire.image_analysis.processors.WandMotion;
 import grimoire.threads.ProcessedFrameData;
+import grimoire.threads.ThreadCommunicator;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
@@ -14,21 +15,18 @@ import org.opencv.imgproc.Imgproc;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
-
-import static grimoire.image_analysis.ImageFilterer.applyThreshold;
 
 public class MotionCaptureDetector implements DetectorInterface{
 
     private final Spellbook spellbook;
-    private BlockingQueue<ProcessedFrameData> processedFrameData;
+    private ThreadCommunicator communicator;
     private Mat previousImage, currentImage, nextImage, temp1, temp2, motion;
     private final MotionProcessor processor;
     private boolean hasBeenInitialized;
 
-    public MotionCaptureDetector(Spellbook spellbook, BlockingQueue<ProcessedFrameData> processedFrameData){
+    public MotionCaptureDetector(Spellbook spellbook, ThreadCommunicator communicator){
         this.spellbook = spellbook;
-        this.processedFrameData = processedFrameData;
+        this.communicator = communicator;
         processor = new MotionProcessor();
         hasBeenInitialized = false;
     }
@@ -38,7 +36,9 @@ public class MotionCaptureDetector implements DetectorInterface{
             hasBeenInitialized = true;
             initFrames(cameraFrame);
         } else {
-            Mat motionFrame = applyMotionFilters(cameraFrame);
+            Mat motionFrame = applyMotionFilters();
+//            BufferedImage image1 = MotionDrawings.matToBufferedImage(motionFrame);
+//            BufferedImage image2 = MotionDrawings.matToBufferedImage(cameraFrame);
 
             List<WandMotion> wandMotions = processor.scanFrame(motionFrame, cameraFrame);
             wandMotions.sort(Comparator.naturalOrder());
@@ -48,7 +48,7 @@ public class MotionCaptureDetector implements DetectorInterface{
                 spellbook.handle(gesture);
             }
             try {
-                this.processedFrameData.put(new ProcessedFrameData(cameraFrame, wandMotions));
+                communicator.addData(new ProcessedFrameData(cameraFrame, wandMotions));
             } catch (InterruptedException e) {}
             updateFrames(cameraFrame);
         }
@@ -72,7 +72,6 @@ public class MotionCaptureDetector implements DetectorInterface{
         frame.copyTo(motion);
     }
 
-
     private void updateFrames(Mat cameraFrame){
         currentImage.copyTo(previousImage);
         nextImage.copyTo(currentImage);
@@ -81,11 +80,11 @@ public class MotionCaptureDetector implements DetectorInterface{
         Imgproc.GaussianBlur(nextImage, nextImage, new Size(kernelSize, kernelSize), 1.5);
     }
 
-    private Mat applyMotionFilters(Mat frame) {
+    private Mat applyMotionFilters() {
         Core.absdiff(nextImage, currentImage, temp1);
         Core.absdiff(currentImage, previousImage, temp2);
         Core.bitwise_and(temp1, temp2, motion);
-        applyThreshold(motion, motion);
+        Imgproc.threshold(motion, motion, Grimoire.UserSettings.MOTION_THRESHOLD, 255, Imgproc.THRESH_BINARY);
         return motion;
     }
 }

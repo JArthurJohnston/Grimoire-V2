@@ -3,10 +3,7 @@ package grimoire;
 import grimoire.gesture_analysis.RuneKeeper;
 import grimoire.image_analysis.cameras.*;
 import grimoire.gesture_analysis.spells.Spellbook;
-import grimoire.threads.CameraRunner;
-import grimoire.threads.DetectionRunner;
-import grimoire.threads.ProcessedFrameData;
-import grimoire.threads.ViewRunner;
+import grimoire.threads.*;
 import grimoire.ui.cli.GrimoireCLI;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -38,6 +35,7 @@ public class Grimoire {
     private static ViewRunner viewRunner;
 
     private static LinkedBlockingQueue<ProcessedFrameData> frameQueue;
+    private static ThreadCommunicator communicator;
 
 
     public static void main(String[] args){
@@ -60,7 +58,7 @@ public class Grimoire {
     }
 
     public static void startUI(){
-        viewRunner = new ViewRunner(frameQueue);
+        viewRunner = new ViewRunner(communicator);
         if(!viewRunner.isRunning){
             Thread viewThread = new Thread(viewRunner, "View-Thread");
             viewThread.start();
@@ -72,10 +70,11 @@ public class Grimoire {
         Spellbook spellbook = new Spellbook(RuneKeeper.readSpellsFromTome());
         BlockingQueue<Mat> matBlockingQueue = new LinkedBlockingQueue<Mat>();
         frameQueue = new LinkedBlockingQueue<>();
+        communicator = new ThreadCommunicator();
 
         cameraRunner= new CameraRunner(cameraId, matBlockingQueue);
         detectionRunner = new DetectionRunner(new MotionCaptureDetector(
-                spellbook, frameQueue), matBlockingQueue);
+                spellbook, communicator), matBlockingQueue);
 
         Thread cameraThread = new Thread(cameraRunner, "Camera-Thread");
         Thread detectionThread = new Thread(detectionRunner, "Detection-Thread");

@@ -6,6 +6,7 @@ import grimoire.image_analysis.clusters.PointCluster;
 import grimoire.image_analysis.buffer.Buffer;
 import org.opencv.core.Mat;
 
+import java.awt.image.BufferedImage;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -25,8 +26,23 @@ public class MotionProcessor {
     }
 
     public List<WandMotion> scanFrame(Mat motionFrame, Mat originalFrame){
-        ClusterCreator clusterCreator = new ClusterCreator();
+        LinkedList<PointCluster> clusters = createClustersFromImage(motionFrame, originalFrame);
 
+        List<WandMotion> wandMotions = processFrameData(clusters);
+        frameMotionBuffer.add(clusters);
+        return wandMotions;
+    }
+
+    public List<WandMotion> scanFrame(BufferedImage motionFrame, BufferedImage originalFrame){
+        LinkedList<PointCluster> clusters = createClustersFromImage(motionFrame, originalFrame);
+
+        List<WandMotion> wandMotions = processFrameData(clusters);
+        frameMotionBuffer.add(clusters);
+        return wandMotions;
+    }
+
+    private LinkedList<PointCluster> createClustersFromImage(Mat motionFrame, Mat originalFrame) {
+        ClusterCreator clusterCreator = new ClusterCreator();
         for (int columnIndex = 0; columnIndex < motionFrame.cols(); columnIndex += Grimoire.UserSettings.SCAN_RESOLUTION) {
             for (int rowIndex = 0; rowIndex < motionFrame.rows(); rowIndex += Grimoire.UserSettings.SCAN_RESOLUTION) {
                 if (motionFrame.get(rowIndex, columnIndex)[0] > 0) {
@@ -37,10 +53,22 @@ public class MotionProcessor {
                 }
             }
         }
-        LinkedList<PointCluster> clusters = clusterCreator.getClusters();
-        List<WandMotion> wandMotions = processFrameData(clusters);
-        frameMotionBuffer.add(clusters);
-        return wandMotions;
+        return clusterCreator.getClusters();
+    }
+
+    private LinkedList<PointCluster> createClustersFromImage(BufferedImage motionFrame, BufferedImage originalFrame) {
+        ClusterCreator clusterCreator = new ClusterCreator();
+        for (int columnIndex = 0; columnIndex < motionFrame.getWidth(); columnIndex += Grimoire.UserSettings.SCAN_RESOLUTION) {
+            for (int rowIndex = 0; rowIndex < motionFrame.getHeight(); rowIndex += Grimoire.UserSettings.SCAN_RESOLUTION) {
+                if (motionFrame.getRGB(columnIndex, rowIndex) > 0) {
+                    double pixelIntensity = pixelIntensity(originalFrame.getRGB(rowIndex, columnIndex));
+                    if(pixelIntensity > Grimoire.UserSettings.INTENSITY_THRESHOLD){
+                        clusterCreator.handle(columnIndex, rowIndex);
+                    }
+                }
+            }
+        }
+        return clusterCreator.getClusters();
     }
 
     private List<WandMotion> processFrameData(List<PointCluster> clusters){

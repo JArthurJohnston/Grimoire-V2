@@ -34,20 +34,20 @@ public class MotionDrawings {
 
     public static BufferedImage drawMotionFrame(List<WandMotion> wandMotions, Mat frameFromCamera){
         BufferedImage bufferedImage = matToBufferedImage(frameFromCamera);
-        drawMotionsTo(bufferedImage, wandMotions);
-        return bufferedImage;
+        return drawMotionsTo(bufferedImage, wandMotions);
     }
 
-    public static void drawMotionsTo(BufferedImage image, List<WandMotion> wandMotions){
+    public static BufferedImage drawMotionsTo(BufferedImage image, List<WandMotion> wandMotions){
         Graphics graphics = image.getGraphics();
         for (WandMotion wandMotion : wandMotions) {
             PointCluster cluster = wandMotion.getCurrentWandPoint();
             MotionDrawings.drawCluster(graphics, cluster, Color.CYAN);
             MotionDrawings.drawMotionTail(wandMotion.getPastWandPoints(), graphics, cluster);
         }
+        return image;
     }
 
-    private static BufferedImage matToBufferedImage(Mat frame){
+    public static BufferedImage matToBufferedImage(Mat frame){
         int type = 0;
         if (frame.channels() == 1) {
             type = BufferedImage.TYPE_BYTE_GRAY;
