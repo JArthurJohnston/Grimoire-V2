@@ -13,6 +13,11 @@ public class ImageAnalysisHelper {
         return (rgbValues[2] * 0.216 + rgbValues[1] * 0.7152 + rgbValues[0] * 0.0722) / 255.0;
     }
 
+
+    public static float pixelIntensity(double rgbValue) {
+        return pixelIntensity((int)rgbValue);
+    }
+
     public static float pixelIntensity(int rgbValue){
         int redValue = (rgbValue >>> 16) & 0xFF;
         int greenValue = (rgbValue >>> 8) & 0xFF;

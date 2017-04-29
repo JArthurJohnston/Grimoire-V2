@@ -37,8 +37,6 @@ public class MotionCaptureDetector implements DetectorInterface{
             initFrames(cameraFrame);
         } else {
             Mat motionFrame = applyMotionFilters();
-//            BufferedImage image1 = MotionDrawings.matToBufferedImage(motionFrame);
-//            BufferedImage image2 = MotionDrawings.matToBufferedImage(cameraFrame);
 
             List<WandMotion> wandMotions = processor.scanFrame(motionFrame, cameraFrame);
             wandMotions.sort(Comparator.naturalOrder());
