@@ -47,6 +47,15 @@ public class MotionDrawings {
         return image;
     }
 
+
+    private static final int FRAME_WIDTH = 640;
+    private static final int FRAME_HEIGHT = 480;
+    private static final int IN_MEMORY_ARRAY_SIZE = FRAME_HEIGHT * FRAME_HEIGHT;
+    private static final double[] IN_MEMORY_IMAGE = new double[IN_MEMORY_ARRAY_SIZE];
+    private static final double[] IN_MEMORY_MOTION = new double[IN_MEMORY_ARRAY_SIZE];
+
+//    private static
+
     public static BufferedImage matToBufferedImage(Mat frame){
         int type = 0;
         if (frame.channels() == 1) {

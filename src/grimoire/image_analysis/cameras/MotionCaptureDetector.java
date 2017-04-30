@@ -46,7 +46,7 @@ public class MotionCaptureDetector implements DetectorInterface{
                 spellbook.handle(gesture);
             }
             try {
-                communicator.addData(new ProcessedFrameData(cameraFrame, wandMotions));
+                communicator.addData(new ProcessedFrameData(motionFrame, wandMotions));
             } catch (InterruptedException e) {}
             updateFrames(cameraFrame);
         }
