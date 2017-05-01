@@ -68,8 +68,8 @@ public class Grimoire {
     public static void startDetection(int cameraId){
 
         Spellbook spellbook = new Spellbook(RuneKeeper.readSpellsFromTome());
-        BlockingQueue<Mat> matBlockingQueue = new LinkedBlockingQueue<Mat>();
-        frameQueue = new LinkedBlockingQueue<>();
+        BlockingQueue<Mat> matBlockingQueue = new LinkedBlockingQueue<>(30);
+        frameQueue = new LinkedBlockingQueue<>(30);
         communicator = new ThreadCommunicator();
 
         cameraRunner= new CameraRunner(cameraId, matBlockingQueue);

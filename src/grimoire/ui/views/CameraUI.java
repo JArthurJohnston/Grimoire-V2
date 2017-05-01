@@ -1,34 +1,19 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package grimoire.ui.views;
 
 import grimoire.Grimoire;
-import grimoire.image_analysis.cameras.DetectorInterface;
 import grimoire.image_analysis.processors.WandMotion;
-import org.opencv.core.Mat;
 
-import java.awt.Graphics;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.util.List;
-import javax.swing.*;
 
-import static grimoire.ui.drawing.MotionDrawings.drawMotionFrame;
 import static grimoire.ui.drawing.MotionDrawings.drawMotionsTo;
 
-/**
- *
- * @author arthur
- */
-public class CameraUI extends javax.swing.JFrame implements GrimoireViewInterface {
-    
-    /**
-     * Creates new form CameraUI
-     */
+public class CameraUI extends javax.swing.JFrame {
+
     public CameraUI() {
         initComponents();
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -42,16 +27,11 @@ public class CameraUI extends javax.swing.JFrame implements GrimoireViewInterfac
         this.birhgtnessSlider.setValue((int) Grimoire.UserSettings.INTENSITY_THRESHOLD * 1000);
         this.motionDetectionSlider.setValue(Grimoire.UserSettings.MOTION_DETECTION_DISTANCE);
         this.motionSizeSlider.setValue(Grimoire.UserSettings.MAX_MOTION_SIZE_LIMIT);
-       
     }
 
     public void drawFrame(BufferedImage frame){
         Graphics graphics = this.videoPanel.getGraphics();
         graphics.drawImage(frame, 0, 0, null);
-    }
-
-    public void drawFrame(Mat image, List<WandMotion> motions){
-        drawFrame(drawMotionFrame(motions, image));
     }
 
     public void drawFrame(BufferedImage image, List<WandMotion> motions){

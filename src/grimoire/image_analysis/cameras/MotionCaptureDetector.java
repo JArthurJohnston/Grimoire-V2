@@ -20,7 +20,7 @@ public class MotionCaptureDetector implements DetectorInterface{
 
     private final Spellbook spellbook;
     private ThreadCommunicator communicator;
-    private Mat previousImage, currentImage, nextImage, temp1, temp2, motion;
+    private Mat previousImage, currentImage, nextImage, motion;
     private final MotionProcessor processor;
     private boolean hasBeenInitialized;
 
@@ -38,15 +38,16 @@ public class MotionCaptureDetector implements DetectorInterface{
         } else {
             Mat motionFrame = applyMotionFilters();
 
-            List<WandMotion> wandMotions = processor.scanFrame(motionFrame, cameraFrame);
-            wandMotions.sort(Comparator.naturalOrder());
-            if (!wandMotions.isEmpty()) {
-                WandMotion largestWandMotion = wandMotions.get(0);
+            ProcessedFrameData frameData = processor.scanFrame(motionFrame);
+            List<WandMotion> motions = frameData.getMotions();
+            if (!motions.isEmpty()) {
+                motions.sort(Comparator.naturalOrder());
+                WandMotion largestWandMotion = motions.get(0);
                 Gesture gesture = GestureDetector.getMostRecentGesture(largestWandMotion);
                 spellbook.handle(gesture);
             }
             try {
-                communicator.addData(new ProcessedFrameData(motionFrame, wandMotions));
+                communicator.addData(frameData);
             } catch (InterruptedException e) {}
             updateFrames(cameraFrame);
         }
@@ -56,8 +57,6 @@ public class MotionCaptureDetector implements DetectorInterface{
         previousImage = new Mat();
         currentImage = new Mat();
         nextImage = new Mat();
-        temp2 = new Mat();
-        temp1 = new Mat();
         motion = new Mat();
 
         Imgproc.cvtColor(frame, frame, Imgproc.COLOR_BGR2GRAY);
@@ -65,8 +64,6 @@ public class MotionCaptureDetector implements DetectorInterface{
         frame.copyTo(previousImage);
         frame.copyTo(currentImage);
         frame.copyTo(nextImage);
-        frame.copyTo(temp1);
-        frame.copyTo(temp2);
         frame.copyTo(motion);
     }
 
@@ -79,10 +76,8 @@ public class MotionCaptureDetector implements DetectorInterface{
     }
 
     private Mat applyMotionFilters() {
-        Core.absdiff(nextImage, currentImage, temp1);
-        Core.absdiff(currentImage, previousImage, temp2);
-        Core.bitwise_and(temp1, temp2, motion);
-        Imgproc.threshold(motion, motion, Grimoire.UserSettings.MOTION_THRESHOLD, 255, Imgproc.THRESH_BINARY);
+        Core.absdiff(nextImage, currentImage, motion);
+        Imgproc.threshold(motion, motion, Grimoire.UserSettings.MOTION_THRESHOLD, 255, Imgproc.THRESH_TOZERO);
         return motion;
     }
 }
