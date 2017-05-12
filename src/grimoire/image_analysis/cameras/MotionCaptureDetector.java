@@ -16,7 +16,7 @@ import org.opencv.imgproc.Imgproc;
 import java.util.Comparator;
 import java.util.List;
 
-public class MotionCaptureDetector implements DetectorInterface{
+public class MotionCaptureDetector {
 
     private final Spellbook spellbook;
     private ThreadCommunicator communicator;
@@ -38,7 +38,13 @@ public class MotionCaptureDetector implements DetectorInterface{
         } else {
             Mat motionFrame = applyMotionFilters();
 
+            /*
+            At rest, this is a constant 4-6 miliseconds
+            when motion is detected it jumps to 10-15 miliseconds
+             */
             ProcessedFrameData frameData = processor.scanFrame(motionFrame);
+
+            //This takes almost no time at all
             List<WandMotion> motions = frameData.getMotions();
             if (!motions.isEmpty()) {
                 motions.sort(Comparator.naturalOrder());
@@ -49,7 +55,7 @@ public class MotionCaptureDetector implements DetectorInterface{
             try {
                 communicator.addData(frameData);
             } catch (InterruptedException e) {}
-            updateFrames(cameraFrame);
+            updateFrames(cameraFrame); //seems to be a constant 2-4 miliseconds
         }
     }
 

@@ -23,13 +23,18 @@ public class MotionProcessor {
     private static final int FPS = 30;
     private static final double TIME = 1.5;
     private static final int BUFFER_SIZE = (int)(FPS * TIME);
+    private int imageWidth;
+    private int imageHeight;
 
     public MotionProcessor(){
         frameMotionBuffer = new Buffer<>(BUFFER_SIZE);
     }
 
     public ProcessedFrameData scanFrame(Mat motionFrame){
+        //this takes almost no time at all, 1 milisecond at worst
         BufferedImage image = matToBufferedImage(motionFrame);
+
+        //4-6 miliseconds sometimes jumping to 10-15
         List<WandMotion> wandMotions = scanFrame(image);
         return new ProcessedFrameData(image, wandMotions);
     }
@@ -43,11 +48,10 @@ public class MotionProcessor {
     }
 
     private LinkedList<PointCluster> createClustersFromImage(BufferedImage motionFrame) {
+        //4 - 7 miliseconds
         ClusterCreator clusterCreator = new ClusterCreator();
-        int width = motionFrame.getWidth();
-        int height = motionFrame.getHeight();
-        for (int columnIndex = 0; columnIndex < width; columnIndex += Grimoire.UserSettings.SCAN_RESOLUTION) {
-            for (int rowIndex = 0; rowIndex < height; rowIndex += Grimoire.UserSettings.SCAN_RESOLUTION) {
+        for (int columnIndex = 0; columnIndex < imageWidth; columnIndex += Grimoire.UserSettings.SCAN_RESOLUTION) {
+            for (int rowIndex = 0; rowIndex < imageHeight; rowIndex += Grimoire.UserSettings.SCAN_RESOLUTION) {
                 if (pixelIntensity(motionFrame.getRGB(columnIndex, rowIndex)) > Grimoire.UserSettings.INTENSITY_THRESHOLD) {
                     clusterCreator.handle(columnIndex, rowIndex);
                 }
@@ -57,6 +61,7 @@ public class MotionProcessor {
     }
 
     private List<WandMotion> processFrameData(List<PointCluster> clusters){
+        //almost nothing, 0 - 2 miliseconds
         List<WandMotion> wandMotions = new LinkedList<>();
         for (PointCluster pointCluster : clusters) {
             if(isPossibleWandPoint(pointCluster)){
@@ -85,9 +90,17 @@ public class MotionProcessor {
         }
     }
 
+    private void setImageDimensions(BufferedImage image){
+        if(imageWidth <=0 || imageHeight <=0){
+            imageWidth = image.getWidth();
+            imageHeight = image.getHeight();
+        }
+    }
+
     private BufferedImage matToBufferedImage(Mat frame){
         initializeImageInmemory(frame);
         frame.get(0, 0, imageBuffer);
+        setImageDimensions(inMemoryImage);
         return inMemoryImage;
     }
 

@@ -1,7 +1,9 @@
 package grimoire.threads;
 
+import grimoire.Grimoire;
+
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 
 public class ThreadCommunicator {
 
@@ -9,7 +11,7 @@ public class ThreadCommunicator {
     private boolean viewIsRunning;
 
     public ThreadCommunicator(){
-        processedFrameData = new LinkedBlockingQueue<>();
+        processedFrameData = new ArrayBlockingQueue<>(Grimoire.UserSettings.BUFFER_SIZE);
         viewIsRunning = false;
     }
 

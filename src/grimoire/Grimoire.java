@@ -1,16 +1,19 @@
 package grimoire;
 
 import grimoire.gesture_analysis.RuneKeeper;
-import grimoire.image_analysis.cameras.*;
 import grimoire.gesture_analysis.spells.Spellbook;
-import grimoire.threads.*;
+import grimoire.image_analysis.cameras.MotionCaptureDetector;
+import grimoire.threads.CameraRunner;
+import grimoire.threads.DetectionRunner;
+import grimoire.threads.ThreadCommunicator;
+import grimoire.threads.ViewRunner;
 import grimoire.ui.cli.GrimoireCLI;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
+
 import java.io.File;
-import java.nio.file.Paths;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 
 public class Grimoire {
 
@@ -34,8 +37,8 @@ public class Grimoire {
     private static DetectionRunner detectionRunner;
     private static ViewRunner viewRunner;
 
-    private static LinkedBlockingQueue<ProcessedFrameData> frameQueue;
     private static ThreadCommunicator communicator;
+    private static boolean detectionHasStarted = false;
 
 
     public static void main(String[] args){
@@ -43,6 +46,7 @@ public class Grimoire {
     }
 
     public static void stop(){
+        detectionHasStarted = false;
         stopUI();
         stopDetection();
         System.exit(0);
@@ -58,18 +62,19 @@ public class Grimoire {
     }
 
     public static void startUI(){
-        viewRunner = new ViewRunner(communicator);
-        if(!viewRunner.isRunning){
-            Thread viewThread = new Thread(viewRunner, "View-Thread");
-            viewThread.start();
+        if(detectionHasStarted){
+            viewRunner = new ViewRunner(communicator);
+            if(!viewRunner.isRunning){
+                Thread viewThread = new Thread(viewRunner, "View-Thread");
+                viewThread.start();
+            }
         }
     }
 
     public static void startDetection(int cameraId){
-
+        detectionHasStarted = true;
         Spellbook spellbook = new Spellbook(RuneKeeper.readSpellsFromTome());
-        BlockingQueue<Mat> matBlockingQueue = new LinkedBlockingQueue<>(30);
-        frameQueue = new LinkedBlockingQueue<>(30);
+        BlockingQueue<Mat> matBlockingQueue = new ArrayBlockingQueue<>(UserSettings.BUFFER_SIZE);
         communicator = new ThreadCommunicator();
 
         cameraRunner= new CameraRunner(cameraId, matBlockingQueue);
@@ -96,5 +101,6 @@ public class Grimoire {
         public static int SPELLCASTING_THRESHOLD = 5;
         public static String SPELLFILE_LOCATION = "./lib/spells.grim";
         public static int SCAN_RESOLUTION = 2;
+        public static int BUFFER_SIZE = 30;
     }
 }
