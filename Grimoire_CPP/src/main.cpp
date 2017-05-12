@@ -2,7 +2,6 @@
 #include <thread>
 #include <opencv2/opencv.hpp>
 #include "./CaptureThread.cpp"
-//#include <opencv2/imgproc/imgproc.hpp>
 
 using namespace cv;
 
