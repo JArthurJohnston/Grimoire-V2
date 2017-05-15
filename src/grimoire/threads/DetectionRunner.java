@@ -22,7 +22,6 @@ public class DetectionRunner implements Runnable {
             try {
                 detector.detect(imageQueue.take());
             } catch (InterruptedException e) {
-
             }
         }
     }

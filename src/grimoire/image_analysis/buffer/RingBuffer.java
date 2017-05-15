@@ -35,23 +35,27 @@ public class RingBuffer<T>{
 
     public void put(T value) throws InterruptedException {
         synchronized (this){
-            while ((writeIndex & mask) == (readIndex & mask) && !isEmpty()){
+            while (readingFromWriteIndex()){
 //                System.out.println("Blocking Write");
                 wait();
             }
+            write(value);
             notify();
         }
-        write(value);
+    }
+
+    private boolean readingFromWriteIndex() {
+        return (writeIndex & mask) == (readIndex & mask) && !isEmpty();
     }
 
     public T take() throws InterruptedException {
         synchronized (this){
             while (isEmpty()){
                 wait();
-                System.out.println("Blocking Read");
+//                System.out.println("Blocking Read");
             }
             notify();
+            return read();
         }
-        return read();
     }
 }

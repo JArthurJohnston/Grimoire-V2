@@ -265,7 +265,7 @@ public class CameraUI extends javax.swing.JFrame {
 
             @Override
             public void windowClosing(WindowEvent e) {
-                CameraUI.this.dispose();
+//                CameraUI.this.dispose();
                 Grimoire.stop();
             }
 

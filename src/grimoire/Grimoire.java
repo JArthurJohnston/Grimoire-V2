@@ -47,7 +47,6 @@ public class Grimoire {
     }
 
     public static void stop(){
-        detectionHasStarted = false;
         stopUI();
         stopDetection();
         System.exit(0);
@@ -58,6 +57,7 @@ public class Grimoire {
     }
 
     public static void stopDetection(){
+        detectionHasStarted = false;
         cameraRunner.stop();
         detectionRunner.stop();
     }
