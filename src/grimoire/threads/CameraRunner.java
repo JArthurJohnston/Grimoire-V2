@@ -1,18 +1,17 @@
 package grimoire.threads;
 
+import grimoire.image_analysis.buffer.RingBuffer;
 import org.opencv.core.Mat;
 import org.opencv.highgui.VideoCapture;
-
-import java.util.concurrent.BlockingQueue;
 
 public class CameraRunner implements Runnable {
 
     private VideoCapture capture;
     private final int cameraIndex;
-    private BlockingQueue<Mat> frameQueue;
+    private RingBuffer<Mat> frameQueue;
     private boolean isRunning;
 
-    public CameraRunner(int cameraIndex, BlockingQueue<Mat> frameQueue){
+    public CameraRunner(int cameraIndex, RingBuffer<Mat> frameQueue){
         this.cameraIndex = cameraIndex;
         this.frameQueue = frameQueue;
         isRunning = false;

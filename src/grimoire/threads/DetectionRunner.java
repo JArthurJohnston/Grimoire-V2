@@ -1,17 +1,16 @@
 package grimoire.threads;
 
+import grimoire.image_analysis.buffer.RingBuffer;
 import grimoire.image_analysis.cameras.MotionCaptureDetector;
 import org.opencv.core.Mat;
-
-import java.util.concurrent.BlockingQueue;
 
 public class DetectionRunner implements Runnable {
 
     private MotionCaptureDetector detector;
-    private BlockingQueue<Mat> imageQueue;
+    private RingBuffer<Mat> imageQueue;
     private boolean isRunning;
 
-    public DetectionRunner(MotionCaptureDetector detector, BlockingQueue<Mat> imageQueue){
+    public DetectionRunner(MotionCaptureDetector detector, RingBuffer<Mat> imageQueue){
         this.detector = detector;
         this.imageQueue = imageQueue;
     }

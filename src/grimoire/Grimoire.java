@@ -2,6 +2,7 @@ package grimoire;
 
 import grimoire.gesture_analysis.RuneKeeper;
 import grimoire.gesture_analysis.spells.Spellbook;
+import grimoire.image_analysis.buffer.RingBuffer;
 import grimoire.image_analysis.cameras.MotionCaptureDetector;
 import grimoire.threads.CameraRunner;
 import grimoire.threads.DetectionRunner;
@@ -74,7 +75,7 @@ public class Grimoire {
     public static void startDetection(int cameraId){
         detectionHasStarted = true;
         Spellbook spellbook = new Spellbook(RuneKeeper.readSpellsFromTome());
-        BlockingQueue<Mat> matBlockingQueue = new ArrayBlockingQueue<>(UserSettings.BUFFER_SIZE);
+        RingBuffer<Mat> matBlockingQueue = new RingBuffer<>(UserSettings.BUFFER_SIZE);
         communicator = new ThreadCommunicator();
 
         cameraRunner= new CameraRunner(cameraId, matBlockingQueue);
@@ -101,6 +102,6 @@ public class Grimoire {
         public static int SPELLCASTING_THRESHOLD = 5;
         public static String SPELLFILE_LOCATION = "./lib/spells.grim";
         public static int SCAN_RESOLUTION = 2;
-        public static int BUFFER_SIZE = 30;
+        public static int BUFFER_SIZE = 32;
     }
 }
