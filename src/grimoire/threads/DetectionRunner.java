@@ -18,9 +18,18 @@ public class DetectionRunner implements Runnable {
     @Override
     public void run() {
         isRunning = true;
+        int numberOfFrames = 0;
+        long fpsTimestamp = System.currentTimeMillis();
         while (isRunning){
             try {
                 detector.detect(imageQueue.take());
+                numberOfFrames++;
+                long timestamp = System.currentTimeMillis();
+                if(timestamp > fpsTimestamp + 1000){
+                    fpsTimestamp = timestamp;
+                    System.out.println(numberOfFrames);
+                    numberOfFrames = 0;
+                }
             } catch (InterruptedException e) {
             }
         }
