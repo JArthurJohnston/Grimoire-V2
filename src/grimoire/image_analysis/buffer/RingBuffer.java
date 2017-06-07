@@ -36,7 +36,6 @@ public class RingBuffer<T>{
     public void put(T value) throws InterruptedException {
         synchronized (this){
             while (readingFromWriteIndex()){
-                System.out.println("Blocking Write");
                 wait();
             }
             write(value);
@@ -52,7 +51,6 @@ public class RingBuffer<T>{
         synchronized (this){
             while (isEmpty()){
                 wait();
-                System.out.println("Blocking Read");
             }
             notify();
             return read();

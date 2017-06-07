@@ -28,7 +28,6 @@ public class Spell {
     }
 
     void cast(){
-        System.out.println("Casting: " + this.magicWords);
         rune.emptyMana();
         caster.cast(this);
     }

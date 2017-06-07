@@ -20,18 +20,7 @@ import java.util.concurrent.BlockingQueue;
 public class Grimoire {
 
     static {
-        String property = System.getProperty("java.library.path");
-        System.out.println("Library Path: " + property);
-        System.out.println("Working Direcotry: " + Paths.get("").toAbsolutePath());
-        String libraryName = "libopencv_java2413.so";
-        File file = new File("/lib/" + libraryName);
-        if(file.getAbsoluteFile().exists()){
-            System.load(file.getAbsolutePath());
-            System.loadLibrary(libraryName);
-        } else {
-            System.out.println("Failed to load file");
-            System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-        }
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
     }
 
     private static CameraRunner cameraRunner;
