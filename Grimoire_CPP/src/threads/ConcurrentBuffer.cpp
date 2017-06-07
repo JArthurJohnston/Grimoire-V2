@@ -1,7 +1,8 @@
 template<class T, long size>
 class ConcurrentBuffer{
-    ConcurrentBuffer(){
-
+    T[] values;
+    ConcurrentBuffer(int capacity){
+        this.values = new T[capacity]();
     }
 
     T *pop();

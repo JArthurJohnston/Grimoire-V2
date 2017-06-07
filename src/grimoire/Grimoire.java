@@ -13,19 +13,19 @@ import org.opencv.core.Core;
 import org.opencv.core.Mat;
 
 import java.io.File;
+import java.nio.file.Paths;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
 public class Grimoire {
 
     static {
-//        String property = System.getProperty("java.library.path");
-//        System.out.println("Library Path: " + property);
-//        System.out.println("Working Direcotry: " + Paths.get("").toAbsolutePath());
+        String property = System.getProperty("java.library.path");
+        System.out.println("Library Path: " + property);
+        System.out.println("Working Direcotry: " + Paths.get("").toAbsolutePath());
         String libraryName = "libopencv_java2413.so";
         File file = new File("/lib/" + libraryName);
         if(file.getAbsoluteFile().exists()){
-
             System.load(file.getAbsolutePath());
             System.loadLibrary(libraryName);
         } else {
@@ -53,13 +53,19 @@ public class Grimoire {
     }
 
     public static void stopUI(){
-        viewRunner.stop();
+        if(viewRunner != null){
+            viewRunner.stop();
+        }
     }
 
     public static void stopDetection(){
         detectionHasStarted = false;
-        cameraRunner.stop();
-        detectionRunner.stop();
+        if(cameraRunner != null){
+            cameraRunner.stop();
+        }
+        if (detectionRunner != null){
+            detectionRunner.stop();
+        }
     }
 
     public static void startUI(){

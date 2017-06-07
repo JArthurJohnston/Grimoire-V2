@@ -6,17 +6,17 @@
 
 #IncludeRegexTransform: 
 
-/home/arthur/IdeaProjects/Grimoire-Standalone/Grimoire_C/src/./CaptureThread.cpp
+/home/arthur/IdeaProjects/Grimoire-Standalone/Grimoire_CPP/src/./threads/ConcurrentBuffer.cpp
 
-/home/arthur/IdeaProjects/Grimoire-Standalone/Grimoire_C/src/main.cpp
+/home/arthur/IdeaProjects/Grimoire-Standalone/Grimoire_CPP/src/main.cpp
 stdio.h
 -
 thread
 -
 opencv2/opencv.hpp
 -
-./CaptureThread.cpp
-/home/arthur/IdeaProjects/Grimoire-Standalone/Grimoire_C/src/./CaptureThread.cpp
+./threads/ConcurrentBuffer.cpp
+/home/arthur/IdeaProjects/Grimoire-Standalone/Grimoire_CPP/src/./threads/ConcurrentBuffer.cpp
 
 /usr/local/include/opencv/cxcore.h
 opencv2/core/core_c.h

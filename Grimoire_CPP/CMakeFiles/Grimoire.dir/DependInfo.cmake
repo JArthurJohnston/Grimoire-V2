@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/arthur/IdeaProjects/Grimoire-Standalone/Grimoire_C/src/main.cpp" "/home/arthur/IdeaProjects/Grimoire-Standalone/Grimoire_C/CMakeFiles/Grimoire.dir/src/main.cpp.o"
+  "/home/arthur/IdeaProjects/Grimoire-Standalone/Grimoire_CPP/src/main.cpp" "/home/arthur/IdeaProjects/Grimoire-Standalone/Grimoire_CPP/CMakeFiles/Grimoire.dir/src/main.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
