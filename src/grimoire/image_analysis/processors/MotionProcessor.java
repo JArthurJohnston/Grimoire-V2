@@ -9,6 +9,7 @@ import org.opencv.core.Mat;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
+import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -25,6 +26,8 @@ public class MotionProcessor {
     private static final int BUFFER_SIZE = (int)(FPS * TIME);
     private int imageWidth;
     private int imageHeight;
+    private BufferedImage inMemoryImage;
+    private byte[] imageBuffer;
 
     public MotionProcessor(){
         frameMotionBuffer = new Buffer<>(BUFFER_SIZE);
@@ -73,18 +76,9 @@ public class MotionProcessor {
         return wandMotions;
     }
 
-    private BufferedImage inMemoryImage;
-    private byte[] imageBuffer;
-
     private void initializeImageInmemory(Mat frame) {
         if(imageBuffer == null || inMemoryImage == null){
-            int type = 0;
-            if (frame.channels() == 1) {
-                type = BufferedImage.TYPE_BYTE_GRAY;
-            } else if (frame.channels() == 3) {
-                type = BufferedImage.TYPE_3BYTE_BGR;
-            }
-            inMemoryImage = new BufferedImage(frame.width(), frame.height(), type);
+            inMemoryImage = new BufferedImage(frame.width(), frame.height(), BufferedImage.TYPE_BYTE_GRAY);
             WritableRaster raster = inMemoryImage.getRaster();
             imageBuffer = ((DataBufferByte) raster.getDataBuffer()).getData();
         }

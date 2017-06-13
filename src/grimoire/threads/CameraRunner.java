@@ -10,6 +10,7 @@ public class CameraRunner implements Runnable {
     private final int cameraIndex;
     private RingBuffer<Mat> frameQueue;
     private boolean isRunning;
+    private Mat defaultFrame = new Mat();
 
     public CameraRunner(int cameraIndex, RingBuffer<Mat> frameQueue){
         this.cameraIndex = cameraIndex;
@@ -23,7 +24,7 @@ public class CameraRunner implements Runnable {
         capture = new VideoCapture();
         capture.open(this.cameraIndex);
         while (isRunning){
-            Mat cameraFrame = new Mat();
+            Mat cameraFrame = defaultFrame;
             if(capture.read(cameraFrame)){
                 try {
                     frameQueue.put(cameraFrame);
