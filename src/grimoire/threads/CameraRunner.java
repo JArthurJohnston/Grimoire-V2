@@ -1,5 +1,6 @@
 package grimoire.threads;
 
+import grimoire.Grimoire;
 import grimoire.image_analysis.buffer.RingBuffer;
 import org.opencv.core.Mat;
 import org.opencv.highgui.VideoCapture;
@@ -21,8 +22,7 @@ public class CameraRunner implements Runnable {
     @Override
     public void run() {
         isRunning = true;
-        capture = new VideoCapture();
-        capture.open(this.cameraIndex);
+        initialize();
         while (isRunning){
             Mat cameraFrame = defaultFrame;
             if(capture.read(cameraFrame)){
@@ -33,6 +33,13 @@ public class CameraRunner implements Runnable {
             }
         }
         capture.release();
+    }
+
+    private void initialize(){
+        capture = new VideoCapture();
+        capture.open(this.cameraIndex);
+        capture.read(defaultFrame);
+        Grimoire.initialize(defaultFrame);
     }
 
     public void stop(){

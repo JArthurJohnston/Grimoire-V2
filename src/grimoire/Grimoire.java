@@ -67,13 +67,17 @@ public class Grimoire {
         }
     }
 
+    public static void initialize(Mat image){
+        detectionRunner.initialize(image);
+    }
+
     public static void startDetection(int cameraId){
         detectionHasStarted = true;
         Spellbook spellbook = new Spellbook(RuneKeeper.readSpellsFromTome());
         RingBuffer<Mat> matBlockingQueue = new RingBuffer<>(UserSettings.BUFFER_SIZE);
         communicator = new ThreadCommunicator();
 
-        cameraRunner= new CameraRunner(cameraId, matBlockingQueue);
+        cameraRunner = new CameraRunner(cameraId, matBlockingQueue);
         detectionRunner = new DetectionRunner(new MotionCaptureDetector(
                 spellbook, communicator), matBlockingQueue);
 

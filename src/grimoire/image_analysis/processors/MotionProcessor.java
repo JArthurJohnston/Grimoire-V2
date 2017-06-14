@@ -9,7 +9,6 @@ import org.opencv.core.Mat;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
-import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -35,7 +34,7 @@ public class MotionProcessor {
 
     public ProcessedFrameData scanFrame(Mat motionFrame){
         //this takes almost no time at all, 1 milisecond at worst
-        BufferedImage image = matToBufferedImage(motionFrame);
+        BufferedImage image = writeFrameToBuffer(motionFrame);
 
         //4-6 miliseconds sometimes jumping to 10-15
         List<WandMotion> wandMotions = scanFrame(image);
@@ -76,25 +75,17 @@ public class MotionProcessor {
         return wandMotions;
     }
 
-    private void initializeImageInmemory(Mat frame) {
-        if(imageBuffer == null || inMemoryImage == null){
-            inMemoryImage = new BufferedImage(frame.width(), frame.height(), BufferedImage.TYPE_BYTE_GRAY);
-            WritableRaster raster = inMemoryImage.getRaster();
-            imageBuffer = ((DataBufferByte) raster.getDataBuffer()).getData();
-        }
+    public void initialize(Mat image){
+        imageWidth = image.width();
+        imageHeight = image.height();
+        inMemoryImage = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_BYTE_GRAY);
+        WritableRaster raster = inMemoryImage.getRaster();
+        imageBuffer = ((DataBufferByte) raster.getDataBuffer()).getData();
+        image.get(0,0, imageBuffer);
     }
 
-    private void setImageDimensions(BufferedImage image){
-        if(imageWidth <=0 || imageHeight <=0){
-            imageWidth = image.getWidth();
-            imageHeight = image.getHeight();
-        }
-    }
-
-    private BufferedImage matToBufferedImage(Mat frame){
-        initializeImageInmemory(frame);
+    private BufferedImage writeFrameToBuffer(Mat frame){
         frame.get(0, 0, imageBuffer);
-        setImageDimensions(inMemoryImage);
         return inMemoryImage;
     }
 

@@ -2,7 +2,7 @@
 
 **Grimoire** is an app which allows you to perform actions with the wave of a wand.
 
-#How It Works
+# How It Works
 
 **Grimoire** uses a camera, modified to view infrared light, to track the motions of objects that reflect infrared light. So far I've been using it with a magic wand I got at Ollivanders in Universal Studios. Though any reflective object will work with a little trial and error.
 

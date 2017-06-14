@@ -10,6 +10,7 @@ public class ClusterCreator {
         clusters = new LinkedList<>();
     }
 
+    //this could be a good place for a binary tree...
     public void handle(int xCoord, int yCoord){
         for (PointCluster eachCluster :  this.clusters) {
             if (eachCluster.contains(xCoord, yCoord)){

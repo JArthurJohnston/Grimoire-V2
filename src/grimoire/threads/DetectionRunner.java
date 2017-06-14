@@ -18,17 +18,16 @@ public class DetectionRunner implements Runnable {
     @Override
     public void run() {
         isRunning = true;
-        long fpsTimestamp = System.currentTimeMillis();
         while (isRunning){
             try {
                 detector.detect(imageQueue.take());
-                long timestamp = System.currentTimeMillis();
-                if(timestamp > fpsTimestamp + 1000){
-                    fpsTimestamp = timestamp;
-                }
             } catch (InterruptedException e) {
             }
         }
+    }
+
+    public void initialize(Mat image){
+        detector.initialize(image);
     }
 
     public void stop(){
