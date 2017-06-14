@@ -24,7 +24,8 @@ public class ViewRunner implements Runnable{
             try {
                 ProcessedFrameData processedData = this.communicator.takeData();
                 view.drawFrame(processedData.frame, processedData.motions);
-            } catch (InterruptedException e) {}
+            } catch (InterruptedException e) {
+            }
         }
         communicator.viewStopped();
         view.setVisible(false);
