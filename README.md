@@ -19,7 +19,7 @@ script by executing the following
 
 #Installation (Windows)
 
-1) Download **Grimoire_Linux.zip** located in the root of this repository.
+1) Download **Grimoire_Windows.zip** located in the root of this repository.
 2) Unzip it to any location you like.
 3) Open the folder you just unzipped and double click the start.bat file to run the app. You could also cd into that
 folder and run the .bat file from the Command Prompt.
