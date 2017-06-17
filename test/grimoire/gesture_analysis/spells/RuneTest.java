@@ -1,8 +1,9 @@
 package grimoire.gesture_analysis.spells;
 
-import grimoire.Grimoire;
-import grimoire.gesture_analysis.gestures.Gesture;
+import com.paratussoftware.Grimoire;
+import com.paratussoftware.gesture_analysis.gestures.Gesture;
 import org.junit.Test;
+import com.paratussoftware.gesture_analysis.spells.Rune;
 
 import static org.junit.Assert.*;
 
@@ -46,7 +47,7 @@ public class RuneTest {
         assertFalse(spell.priceHasBeenPaid());
 
         spell.sense(Gesture.LEFTWARDS);
-        assertFalse(spell.priceHasBeenPaid());
+        assertTrue(spell.priceHasBeenPaid());
     }
 
     @Test

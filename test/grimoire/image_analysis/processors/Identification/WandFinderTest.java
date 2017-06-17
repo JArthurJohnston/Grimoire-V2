@@ -1,13 +1,15 @@
 package grimoire.image_analysis.processors.Identification;
 
-import grimoire.Grimoire;
-import grimoire.image_analysis.clusters.PointCluster;
-import grimoire.image_analysis.buffer.Buffer;
+import com.paratussoftware.Grimoire;
+import com.paratussoftware.image_analysis.clusters.PointCluster;
+import com.paratussoftware.image_analysis.buffer.Buffer;
 import org.junit.Test;
 
 import java.util.LinkedList;
 
-import static grimoire.image_analysis.processors.Identification.WandFinder.*;
+import static com.paratussoftware.image_analysis.processors.Identification.WandFinder.findPastWandPointsFor;
+import static com.paratussoftware.image_analysis.processors.Identification.WandFinder.isPossibleWandPoint;
+import static com.paratussoftware.image_analysis.processors.Identification.WandFinder.nearestNearbyWandPointTo;
 import static org.junit.Assert.*;
 
 public class WandFinderTest {

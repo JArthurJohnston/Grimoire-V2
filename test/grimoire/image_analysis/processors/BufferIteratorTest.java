@@ -1,7 +1,7 @@
 package grimoire.image_analysis.processors;
 
-import grimoire.image_analysis.buffer.Buffer;
-import grimoire.image_analysis.buffer.FifoBufferIterator;
+import com.paratussoftware.image_analysis.buffer.Buffer;
+import com.paratussoftware.image_analysis.buffer.FifoBufferIterator;
 import org.junit.Test;
 
 import java.util.Iterator;

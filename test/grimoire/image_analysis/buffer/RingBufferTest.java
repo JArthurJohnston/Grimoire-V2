@@ -1,6 +1,7 @@
 package grimoire.image_analysis.buffer;
 
 import org.junit.Test;
+import com.paratussoftware.image_analysis.buffer.RingBuffer;
 
 import static org.junit.Assert.*;
 

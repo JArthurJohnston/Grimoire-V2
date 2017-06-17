@@ -1,6 +1,6 @@
 package grimoire.image_analysis.processors;
 
-import grimoire.image_analysis.buffer.Buffer;
+import com.paratussoftware.image_analysis.buffer.Buffer;
 import org.junit.Test;
 
 import java.util.Iterator;
