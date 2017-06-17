@@ -17,6 +17,15 @@ script by executing the following
     
 4) Acquiring, modifying, and installing a camera is up to you.
 
+# Installation (Raspberry Pi)
+
+1) Download **Grimoire_RaspPi.zip** located in the root of this repository.
+2) follow steps 2 and 3 in the **Installation (Linux)** section
+
+Note: Ive noticed some memory leaks when using the Raspberry Pi OpenCV binaries. 
+Also, Grimoire is currently a little too much for the Pi to handle, even a Pi 3. 
+Im currently in the process of optimizing it.
+
 # Installation (Windows)
 
 1) Download **Grimoire_Windows.zip** located in the root of this repository.
