@@ -1,3 +1,0 @@
-/home/arthur/IdeaProjects/Grimoire-Standalone/Grimoire_CPP/CMakeFiles/edit_cache.dir
-/home/arthur/IdeaProjects/Grimoire-Standalone/Grimoire_CPP/CMakeFiles/rebuild_cache.dir
-/home/arthur/IdeaProjects/Grimoire-Standalone/Grimoire_CPP/CMakeFiles/Grimoire.dir
