@@ -13,7 +13,7 @@ public class Aether {
             ServerSocket serverSocket = new ServerSocket(7777);
             while(true){
                 Socket clientRequestSocket = serverSocket.accept();
-//                new Thread(new ClientHandler(clientRequestSocket)).start();
+                new Thread(new ClientHandler(clientRequestSocket)).start();
             }
         } catch (IOException e) {
             e.printStackTrace();

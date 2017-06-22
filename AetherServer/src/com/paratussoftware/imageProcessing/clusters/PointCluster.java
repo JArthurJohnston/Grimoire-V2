@@ -25,7 +25,7 @@ public class PointCluster {
     }
 
     public boolean contains(int xCoord, int yCoord){
-        return this.distanceTo(xCoord, yCoord) < Settings.CLUSTER_CONTAINTS_DISTANCE;
+        return this.distanceTo(xCoord, yCoord) <= Settings.CLUSTER_CONTAINTS_DISTANCE;
     }
 
     public void addPoint(int x, int y){
@@ -39,9 +39,11 @@ public class PointCluster {
     public int left(){
         return leftBoundary;
     }
+
     public int top(){
         return topBoundary;
     }
+
     public int bottom(){
         return bottomBoundary;
     }

@@ -6,6 +6,7 @@ public class LifoBufferIterator<T> implements Iterator<T> {
     private int index;
     private Buffer<T> buffer;
 
+
     LifoBufferIterator(Buffer<T> buffer){
         this.buffer = buffer;
         index = 0;

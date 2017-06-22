@@ -51,8 +51,10 @@ public class PointClusterTest {
 
     @Test
     public void testDistanceTo_Point() throws Exception{
-
         PointCluster pointCluster = PointCluster.newWith(0,0);
+
+        assertEquals(5, pointCluster.distanceTo(0,5), 0.1);
+
         pointCluster.addPoint(5, 5);
 
         assertEquals(16.97, pointCluster.distanceTo(15, 15), 0.001);
@@ -75,8 +77,10 @@ public class PointClusterTest {
 
         assertFalse(pointCluster.contains(-11, -11));
         assertTrue(pointCluster.contains(0,0));
-        assertTrue(pointCluster.contains(10,10));
-        assertFalse(pointCluster.contains(11,11));
+        assertTrue(pointCluster.contains(0,10));
+        assertTrue(pointCluster.contains(10,0));
+        assertFalse(pointCluster.contains(0,11));
+        assertFalse(pointCluster.contains(11,0));
     }
 
 
