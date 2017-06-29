@@ -2,6 +2,7 @@ package com.paratussoftware.imageProcessing.clusters;
 
 import com.paratussoftware.config.Settings;
 import org.junit.Test;
+import org.opencv.core.Point;
 
 import static org.junit.Assert.*;
 
@@ -32,10 +33,18 @@ public class PointClusterTest {
     @Test
     public void testCenterPoint() throws Exception{
         PointCluster pointCluster = PointCluster.newWith(0,0);
+
+        assertEquals(0, pointCluster.centerPoint().getX(), 0.001);
+        assertEquals(0, pointCluster.centerPoint().getY(), 0.001);
+
         pointCluster.addPoint(5, 5);
 
         assertEquals(3, pointCluster.centerPoint().getX(), 0.001);
         assertEquals(3, pointCluster.centerPoint().getY(), 0.001);
+
+        PointCluster cluster2 = PointCluster.newWith(5, 5);
+        assertEquals(5, cluster2.centerPoint().getX(), 0.001);
+        assertEquals(5, cluster2.centerPoint().getY(), 0.001);
     }
 
     @Test

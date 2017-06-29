@@ -6,7 +6,7 @@ import java.util.LinkedList;
 
 import static com.paratussoftware.image_analysis.processors.PointMath.distanceBetween;
 
-public class WandMotion implements Comparable<WandMotion>{
+public class WandMotion implements Comparable<WandMotion> {
 
     private final PointCluster currentWandPoint;
     private final LinkedList<PointCluster> pastWandPoints;

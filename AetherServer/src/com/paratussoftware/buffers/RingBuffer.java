@@ -2,8 +2,7 @@ package com.paratussoftware.buffers;
 
 public class RingBuffer<T> {
     private T[] values;
-    private int writeIndex, readIndex, mask;
-    private int capacity;
+    private int writeIndex, readIndex, mask, capacity;
 
     /**
      * For this to work correctly, the capacity of the buffer
@@ -71,5 +70,9 @@ public class RingBuffer<T> {
 
     public int getCapacity() {
         return capacity;
+    }
+
+    public int size() {
+        return writeIndex < capacity ? writeIndex : capacity;
     }
 }

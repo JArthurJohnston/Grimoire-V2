@@ -1,8 +1,5 @@
 package com.paratussoftware.requestHandling;
 
-import com.paratussoftware.buffers.ByteArrayRingBuffer;
-import com.paratussoftware.config.Settings;
-import com.paratussoftware.imageProcessing.ImageProcessor;
 import org.junit.Test;
 
 import java.net.Socket;
@@ -19,4 +16,10 @@ public class ClientHandlerTest {
 
         assertSame(mockSocket, clientHandler.getSocket());
     }
+    
+    @Test
+    public void testRun() throws Exception{
+        
+    }
+    
 }

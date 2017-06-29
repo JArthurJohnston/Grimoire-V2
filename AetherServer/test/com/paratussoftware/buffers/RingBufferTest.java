@@ -115,4 +115,24 @@ public class RingBufferTest {
         assertEquals(expectedString2, ringBuffer.get(1));
     }
 
+    @Test
+    public void testSize() throws Exception{
+        int capacity = 4;
+        RingBuffer<String> ringBuffer = new RingBuffer<>(capacity);
+
+        assertEquals(0, ringBuffer.size());
+
+        ringBuffer.write("foo");
+
+        assertEquals(1, ringBuffer.size());
+
+        ringBuffer.write("bar");
+        ringBuffer.write("baz");
+        ringBuffer.write("quz");
+        ringBuffer.write("hello");
+
+        assertEquals(capacity, ringBuffer.size());
+    }
+
+
 }
