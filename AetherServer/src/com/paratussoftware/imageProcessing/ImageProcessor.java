@@ -5,53 +5,59 @@ import com.paratussoftware.buffers.RingBuffer;
 import com.paratussoftware.imageProcessing.clusters.ClusterCreator;
 import com.paratussoftware.imageProcessing.clusters.PointCluster;
 
-import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ImageProcessor implements Runnable{
+public class ImageProcessor implements Runnable {
 
-    private ByteArrayRingBuffer ringBuffer;
+    private final ByteArrayRingBuffer ringBuffer;
     private boolean isRunning;
-    private ClusterCreator clusterCreator;
-    private RingBuffer<List<PointCluster>> bufferedClusters;
+    private final ClusterCreator clusterCreator;
+    private final RingBuffer<List<PointCluster>> bufferedClusters;
+    private final MotionTracker motionTracker;
 
-    public ImageProcessor(ByteArrayRingBuffer ringBuffer) {
+    public ImageProcessor(final ByteArrayRingBuffer ringBuffer) {
         this.ringBuffer = ringBuffer;
         this.clusterCreator = new ClusterCreator();
         this.bufferedClusters = new RingBuffer<>(32);
+        this.motionTracker = new MotionTracker();
     }
 
-    public void stop(){
-        isRunning = false;
+    public void stop() {
+        this.isRunning = false;
     }
 
     @Override
     public void run() {
-        isRunning = true;
-        while (isRunning){
-            byte[] framePixels = this.ringBuffer.read();
+        this.isRunning = true;
+        while (this.isRunning) {
+            final byte[] framePixels = this.ringBuffer.read();
             processFrame(framePixels);
         }
     }
 
-    protected void processFrame(byte[] framePixels) {
-        LinkedList<PointCluster> pointClusters = clusterCreator.clusterPixels(framePixels);
+    void processFrame(final byte[] framePixels) {
+        final LinkedList<PointCluster> pointClusters = this.clusterCreator.clusterPixels(framePixels);
+        this.motionTracker.track(pointClusters);
         try {
             this.bufferedClusters.put(pointClusters);
-        } catch (InterruptedException e) {
+        } catch (final InterruptedException e) {
         }
     }
 
-    public RingBuffer<List<PointCluster>> getBufferedClusters(){
+    RingBuffer<List<PointCluster>> getBufferedClusters() {
         return this.bufferedClusters;
     }
 
-    public ClusterCreator getClusterCreator() {
-        return clusterCreator;
+    ClusterCreator getClusterCreator() {
+        return this.clusterCreator;
     }
 
-    public ByteArrayRingBuffer getRingBuffer() {
-        return ringBuffer;
+    ByteArrayRingBuffer getRingBuffer() {
+        return this.ringBuffer;
+    }
+
+    MotionTracker getMotionTracker() {
+        return this.motionTracker;
     }
 }

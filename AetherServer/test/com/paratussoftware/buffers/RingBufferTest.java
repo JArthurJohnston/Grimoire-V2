@@ -7,32 +7,32 @@ import static org.junit.Assert.*;
 public class RingBufferTest {
 
     @Test
-    public void testConstruction() throws Exception{
-        RingBuffer<String> ringBuffer = new RingBuffer<>(16);
+    public void testConstruction() throws Exception {
+        final RingBuffer<String> ringBuffer = new RingBuffer<>(16);
 
-        Object[] ringBufferValues = ringBuffer.getValues();
+        final Object[] ringBufferValues = ringBuffer.getValues();
         assertEquals(16, ringBufferValues.length);
         assertEquals(16, ringBuffer.getCapacity());
     }
 
     @Test
-    public void testMustBeBuildWithCapacityThatIsAPowerOfTwo() throws Exception{
-        RingBuffer<Object> ringBuffer = new RingBuffer<>(32);
+    public void testMustBeBuildWithCapacityThatIsAPowerOfTwo() throws Exception {
+        final RingBuffer<Object> ringBuffer = new RingBuffer<>(32);
         assertEquals(32, ringBuffer.getValues().length);
 
-        try{
-            new RingBuffer<> (12);
+        try {
+            new RingBuffer<>(12);
             fail("should have thrown exception");
-        } catch (RuntimeException e){
+        } catch (final RuntimeException e) {
             assertEquals("Capacity must be a power of two", e.getMessage());
         }
     }
 
     @Test
-    public void testReadAndWrite() throws Exception{
-        RingBuffer<String> ringBuffer = new RingBuffer<>(16);
+    public void testReadAndWrite() throws Exception {
+        final RingBuffer<String> ringBuffer = new RingBuffer<>(16);
 
-        String expectedString = "sdflkjsdflkj";
+        final String expectedString = "sdflkjsdflkj";
 
         ringBuffer.write(expectedString);
 
@@ -42,12 +42,12 @@ public class RingBufferTest {
     }
 
     @Test
-    public void testisEmpty() throws Exception{
-        RingBuffer<String> ringBuffer = new RingBuffer<>(4);
+    public void testisEmpty() throws Exception {
+        final RingBuffer<String> ringBuffer = new RingBuffer<>(4);
 
         assertTrue(ringBuffer.isEmpty());
 
-        String expectedString = "sdflkjsdflkj";
+        final String expectedString = "sdflkjsdflkj";
         ringBuffer.write(expectedString);
 
         assertFalse(ringBuffer.isEmpty());
@@ -58,13 +58,13 @@ public class RingBufferTest {
     }
 
     @Test
-    public void testReadWhenFull() throws Exception{
-        RingBuffer<String> ringBuffer = new RingBuffer<>(4);
+    public void testReadWhenFull() throws Exception {
+        final RingBuffer<String> ringBuffer = new RingBuffer<>(4);
 
-        String expectedString = "sdflkjsdflkj";
-        String expectedString2 = "khgjhg";
-        String expectedString3 = "adsoiyqwe";
-        String expectedString4 = "jkfkjdkjdf";
+        final String expectedString = "sdflkjsdflkj";
+        final String expectedString2 = "khgjhg";
+        final String expectedString3 = "adsoiyqwe";
+        final String expectedString4 = "jkfkjdkjdf";
 
         ringBuffer.write(expectedString);
         ringBuffer.write(expectedString2);
@@ -80,12 +80,12 @@ public class RingBufferTest {
     }
 
     @Test
-    public void testWritePastFull() throws Exception{
-        RingBuffer<String> ringBuffer = new RingBuffer<>(2);
+    public void testWritePastFull() throws Exception {
+        final RingBuffer<String> ringBuffer = new RingBuffer<>(2);
 
-        String expectedString = "sdflkjsdflkj";
-        String expectedString2 = "khgjhg";
-        String expectedString3 = "adsoiyqwe";
+        final String expectedString = "sdflkjsdflkj";
+        final String expectedString2 = "khgjhg";
+        final String expectedString3 = "adsoiyqwe";
 
         ringBuffer.write(expectedString);
         ringBuffer.write(expectedString2);
@@ -96,13 +96,13 @@ public class RingBufferTest {
     }
 
     @Test
-    public void testGetAtIndex() throws Exception{
-        RingBuffer<String> ringBuffer = new RingBuffer<>(4);
+    public void testGetAtIndex() throws Exception {
+        final RingBuffer<String> ringBuffer = new RingBuffer<>(4);
 
-        String expectedString = "sdflkjsdflkj";
-        String expectedString2 = "khgjhg";
-        String expectedString3 = "adsoiyqwe";
-        String expectedString4 = "jkfkjdkjdf";
+        final String expectedString = "sdflkjsdflkj";
+        final String expectedString2 = "khgjhg";
+        final String expectedString3 = "adsoiyqwe";
+        final String expectedString4 = "jkfkjdkjdf";
 
         ringBuffer.write(expectedString);
         ringBuffer.write(expectedString2);
@@ -116,9 +116,9 @@ public class RingBufferTest {
     }
 
     @Test
-    public void testSize() throws Exception{
-        int capacity = 4;
-        RingBuffer<String> ringBuffer = new RingBuffer<>(capacity);
+    public void testSize() throws Exception {
+        final int capacity = 4;
+        final RingBuffer<String> ringBuffer = new RingBuffer<>(capacity);
 
         assertEquals(0, ringBuffer.size());
 
@@ -133,6 +133,4 @@ public class RingBufferTest {
 
         assertEquals(capacity, ringBuffer.size());
     }
-
-
 }

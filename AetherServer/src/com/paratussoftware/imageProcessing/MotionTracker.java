@@ -1,34 +1,44 @@
 package com.paratussoftware.imageProcessing;
 
-import com.paratussoftware.buffers.RingBuffer;
+import com.paratussoftware.config.Settings;
 import com.paratussoftware.imageProcessing.clusters.PointCluster;
 import com.paratussoftware.imageProcessing.clusters.WandMotion;
 import com.paratussoftware.imageProcessing.identification.WandIdentifier;
 
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
+
 public class MotionTracker {
-    private final RingBuffer<List<WandMotion>> bufferedClusters;
     private final LinkedList<WandMotion> trackedMotions;
 
-    public MotionTracker(final RingBuffer<List<WandMotion>> ringBuffer) {
+    public MotionTracker() {
         this.trackedMotions = new LinkedList<>();
-        this.bufferedClusters = ringBuffer;
-    }
-
-    public RingBuffer<List<WandMotion>> getBufferedClusters() {
-        return this.bufferedClusters;
     }
 
     public void track(final List<PointCluster> pointClusters) {
         for (final PointCluster eachCluster : pointClusters) {
-            if (WandIdentifier.isPossibleWandPoint(eachCluster))
-                this.trackedMotions.add(new WandMotion(eachCluster));
+            if (WandIdentifier.isPossibleWandPoint(eachCluster)) {
+                final WandMotion wandMotion = nearestWandMotionTo(eachCluster);
+                if (wandMotion != null && wandMotion.getCurrentCluster().distanceTo(eachCluster) < Settings.MOTION_TRACKING_DISTANCE) {
+                    wandMotion.addCluster(eachCluster);
+                } else {
+                    this.trackedMotions.add(new WandMotion(eachCluster));
+                }
+            }
         }
     }
 
-    public List<WandMotion> getTrackedMotions() {
+    private WandMotion nearestWandMotionTo(final PointCluster cluster) {
+        if (this.trackedMotions.isEmpty()) {
+            return null;
+        }
+        this.trackedMotions.sort(Comparator.comparingDouble(o -> o.getCurrentCluster().distanceTo(cluster)));
+        return this.trackedMotions.getFirst();
+    }
+
+    List<WandMotion> getTrackedMotions() {
         return this.trackedMotions;
     }
 }
