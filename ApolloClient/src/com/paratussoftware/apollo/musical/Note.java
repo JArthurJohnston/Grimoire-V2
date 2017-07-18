@@ -1,11 +1,19 @@
 package com.paratussoftware.apollo.musical;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class Note {
+    @XmlElement
+    private String name;
+    @XmlElement
+    private int lowerRange;
+    @XmlElement
+    private int upperRange;
 
-
-    private final String name;
-    private final int lowerRange;
-    private final int upperRange;
+    private Note() {
+    }
 
     public Note(final String name, final int lowerRange, final int upperRange) {
         this.name = name;

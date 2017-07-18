@@ -1,10 +1,18 @@
 package com.paratussoftware.apollo.musical;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.LinkedList;
 
+@XmlRootElement
 public class Instrument {
-    private final String name;
-    private final LinkedList<Note> notes;
+    @XmlElement
+    private String name;
+    @XmlElement
+    private LinkedList<Note> notes;
+
+    private Instrument() {
+    }
 
     public Instrument(final String name, final LinkedList<Note> notes) {
         this.name = name;
