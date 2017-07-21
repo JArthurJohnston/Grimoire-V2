@@ -4,15 +4,22 @@ import com.paratussoftware.apollo.musical.Melody;
 import org.junit.Test;
 
 import static com.paratussoftware.apollo.musical.Melody.Tab.*;
+import static org.junit.Assert.*;
 
 public class SongWriterTest {
 
     @Test
     public void testReadAndWriteMelody() throws Exception {
         final SongWriter songWriter = new SongWriter();
-        final Melody powerRangersJingle = new Melody("", E, E, D, E, G, E);
+        final String expectedMelodyName = "Go Go Power Rangers";
+        final Melody powerRangersJingle = new Melody(expectedMelodyName, E, E, D, E, G, E);
 
-        songWriter.write(powerRangersJingle, "./test/testRes/ranger.melody");
+        final String songFileName = "./testRes/ranger.melody";
+        songWriter.write(powerRangersJingle, songFileName);
+
+        final Melody songFromFile = songWriter.read(songFileName);
+
+        assertEquals(expectedMelodyName, songFromFile.getName());
     }
 
 

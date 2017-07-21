@@ -15,4 +15,12 @@ public class NoteTest {
         assertEquals(775, note.getUpperRange());
     }
 
+    @Test
+    public void testNullNote() throws Exception {
+        assertEquals("", Note.NULL.getName());
+        assertEquals(0, Note.NULL.getLowerRange());
+        assertEquals(0, Note.NULL.getUpperRange());
+    }
+
+
 }

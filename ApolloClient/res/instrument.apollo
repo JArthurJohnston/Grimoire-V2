@@ -24,7 +24,7 @@
     <notes>
         <name>G</name>
         <lowerRange>759</lowerRange>
-        <upperRange>777</upperRange>
+        <upperRange>805</upperRange>
     </notes>
     <notes>
         <name>G#</name>
@@ -34,6 +34,6 @@
     <notes>
         <name>A</name>
         <lowerRange>855</lowerRange>
-        <upperRange>868</upperRange>
+        <upperRange>883</upperRange>
     </notes>
 </instrument>

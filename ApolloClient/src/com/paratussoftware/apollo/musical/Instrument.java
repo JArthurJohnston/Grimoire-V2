@@ -26,4 +26,13 @@ public class Instrument {
     public LinkedList<Note> getNotes() {
         return this.notes;
     }
+
+    public Note findNote(final float pitch) {
+        for (final Note note : this.notes) {
+            if (note.getLowerRange() <= pitch && note.getUpperRange() >= pitch) {
+                return note;
+            }
+        }
+        return Note.NULL;
+    }
 }

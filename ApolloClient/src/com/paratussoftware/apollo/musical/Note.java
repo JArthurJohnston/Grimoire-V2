@@ -5,6 +5,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class Note {
+
+    public static Note NULL = new Note("", 0, 0);
+
     @XmlElement
     private String name;
     @XmlElement
