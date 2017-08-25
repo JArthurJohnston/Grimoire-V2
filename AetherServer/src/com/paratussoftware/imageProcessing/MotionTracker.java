@@ -13,6 +13,11 @@ import java.util.List;
 public class MotionTracker {
     private final LinkedList<WandMotion> trackedMotions;
 
+    /*
+    Now that motions are getting tracked, they need to be prioritized and eventually removed
+    for garbage collection.
+    Currently the trackedMotions list will grow infinitely.
+     */
     public MotionTracker() {
         this.trackedMotions = new LinkedList<>();
     }
@@ -34,7 +39,7 @@ public class MotionTracker {
         if (this.trackedMotions.isEmpty()) {
             return null;
         }
-        this.trackedMotions.sort(Comparator.comparingDouble(o -> o.getCurrentCluster().distanceTo(cluster)));
+        this.trackedMotions.sort(Comparator.comparingDouble(wandMotion -> wandMotion.getCurrentCluster().distanceTo(cluster)));
         return this.trackedMotions.getFirst();
     }
 

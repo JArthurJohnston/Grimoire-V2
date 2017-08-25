@@ -11,10 +11,10 @@ import java.util.List;
 public class ImageProcessor implements Runnable {
 
     private final ByteArrayRingBuffer ringBuffer;
-    private boolean isRunning;
     private final ClusterCreator clusterCreator;
     private final RingBuffer<List<PointCluster>> bufferedClusters;
     private final MotionTracker motionTracker;
+    private boolean isRunning;
 
     public ImageProcessor(final ByteArrayRingBuffer ringBuffer) {
         this.ringBuffer = ringBuffer;
@@ -40,7 +40,7 @@ public class ImageProcessor implements Runnable {
         final LinkedList<PointCluster> pointClusters = this.clusterCreator.clusterPixels(framePixels);
         this.motionTracker.track(pointClusters);
         try {
-            this.bufferedClusters.put(pointClusters);
+            this.bufferedClusters.put(pointClusters);//do i still need this?
         } catch (final InterruptedException e) {
         }
     }

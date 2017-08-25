@@ -34,7 +34,6 @@ public class ApolloMainView extends JFrame {
 
         @Override
         public void paint(final Graphics g) {
-//            super.paint(g);
             g.setColor(Color.WHITE);
             final int height = this.getHeight() - 1;
             final int width = this.getWidth() - 1;
@@ -46,7 +45,7 @@ public class ApolloMainView extends JFrame {
 
         private void drawLines(final Graphics g) {
             g.setColor(Color.RED);
-            for (int x = 0; x < 1000; x++) {
+            for (int x = 0; x < 1000; x += 100) {
                 if (x % 100 == 0) {
                     g.drawLine(x, 0, x, this.getHeight());
                     g.drawString(Integer.toString(x), x + 2, 15);

@@ -9,31 +9,39 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
 
-public class ClientHandler implements Runnable{
-    private Socket socket;
+public class ClientHandler implements Runnable {
+    private final Socket socket;
 
-    public ClientHandler(Socket socket) {
+    public ClientHandler(final Socket socket) {
         this.socket = socket;
     }
 
     public Socket getSocket() {
-        return socket;
+        return this.socket;
     }
 
     @Override
     public void run() {
-        ByteArrayRingBuffer ringBuffer = new ByteArrayRingBuffer(32, Settings.IMAGE_WIDTH * Settings.IMAGE_HEIGHT);
+        final ByteArrayRingBuffer ringBuffer = new ByteArrayRingBuffer(32, Settings.IMAGE_WIDTH * Settings.IMAGE_HEIGHT);
 
-        ImageProcessor imageProcessor = new ImageProcessor(ringBuffer);
-        new Thread(imageProcessor).start();
-        while (!this.socket.isClosed()){
+        final ImageProcessor imageProcessor = startProcessingThread(ringBuffer);
+
+        while (!this.socket.isClosed()) {
             InputStream inputStream = null;
             try {
                 inputStream = this.socket.getInputStream();
-                DataInputStream dataInputStream = new DataInputStream(inputStream);
+                final DataInputStream dataInputStream = new DataInputStream(inputStream);
                 dataInputStream.readFully(ringBuffer.push());
-            } catch (IOException e) {}
+            } catch (final IOException e) {
+            }
         }
+
         imageProcessor.stop();
+    }
+
+    private ImageProcessor startProcessingThread(final ByteArrayRingBuffer ringBuffer) {
+        final ImageProcessor imageProcessor = new ImageProcessor(ringBuffer);
+        new Thread(imageProcessor).start();
+        return imageProcessor;
     }
 }
