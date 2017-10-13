@@ -4,24 +4,24 @@ import com.paratussoftware.buffers.RingBuffer;
 
 public class WandMotion implements Comparable<WandMotion> {
 
+    private final RingBuffer<PointCluster> pastClusters;
     private PointCluster currentCluster;
-    private RingBuffer<PointCluster> pastClusters;
 
-    public WandMotion(PointCluster firstCluster){
+    public WandMotion(final PointCluster firstCluster) {
         this.currentCluster = firstCluster;
-        pastClusters = new RingBuffer<>(32);
+        this.pastClusters = new RingBuffer<>(32);
     }
 
-    public WandMotion(PointCluster currentCluster, RingBuffer<PointCluster> pastClusters){
+    public WandMotion(final PointCluster currentCluster, final RingBuffer<PointCluster> pastClusters) {
         this.currentCluster = currentCluster;
         this.pastClusters = pastClusters;
     }
 
-    public double length(){
+    double length() {
         double length = 0;
-        PointCluster currentPoint = currentCluster;
+        PointCluster currentPoint = this.currentCluster;
         for (int i = 0; i < this.pastClusters.size(); i++) {
-            PointCluster eachPastPoint = this.pastClusters.get(i);
+            final PointCluster eachPastPoint = this.pastClusters.get(i);
             length += currentPoint.distanceTo(eachPastPoint);
             currentPoint = eachPastPoint;
         }
@@ -29,19 +29,19 @@ public class WandMotion implements Comparable<WandMotion> {
     }
 
     public RingBuffer<PointCluster> getPastClusters() {
-        return pastClusters;
+        return this.pastClusters;
     }
 
     public PointCluster getCurrentCluster() {
-        return currentCluster;
+        return this.currentCluster;
     }
 
     @Override
-    public int compareTo(WandMotion other) {
+    public int compareTo(final WandMotion other) {
         return Double.compare(this.length(), other.length());
     }
 
-    public void addCluster(PointCluster newCluster) {
+    public void addCluster(final PointCluster newCluster) {
         this.pastClusters.write(this.currentCluster);
         this.currentCluster = newCluster;
     }
