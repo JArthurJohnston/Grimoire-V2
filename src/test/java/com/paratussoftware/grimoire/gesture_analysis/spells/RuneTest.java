@@ -1,4 +1,4 @@
-package com.grimoire.gesture_analysis.spells;
+package com.paratussoftware.grimoire.gesture_analysis.spells;
 
 import com.paratussoftware.Grimoire;
 import com.paratussoftware.gesture_analysis.gestures.Gesture;

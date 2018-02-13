@@ -1,4 +1,4 @@
-package grimoire.gesture_analysis.spells.serialization;
+package com.paratussoftware.grimoire.gesture_analysis.spells.serialization;
 
 import com.paratussoftware.Grimoire;
 import com.paratussoftware.gesture_analysis.gestures.Gesture;

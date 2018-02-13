@@ -1,4 +1,4 @@
-package grimoire.image_analysis.processors.Identification;
+package com.paratussoftware.grimoire.image_analysis.processors.Identification;
 
 import com.paratussoftware.Grimoire;
 import com.paratussoftware.image_analysis.clusters.PointCluster;
