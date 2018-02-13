@@ -17,7 +17,7 @@ jar {
     manifest {
         attributes 'Implementation-Title': 'Grimoire',
                    'Implementation-Version': version,
-			'Main-Class': 'com.paratusSoftware.Grimoire'
+			'Main-Class': 'com.paratussoftware.Grimoire'
     }
 }
 
