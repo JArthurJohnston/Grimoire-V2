@@ -1,4 +1,4 @@
-package grimoire.gesture_analysis.spells;
+package com.grimoire.gesture_analysis.spells;
 
 import com.paratussoftware.Grimoire;
 import com.paratussoftware.gesture_analysis.gestures.Gesture;
@@ -8,7 +8,6 @@ import com.paratussoftware.gesture_analysis.spells.Rune;
 import static org.junit.Assert.*;
 
 public class RuneTest {
-
 
     @Test
     public void testCastsSpellsWhenReady() throws Exception{
@@ -64,7 +63,7 @@ public class RuneTest {
         assertFalse(spell.priceHasBeenPaid());
 
         spell.sense(Gesture.DOWNWARDS);
-        assertFalse(spell.priceHasBeenPaid());
+        assertTrue(spell.priceHasBeenPaid());
         spell.sense(Gesture.DOWNWARDS_LEFT);
         assertTrue(spell.priceHasBeenPaid());
 

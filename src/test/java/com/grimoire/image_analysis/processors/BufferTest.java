@@ -105,26 +105,26 @@ public class BufferTest {
         Iterator<String> iterator = buffer.fifoIterator();
 
         assertTrue(iterator.hasNext());
+        assertSame(value4, iterator.next());
+
+        assertTrue(iterator.hasNext());
         assertSame(value2, iterator.next());
 
         assertTrue(iterator.hasNext());
         assertSame(value3, iterator.next());
-
-        assertTrue(iterator.hasNext());
-        assertSame(value4, iterator.next());
 
         assertFalse(iterator.hasNext());
 
         Iterator<String> newIterator = buffer.fifoIterator();
 
         assertTrue(newIterator.hasNext());
+        assertSame(value4, newIterator.next());
+
+        assertTrue(newIterator.hasNext());
         assertSame(value2, newIterator.next());
 
         assertTrue(newIterator.hasNext());
         assertSame(value3, newIterator.next());
-
-        assertTrue(newIterator.hasNext());
-        assertSame(value4, newIterator.next());
 
         assertFalse(newIterator.hasNext());
     }
@@ -146,16 +146,6 @@ public class BufferTest {
         } catch (RuntimeException e){
             assertEquals("Cannot instantiate Buffer with capacity of 0", e.getMessage());
         }
-    }
-
-    @Test
-    public void testLifoIteratorWithOneElement() throws Exception{
-        Buffer<String> buffer = new Buffer<String>(3);
-        buffer.add("hello");
-        Iterator<String> stringIterator = buffer.lifoIterator();
-
-        assertTrue(stringIterator.hasNext());
-        assertEquals("hello", stringIterator.next());
     }
 
     private void addArrayToBuffer(Buffer buffer, Object[] clusters){

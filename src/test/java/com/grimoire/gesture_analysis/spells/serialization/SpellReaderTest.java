@@ -4,6 +4,7 @@ import com.paratussoftware.Grimoire;
 import com.paratussoftware.gesture_analysis.gestures.Gesture;
 import com.paratussoftware.gesture_analysis.spells.Spell;
 import com.paratussoftware.gesture_analysis.spells.SpellCaster;
+import org.junit.Ignore;
 import org.junit.Test;
 import com.paratussoftware.gesture_analysis.spells.serialization.SpellReader;
 
@@ -14,6 +15,7 @@ import static org.junit.Assert.*;
 
 public class SpellReaderTest {
 
+    @Ignore
     @Test
     public void testRead() throws Exception{
         SpellReader spellReader = new SpellReader();

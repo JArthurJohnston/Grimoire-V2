@@ -10,23 +10,23 @@ import static org.junit.Assert.*;
 
 public class ExceptionLoggerTest {
 
-    private String testLogFilename = "./test.log";
+    private static String testLogFilename = "./test.log";
 
     @BeforeClass
-    public void setUp() throws Exception {
+    public static void setUp() throws Exception {
         File file = new File(testLogFilename);
         file.delete();
         file.createNewFile();
     }
 
     @AfterClass
-    public void tearDown() throws Exception {
+    public static void tearDown()  {
         File file = new File(testLogFilename);
         file.delete();
     }
 
     @Test
-    public void testWritesStacktraceToExceptionsFile() throws Exception{
+    public void testWritesStacktraceToExceptionsFile() {
         assertEquals("./lib/exceptions.log", Grimoire.UserSettings.ERROR_LOG_LOCATION);
 
         Grimoire.UserSettings.ERROR_LOG_LOCATION = testLogFilename;
