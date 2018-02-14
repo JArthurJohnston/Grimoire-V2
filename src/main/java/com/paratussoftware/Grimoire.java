@@ -84,7 +84,7 @@ public class Grimoire {
     }
 
     public static class UserSettings {
-        public static String ERROR_LOG_LOCATION = "./lib/exceptions.log";
+        public static String ERROR_LOG_LOCATION = "./res/exceptions.log";
         public static double MOTION_THRESHOLD = 25;
         public static int GAUSSIAN_KERNEL_SIZE = 9;
         public static double INTENSITY_THRESHOLD = 0.2;
@@ -95,7 +95,7 @@ public class Grimoire {
         public static int GESTURE_DETECTION_DISTANCE = 40;
         public static int SPELLCAST_COOLDOWN_TIME = 3 * 1000;
         public static int SPELLCASTING_THRESHOLD = 5;
-        public static String SPELLFILE_LOCATION = "./lib/spells.grim";
+        public static String SPELLFILE_LOCATION = "./res/spells.grim";
         public static int SCAN_RESOLUTION = 2;
         public static int BUFFER_SIZE = 32;
     }

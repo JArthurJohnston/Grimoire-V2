@@ -1,7 +1,8 @@
-package grimoire.image_analysis.buffer;
+package com.paratussoftware.grimoire.image_analysis.buffer;
 
 import org.junit.Test;
 import com.paratussoftware.image_analysis.buffer.RingBuffer;
+import org.opencv.core.Mat;
 
 import static org.junit.Assert.*;
 
@@ -10,7 +11,7 @@ public class RingBufferTest {
 
     @Test
     public void testConstruction() throws Exception{
-        RingBuffer ringBuffer = new RingBuffer(7);
+        RingBuffer<Mat> ringBuffer = new RingBuffer(7);
 
         assertEquals(7, ringBuffer.getCapacity());
         assertTrue(ringBuffer.isEmpty());
@@ -25,9 +26,9 @@ public class RingBufferTest {
 
         assertFalse(stringRingBuffer.isEmpty());
 
-        String popedValue = stringRingBuffer.read();
+        String poppedValue = stringRingBuffer.read();
 
-        assertEquals(hello, popedValue);
+        assertEquals(hello, poppedValue);
         assertTrue(stringRingBuffer.isEmpty());
     }
 

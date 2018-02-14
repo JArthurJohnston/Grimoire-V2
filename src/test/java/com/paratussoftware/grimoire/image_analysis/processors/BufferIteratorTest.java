@@ -1,4 +1,4 @@
-package grimoire.image_analysis.processors;
+package com.paratussoftware.grimoire.image_analysis.processors;
 
 import com.paratussoftware.image_analysis.buffer.Buffer;
 import com.paratussoftware.image_analysis.buffer.FifoBufferIterator;
