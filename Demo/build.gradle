@@ -1,0 +1,22 @@
+dependencies {
+    compile files('lib/opencv-2413.jar')
+}
+
+version = '1.0'
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'Grimoire',
+                'Implementation-Version': version,
+//                "Class-Path": configurations.compile.collect { it.getName() }.join(' '),
+                'Class-Path': 'bin/opencv-2413.jar',
+                'Main-Class': 'com.paratussoftware.Grimoire'
+    }
+}
+
+task copyOpenCVJar(type: Copy){
+    from 'lib/opencv-2413.jar'
+    into 'build/libs/bin'
+}
+
+build.dependsOn copyOpenCVJar

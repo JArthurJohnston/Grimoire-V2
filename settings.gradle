@@ -1,1 +1,5 @@
 rootProject.name='Grimoire'
+
+include 'AetherServer'
+include 'GrimoireClient'
+include 'Demo'
