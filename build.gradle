@@ -19,10 +19,6 @@ jar {
     }
 }
 
-sourceSets {
-	main.resources.srcDirs = ['res']
-}
-
 task copyOpenCVJar(type: Copy){
     from 'lib/opencv-2413.jar'
     into 'build/libs/bin'
