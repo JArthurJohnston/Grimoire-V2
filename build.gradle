@@ -11,6 +11,8 @@ subprojects {
     }
 
     sourceCompatibility = 1.8
+
+    tasks.withType(Test) {
+        systemProperty "java.library.path", "libs"
+    }
 }
-
-
