@@ -40,10 +40,10 @@ public class ImageProcessor implements Runnable {
         final LinkedList<PointCluster> pointClusters = this.clusterCreator.clusterPixels(framePixels);
         this.motionTracker.track(pointClusters);
         this.motionTracker.getTrackedMotions(); //needs gesture processing
-//        try {
-//            this.bufferedClusters.put(pointClusters);//do i still need this?
-//        } catch (final InterruptedException e) {
-//        }
+        try {
+            this.bufferedClusters.put(pointClusters);//do i still need this?
+        } catch (final InterruptedException e) {
+        }
     }
 
     RingBuffer<List<PointCluster>> getBufferedClusters() {

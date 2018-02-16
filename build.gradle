@@ -1,3 +1,5 @@
+group = 'com.paratussoftware.Grimoire'
+
 subprojects {
     apply plugin: 'java'
     apply plugin: 'idea'
@@ -13,6 +15,6 @@ subprojects {
     sourceCompatibility = 1.8
 
     tasks.withType(Test) {
-        systemProperty "java.library.path", "libs"
+        systemProperty "java.library.path", "/Demo/lib"
     }
 }
