@@ -28,7 +28,7 @@ public class GestureDetector {
         }
     }
 
-    public Gesture gestureFor(final WandMotion wandMotion) {
+    public Gesture gestureFrom(final WandMotion wandMotion) {
         final Point currentPoint = wandMotion.getCurrentCluster().centerPoint();
         final RingBuffer<PointCluster> pastWandPoints = wandMotion.getPastClusters();
 
