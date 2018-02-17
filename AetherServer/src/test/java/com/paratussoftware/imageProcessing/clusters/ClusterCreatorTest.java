@@ -75,16 +75,28 @@ public class ClusterCreatorTest {
     @Test
     public void testClusterPixels_blackImage(){
         ClusterCreator clusterCreator = new ClusterCreator();
-        byte[] imageBytes = readTestImageBytes("./resources/blackFrame.jpg");
+        byte[] imageBytes = readTestImageBytes_grayscale("./resources/blackFrame.jpg");
 
         List<PointCluster> clusters = clusterCreator.clusterPixels(imageBytes);
         assertTrue(clusters.isEmpty());
     }
 
     private byte[] readTestImageBytes(String filename){
-        Settings.IMAGE_WIDTH = 800;
+        Settings.IMAGE_WIDTH = 640;
         Mat frame = Highgui.imread(filename);
         Imgproc.cvtColor(frame, frame, Imgproc.COLOR_BGR2GRAY);
+
+        Imgproc.threshold(frame, frame, 25, 255, Imgproc.THRESH_BINARY);
+        BufferedImage image = new BufferedImage(frame.width(), frame.height(), BufferedImage.TYPE_BYTE_GRAY);
+        byte[] imageBytes = ((DataBufferByte)image.getRaster().getDataBuffer()).getData();
+        frame.get(0,0,imageBytes);
+        return imageBytes;
+    }
+
+    private byte[] readTestImageBytes_grayscale(String filename){
+        Settings.IMAGE_WIDTH = 640;
+        Mat frame = Highgui.imread(filename);
+//        Imgproc.cvtColor(frame, frame, Imgproc.COLOR_BGR2GRAY);
 
         Imgproc.threshold(frame, frame, 25, 255, Imgproc.THRESH_BINARY);
         BufferedImage image = new BufferedImage(frame.width(), frame.height(), BufferedImage.TYPE_BYTE_GRAY);

@@ -15,6 +15,6 @@ subprojects {
     sourceCompatibility = 1.8
 
     tasks.withType(Test) {
-        systemProperty "java.library.path", "/Demo/lib"
+        systemProperty "java.library.path", "/home/arthur/Projects/Grimoire-V2/Demo/lib/linux"
     }
 }
