@@ -5,18 +5,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.opencv.core.Core;
-import org.opencv.core.Mat;
-import org.opencv.highgui.Highgui;
-import org.opencv.imgproc.Imgproc;
 
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
-import java.io.File;
-import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.List;
 
-import static com.paratussoftware.imageProcessing.clusters.TestFileReader.openFile;
+import static com.paratussoftware.helpers.TestImageReader.readImageDataFromFile;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -26,23 +19,23 @@ public class ClusterCreatorTest {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
     }
 
-    private int originalWidth, originalHeight;
+    private int originalWidth;
+    private ClusterCreator clusterCreator;
 
     @Before
     public void setUp() {
         originalWidth = Settings.IMAGE_WIDTH;
-        originalHeight = Settings.IMAGE_HEIGHT;
+        Settings.IMAGE_WIDTH = 640;
+        clusterCreator = new ClusterCreator();
     }
 
     @After
     public void tearDown() {
         Settings.IMAGE_WIDTH = originalWidth;
-        Settings.IMAGE_HEIGHT = originalHeight;
     }
 
     @Test
     public void testHandleCoordinates(){
-        ClusterCreator clusterCreator = new ClusterCreator();
         LinkedList<PointCluster> pointClusters = new LinkedList<>();
 
         clusterCreator.handle(5, 4, pointClusters);
@@ -55,47 +48,33 @@ public class ClusterCreatorTest {
         PointCluster firstCluster = pointClusters.getFirst();
         PointCluster secondCluster = pointClusters.getLast();
 
-        assertEquals(5, firstCluster.left());
-        assertEquals(7, firstCluster.right());
-        assertEquals(4, firstCluster.top());
-        assertEquals(8, firstCluster.bottom());
+        checkClusterProperties(firstCluster, 5, 7, 4, 8);
+        checkClusterProperties(secondCluster, 29, 29, 45, 45);
+    }
 
-        assertEquals(29, secondCluster.left());
-        assertEquals(29, secondCluster.right());
-        assertEquals(45, secondCluster.top());
-        assertEquals(45, secondCluster.bottom());
+    private void checkClusterProperties(PointCluster cluster, int left, int right, int top, int bottom){
+        assertEquals("Left side doesn't match", left, cluster.left());
+        assertEquals("Right side doesn't match",right, cluster.right());
+        assertEquals("Top side doesn't match",top, cluster.top());
+        assertEquals("Bottom side doesn't match",bottom, cluster.bottom());
     }
 
     @Test
     public void testClusterPixels(){
-        ClusterCreator clusterCreator = new ClusterCreator();
-        byte[] imageBytes = readTestImageBytes("testFrame.jpg");
+        byte[] imageData = readImageDataFromFile("testFrame.jpg");
 
-        List<PointCluster> clusters = clusterCreator.clusterPixels(imageBytes);
+        List<PointCluster> clusters = clusterCreator.clusterPixels(imageData);
         assertEquals(7, clusters.size());
     }
 
     @Test
     public void testClusterPixels_blackImage(){
-        ClusterCreator clusterCreator = new ClusterCreator();
-        byte[] imageBytes = readTestImageBytes("blackFrame.jpg");
+        byte[] imageData = readImageDataFromFile("blackFrame.jpg");
 
-        List<PointCluster> clusters = clusterCreator.clusterPixels(imageBytes);
+        List<PointCluster> clusters = clusterCreator.clusterPixels(imageData);
         assertTrue(clusters.isEmpty());
     }
 
-    private byte[] readTestImageBytes(String filename){
-        Settings.IMAGE_WIDTH = 640;
-        File file = openFile(filename);
-        Mat frame = Highgui.imread(file.getAbsolutePath());
-        Imgproc.cvtColor(frame, frame, Imgproc.COLOR_BGR2GRAY);
-
-        Imgproc.threshold(frame, frame, 25, 255, Imgproc.THRESH_BINARY);
-        BufferedImage image = new BufferedImage(frame.width(), frame.height(), BufferedImage.TYPE_BYTE_GRAY);
-        byte[] imageBytes = ((DataBufferByte)image.getRaster().getDataBuffer()).getData();
-        frame.get(0,0,imageBytes);
-        return imageBytes;
-    }
 
 
 }

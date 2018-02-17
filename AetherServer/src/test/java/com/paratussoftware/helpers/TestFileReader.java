@@ -1,4 +1,4 @@
-package com.paratussoftware.imageProcessing.clusters;
+package com.paratussoftware.helpers;
 
 import java.io.File;
 import java.nio.file.Paths;
