@@ -1,6 +1,7 @@
 package com.paratussoftware.imageProcessing.clusters;
 
 import com.paratussoftware.buffers.RingBuffer;
+import com.paratussoftware.imageProcessing.motions.WandMotion;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

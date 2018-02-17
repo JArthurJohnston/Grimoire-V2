@@ -1,7 +1,7 @@
 package com.paratussoftware.gestures;
 
 import com.paratussoftware.config.Settings;
-import com.paratussoftware.imageProcessing.clusters.WandMotion;
+import com.paratussoftware.imageProcessing.motions.WandMotion;
 import org.junit.Before;
 import org.junit.Test;
 

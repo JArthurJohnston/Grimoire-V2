@@ -52,13 +52,6 @@ public class ClusterCreatorTest {
         checkClusterProperties(secondCluster, 29, 29, 45, 45);
     }
 
-    private void checkClusterProperties(PointCluster cluster, int left, int right, int top, int bottom){
-        assertEquals("Left side doesn't match", left, cluster.left());
-        assertEquals("Right side doesn't match",right, cluster.right());
-        assertEquals("Top side doesn't match",top, cluster.top());
-        assertEquals("Bottom side doesn't match",bottom, cluster.bottom());
-    }
-
     @Test
     public void testClusterPixels(){
         byte[] imageData = readImageDataFromFile("testFrame.jpg");
@@ -75,6 +68,12 @@ public class ClusterCreatorTest {
         assertTrue(clusters.isEmpty());
     }
 
+    private void checkClusterProperties(PointCluster cluster, int left, int right, int top, int bottom){
+        assertEquals("Left side doesn't match", left, cluster.left());
+        assertEquals("Right side doesn't match",right, cluster.right());
+        assertEquals("Top side doesn't match",top, cluster.top());
+        assertEquals("Bottom side doesn't match",bottom, cluster.bottom());
+    }
 
 
 }

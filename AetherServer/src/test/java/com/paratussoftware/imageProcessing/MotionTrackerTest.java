@@ -2,7 +2,8 @@ package com.paratussoftware.imageProcessing;
 
 import com.paratussoftware.config.Settings;
 import com.paratussoftware.imageProcessing.clusters.PointCluster;
-import com.paratussoftware.imageProcessing.clusters.WandMotion;
+import com.paratussoftware.imageProcessing.motions.WandMotion;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -12,22 +13,25 @@ import static org.junit.Assert.*;
 
 public class MotionTrackerTest {
 
+    private MotionTracker motionTracker;
+
+    @Before
+    public void setUp(){
+        motionTracker = new MotionTracker();
+    }
+
     @Test
     public void testConstruction() throws Exception {
-        final MotionTracker motionTracker = new MotionTracker();
-
         assertTrue(motionTracker.getTrackedMotions().isEmpty());
     }
 
     @Test
     public void testTracksClusters() throws Exception {
-        final MotionTracker motionTracker = new MotionTracker();
-
         final LinkedList<PointCluster> pointClusters = new LinkedList<>();
         final PointCluster possibleWandPoint = createPointCluster(0, 0, 5, 5);
-        final PointCluster clusterThantsTooSmall = PointCluster.newWith(10, 10);
+        final PointCluster clusterThatsTooSmall = PointCluster.newWith(10, 10);
         pointClusters.add(possibleWandPoint);
-        pointClusters.add(clusterThantsTooSmall);
+        pointClusters.add(clusterThatsTooSmall);
 
         motionTracker.track(pointClusters);
 
@@ -38,12 +42,14 @@ public class MotionTrackerTest {
     }
 
     @Test
-    public void testMapsTrackedClustersToExistingMotions() throws Exception {
+    public void testDefaultMotionTrackingDistance() {
         assertEquals(40, Settings.MOTION_TRACKING_DISTANCE);
+    }
 
+    @Test
+    public void testMapsTrackedClustersToExistingMotions() throws Exception {
         final PointCluster firstCluster = PointCluster.newWith(0, 0);
         final WandMotion wandMotion = new WandMotion(firstCluster);
-        final MotionTracker motionTracker = new MotionTracker();
         motionTracker.getTrackedMotions().add(wandMotion);
 
         final PointCluster newCluster = PointCluster.newWith(1, 1);

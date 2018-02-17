@@ -4,7 +4,7 @@ import com.paratussoftware.buffers.ByteArrayRingBuffer;
 import com.paratussoftware.buffers.RingBuffer;
 import com.paratussoftware.config.Settings;
 import com.paratussoftware.imageProcessing.clusters.PointCluster;
-import com.paratussoftware.imageProcessing.clusters.WandMotion;
+import com.paratussoftware.imageProcessing.motions.WandMotion;
 import org.junit.Test;
 
 import java.util.List;

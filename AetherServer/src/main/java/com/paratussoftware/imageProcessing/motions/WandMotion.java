@@ -1,6 +1,7 @@
-package com.paratussoftware.imageProcessing.clusters;
+package com.paratussoftware.imageProcessing.motions;
 
 import com.paratussoftware.buffers.RingBuffer;
+import com.paratussoftware.imageProcessing.clusters.PointCluster;
 
 public class WandMotion implements Comparable<WandMotion> {
 
@@ -17,7 +18,7 @@ public class WandMotion implements Comparable<WandMotion> {
         this.pastClusters = pastClusters;
     }
 
-    double length() {
+    public double length() {
         double length = 0;
         PointCluster currentPoint = this.currentCluster;
         for (int i = 0; i < this.pastClusters.size(); i++) {

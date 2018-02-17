@@ -2,7 +2,7 @@ package com.paratussoftware.gestures;
 
 import com.paratussoftware.buffers.RingBuffer;
 import com.paratussoftware.imageProcessing.clusters.PointCluster;
-import com.paratussoftware.imageProcessing.clusters.WandMotion;
+import com.paratussoftware.imageProcessing.motions.WandMotion;
 
 public class WandMotionTestBuilder {
 

@@ -4,6 +4,7 @@ import com.paratussoftware.buffers.ByteArrayRingBuffer;
 import com.paratussoftware.buffers.RingBuffer;
 import com.paratussoftware.imageProcessing.clusters.ClusterCreator;
 import com.paratussoftware.imageProcessing.clusters.PointCluster;
+import com.paratussoftware.imageProcessing.motions.WandMotion;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -39,7 +40,8 @@ public class ImageProcessor implements Runnable {
     void processFrame(final byte[] framePixels) {
         final LinkedList<PointCluster> pointClusters = this.clusterCreator.clusterPixels(framePixels);
         this.motionTracker.track(pointClusters);
-        this.motionTracker.getTrackedMotions(); //needs gesture processing
+        List<WandMotion> trackedMotions = this.motionTracker.getTrackedMotions();//needs gesture processing
+
         try {
             this.bufferedClusters.put(pointClusters);//do i still need this?
         } catch (final InterruptedException e) {
