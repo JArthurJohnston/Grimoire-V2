@@ -1,7 +1,4 @@
 *.iml
-*.jpg
-*.jpeg
-*.png
 .idea/
 .gradle/
 build/

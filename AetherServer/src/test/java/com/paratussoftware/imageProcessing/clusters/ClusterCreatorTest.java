@@ -11,9 +11,12 @@ import org.opencv.imgproc.Imgproc;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
+import java.io.File;
+import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.List;
 
+import static com.paratussoftware.imageProcessing.clusters.TestFileReader.openFile;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -23,7 +26,7 @@ public class ClusterCreatorTest {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
     }
 
-    int originalWidth, originalHeight;
+    private int originalWidth, originalHeight;
 
     @Before
     public void setUp() {
@@ -66,16 +69,16 @@ public class ClusterCreatorTest {
     @Test
     public void testClusterPixels(){
         ClusterCreator clusterCreator = new ClusterCreator();
-        byte[] imageBytes = readTestImageBytes("./resources/testFrame.jpg");
+        byte[] imageBytes = readTestImageBytes("testFrame.jpg");
 
         List<PointCluster> clusters = clusterCreator.clusterPixels(imageBytes);
-        assertEquals(75, clusters.size());
+        assertEquals(7, clusters.size());
     }
 
     @Test
     public void testClusterPixels_blackImage(){
         ClusterCreator clusterCreator = new ClusterCreator();
-        byte[] imageBytes = readTestImageBytes_grayscale("./resources/blackFrame.jpg");
+        byte[] imageBytes = readTestImageBytes("blackFrame.jpg");
 
         List<PointCluster> clusters = clusterCreator.clusterPixels(imageBytes);
         assertTrue(clusters.isEmpty());
@@ -83,20 +86,9 @@ public class ClusterCreatorTest {
 
     private byte[] readTestImageBytes(String filename){
         Settings.IMAGE_WIDTH = 640;
-        Mat frame = Highgui.imread(filename);
+        File file = openFile(filename);
+        Mat frame = Highgui.imread(file.getAbsolutePath());
         Imgproc.cvtColor(frame, frame, Imgproc.COLOR_BGR2GRAY);
-
-        Imgproc.threshold(frame, frame, 25, 255, Imgproc.THRESH_BINARY);
-        BufferedImage image = new BufferedImage(frame.width(), frame.height(), BufferedImage.TYPE_BYTE_GRAY);
-        byte[] imageBytes = ((DataBufferByte)image.getRaster().getDataBuffer()).getData();
-        frame.get(0,0,imageBytes);
-        return imageBytes;
-    }
-
-    private byte[] readTestImageBytes_grayscale(String filename){
-        Settings.IMAGE_WIDTH = 640;
-        Mat frame = Highgui.imread(filename);
-//        Imgproc.cvtColor(frame, frame, Imgproc.COLOR_BGR2GRAY);
 
         Imgproc.threshold(frame, frame, 25, 255, Imgproc.THRESH_BINARY);
         BufferedImage image = new BufferedImage(frame.width(), frame.height(), BufferedImage.TYPE_BYTE_GRAY);
