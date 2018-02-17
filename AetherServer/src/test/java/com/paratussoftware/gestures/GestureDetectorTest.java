@@ -15,14 +15,13 @@ public class GestureDetectorTest {
 
     @Before
     public void setup() throws Exception{
+        Settings.GESTURE_DETECTION_DISTANCE = 10;
         downwardsLeftWandMotion = createDownwardsLeftWandMotion();
         gestureDetector = new GestureDetector();
     }
 
     @Test
     public void testGestureFromWandMotion_downwardsLeft() throws Exception{
-        Settings.GESTURE_DETECTION_DISTANCE = 10;
-
         final Gesture actualGesture = gestureDetector.gestureFrom(createDownwardsLeftWandMotion());
 
         assertEquals(Gesture.DOWNWARDS_LEFT, actualGesture);
@@ -30,8 +29,6 @@ public class GestureDetectorTest {
 
     @Test
     public void testGestureFromWandMotion_downwardsRight() throws Exception{
-        Settings.GESTURE_DETECTION_DISTANCE = 10;
-
         final Gesture actualGesture = gestureDetector.gestureFrom(createDownwardsRightWandMotion());
 
         assertEquals(Gesture.DOWNWARDS_RIGHT, actualGesture);
@@ -39,8 +36,6 @@ public class GestureDetectorTest {
 
     @Test
     public void testGestureFromWandMotion_upwardsLeft() throws Exception{
-        Settings.GESTURE_DETECTION_DISTANCE = 10;
-
         final Gesture actualGesture = gestureDetector.gestureFrom(createUpwardsLeftWandMotion());
 
         assertEquals(Gesture.UPWARDS_LEFT, actualGesture);
@@ -48,8 +43,6 @@ public class GestureDetectorTest {
 
     @Test
     public void testGestureFromWandMotion_upwardsRight() throws Exception{
-        Settings.GESTURE_DETECTION_DISTANCE = 10;
-
         final Gesture actualGesture = gestureDetector.gestureFrom(createUpwardsRightWandMotion());
 
         assertEquals(Gesture.UPWARDS_RIGHT, actualGesture);
@@ -57,38 +50,30 @@ public class GestureDetectorTest {
 
     @Test
     public void testGestureFromWandMotion_rightwards() throws Exception{
-        Settings.GESTURE_DETECTION_DISTANCE = 10;
-
         final Gesture actualGesture = gestureDetector.gestureFrom(createRightwardsWandMotion());
 
-        assertEquals(Gesture.UPWARDS_RIGHT, actualGesture);
+        assertEquals(Gesture.RIGHTWARDS, actualGesture);
     }
 
     @Test
     public void testGestureFromWandMotion_leftwards() throws Exception{
-        Settings.GESTURE_DETECTION_DISTANCE = 10;
-
         final Gesture actualGesture = gestureDetector.gestureFrom(createLeftwardsWandMotion());
 
-        assertEquals(Gesture.UPWARDS_RIGHT, actualGesture);
+        assertEquals(Gesture.LEFTWARDS, actualGesture);
     }
 
     @Test
     public void testGestureFromWandMotion_upwards() throws Exception{
-        Settings.GESTURE_DETECTION_DISTANCE = 10;
-
         final Gesture actualGesture = gestureDetector.gestureFrom(createUpwardsWandMotion());
 
-        assertEquals(Gesture.UPWARDS_RIGHT, actualGesture);
+        assertEquals(Gesture.UPWARDS, actualGesture);
     }
 
     @Test
     public void testGestureFromWandMotion_downwards() throws Exception{
-        Settings.GESTURE_DETECTION_DISTANCE = 10;
-
         final Gesture actualGesture = gestureDetector.gestureFrom(createDownwardsWandMotion());
 
-        assertEquals(Gesture.UPWARDS_RIGHT, actualGesture);
+        assertEquals(Gesture.DOWNWARDS, actualGesture);
     }
 
     @Test

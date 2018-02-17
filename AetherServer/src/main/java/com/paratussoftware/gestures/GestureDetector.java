@@ -12,19 +12,27 @@ public class GestureDetector {
     private static Gesture calculateDirectionFromPoints(final Point currentPoint, final Point firstPoint) {
         final double slope = PointMath.slope(currentPoint, firstPoint);
         if (PointMath.isDiagonal(slope)) {
-            final boolean isRightwardsMovement = currentPoint.getX() > firstPoint.getX();
-            if (slope > 0) {
-                return isRightwardsMovement ? Gesture.DOWNWARDS_LEFT : Gesture.UPWARDS_RIGHT;
-            } else {
-                return isRightwardsMovement ? Gesture.UPWARDS_LEFT : Gesture.DOWNWARDS_RIGHT;
-            }
+            return calculateDiagonalMovement(currentPoint, firstPoint, slope);
         }
+        return calculateHorizontalAndVerticalMovement(currentPoint, firstPoint);
+    }
+
+    private static Gesture calculateHorizontalAndVerticalMovement(Point currentPoint, Point firstPoint) {
         final double differenceInX = Math.abs(currentPoint.getX() - firstPoint.getX());
         final double differenceInY = Math.abs(currentPoint.getY() - firstPoint.getY());
         if (differenceInX > differenceInY) {
             return currentPoint.getX() > firstPoint.getX() ? Gesture.LEFTWARDS : Gesture.RIGHTWARDS;
         } else {
             return currentPoint.getY() > firstPoint.getY() ? Gesture.DOWNWARDS : Gesture.UPWARDS;
+        }
+    }
+
+    private static Gesture calculateDiagonalMovement(Point currentPoint, Point firstPoint, double slope) {
+        final boolean isRightwardsMovement = currentPoint.getX() > firstPoint.getX();
+        if (slope > 0) {
+            return isRightwardsMovement ? Gesture.DOWNWARDS_LEFT : Gesture.UPWARDS_RIGHT;
+        } else {
+            return isRightwardsMovement ? Gesture.UPWARDS_LEFT : Gesture.DOWNWARDS_RIGHT;
         }
     }
 
