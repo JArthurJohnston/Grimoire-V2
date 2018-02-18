@@ -15,6 +15,7 @@ public class ClientHandlerTest {
         ClientHandler clientHandler = new ClientHandler(mockSocket);
 
         assertSame(mockSocket, clientHandler.getSocket());
+        assertTrue(clientHandler.getGestureBuffer().isEmpty());
     }
     
 }

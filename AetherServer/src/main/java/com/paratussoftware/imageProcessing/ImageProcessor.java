@@ -3,6 +3,8 @@ package com.paratussoftware.imageProcessing;
 import com.paratussoftware.buffers.ByteArrayRingBuffer;
 import com.paratussoftware.buffers.PriorityBuffer;
 import com.paratussoftware.buffers.RingBuffer;
+import com.paratussoftware.gestures.Gesture;
+import com.paratussoftware.gestures.GestureDetector;
 import com.paratussoftware.imageProcessing.clusters.ClusterCreator;
 import com.paratussoftware.imageProcessing.clusters.PointCluster;
 import com.paratussoftware.imageProcessing.motions.WandMotion;
@@ -14,17 +16,17 @@ public class ImageProcessor implements Runnable {
 
     private final ByteArrayRingBuffer ringBuffer;
     private final ClusterCreator clusterCreator;
-    private final RingBuffer<List<PointCluster>> bufferedClusters;
     private final MotionTracker motionTracker;
     private boolean isRunning;
-    private PriorityBuffer<WandMotion> prioritizedMotions;
+    private final PriorityBuffer<WandMotion> prioritizedMotions;
+    private final RingBuffer<Gesture> gestureOutputBuffer;
 
-    public ImageProcessor(final ByteArrayRingBuffer ringBuffer) {
+    public ImageProcessor(final ByteArrayRingBuffer ringBuffer, final RingBuffer<Gesture> gestureBuffer) {
         this.ringBuffer = ringBuffer;
         this.clusterCreator = new ClusterCreator();
-        this.bufferedClusters = new RingBuffer<>(32);
         this.prioritizedMotions = buildDefaultPriorityBuffer();
         this.motionTracker = new MotionTracker(prioritizedMotions);
+        this.gestureOutputBuffer = gestureBuffer;
     }
 
     private PriorityBuffer<WandMotion> buildDefaultPriorityBuffer() {
@@ -48,17 +50,9 @@ public class ImageProcessor implements Runnable {
         final LinkedList<PointCluster> pointClusters = this.clusterCreator.clusterPixels(framePixels);
         this.motionTracker.track(pointClusters);
 
-
-
-        try {
-            this.bufferedClusters.put(pointClusters);//do i still need this?
-        } catch (final InterruptedException e) {
-        }
+        Gesture gesture = GestureDetector.gestureFrom(prioritizedMotions.getFirst());
     }
 
-    RingBuffer<List<PointCluster>> getBufferedClusters() {
-        return this.bufferedClusters;
-    }
 
     ClusterCreator getClusterCreator() {
         return this.clusterCreator;
@@ -74,5 +68,9 @@ public class ImageProcessor implements Runnable {
 
     public PriorityBuffer<WandMotion> getPrioritizedMotions() {
         return prioritizedMotions;
+    }
+
+    public RingBuffer<Gesture> getGestureOutputBuffer() {
+        return gestureOutputBuffer;
     }
 }

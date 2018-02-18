@@ -4,28 +4,38 @@ import com.paratussoftware.buffers.ByteArrayRingBuffer;
 import com.paratussoftware.buffers.PriorityBuffer;
 import com.paratussoftware.buffers.RingBuffer;
 import com.paratussoftware.config.Settings;
-import com.paratussoftware.imageProcessing.clusters.PointCluster;
+import com.paratussoftware.gestures.Gesture;
 import com.paratussoftware.imageProcessing.motions.WandMotion;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.List;
-
+import static com.paratussoftware.imageProcessing.identification.ImageTestData.*;
 import static org.junit.Assert.*;
 
 public class ImageProcessorTest {
 
     private ByteArrayRingBuffer ringBuffer;
+    private RingBuffer<Gesture> gestureBuffer;
     private ImageProcessor imageProcessor;
 
     @Before
     public void setUp(){
+        Settings.IMAGE_WIDTH = 10;
+
+        gestureBuffer = new RingBuffer<>(4);
         ringBuffer = new ByteArrayRingBuffer(4, 8);
-        imageProcessor = new ImageProcessor(ringBuffer);
+        imageProcessor = new ImageProcessor(ringBuffer, gestureBuffer);
+    }
+
+    @After
+    public void tearDown(){
+        Settings.IMAGE_WIDTH = 848;
     }
 
     @Test
     public void testConstruction() {
+        assertSame(gestureBuffer, imageProcessor.getGestureOutputBuffer());
         assertTrue(imageProcessor.getPrioritizedMotions().isEmpty());
         assertEquals(8, imageProcessor.getPrioritizedMotions().getCapacity());
         assertSame(ringBuffer, imageProcessor.getRingBuffer());
@@ -33,25 +43,11 @@ public class ImageProcessorTest {
         MotionTracker motionTracker = imageProcessor.getMotionTracker();
         assertNotNull(motionTracker);
         assertSame(motionTracker.getTrackedMotions(), imageProcessor.getPrioritizedMotions());
-
-
-        final RingBuffer<List<PointCluster>> bufferedClusters = imageProcessor.getBufferedClusters();
-        assertEquals(32, bufferedClusters.getCapacity());
     }
 
     @Test
     public void testProcessFrame_buffersPointClusters() {
-        assertEquals(848, Settings.IMAGE_WIDTH);
-        assertEquals(480, Settings.IMAGE_HEIGHT);
-        Settings.IMAGE_WIDTH = 10;
-        Settings.IMAGE_HEIGHT = 10;
-
         imageProcessor.processFrame(arrayWithOneCluster());
-
-        final List<PointCluster> pointClusters = imageProcessor.getBufferedClusters().get(0);
-        assertEquals(1, pointClusters.size());
-        assertEquals(5, pointClusters.get(0).width());
-        assertEquals(5, pointClusters.get(0).height());
 
         final MotionTracker motionTracker = imageProcessor.getMotionTracker();
         final PriorityBuffer<WandMotion> trackedMotions = motionTracker.getTrackedMotions();
@@ -61,19 +57,19 @@ public class ImageProcessorTest {
         assertEquals(5, wandMotion.getCurrentCluster().height());
     }
 
-    private byte[] arrayWithOneCluster() {
-        return new byte[]{
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 1, 1, 1, 0, 0, 0, 0,
-                0, 0, 1, 1, 1, 1, 1, 1, 0, 0,
-                0, 0, 1, 1, 1, 1, 1, 1, 0, 0,
-                0, 0, 1, 1, 1, 1, 1, 1, 0, 0,
-                0, 0, 1, 1, 1, 1, 1, 1, 0, 0,
-                0, 0, 0, 1, 1, 1, 1, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-        };
+    @Test
+    public void processFiveFrames_generatesWandMotion() {
+        byte[][] motionFrameData = wandMotionFrameData();
+        for (byte[] frameDatum : motionFrameData) {
+            imageProcessor.processFrame(frameDatum);
+        }
+
+        final MotionTracker motionTracker = imageProcessor.getMotionTracker();
+        final PriorityBuffer<WandMotion> trackedMotions = motionTracker.getTrackedMotions();
+        assertEquals(1, trackedMotions.size());
+        final WandMotion wandMotion = trackedMotions.get(0);
+        assertEquals(5, wandMotion.getCurrentCluster().width());
+        assertEquals(5, wandMotion.getCurrentCluster().height());
     }
 
 
