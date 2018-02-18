@@ -1,5 +1,6 @@
 package com.paratussoftware.imageProcessing;
 
+import com.paratussoftware.buffers.PriorityBuffer;
 import com.paratussoftware.config.Settings;
 import com.paratussoftware.imageProcessing.clusters.PointCluster;
 import com.paratussoftware.imageProcessing.motions.WandMotion;
@@ -14,10 +15,13 @@ import static org.junit.Assert.*;
 public class MotionTrackerTest {
 
     private MotionTracker motionTracker;
+    private PriorityBuffer<WandMotion> wandMotionPriorityBuffer;
+
 
     @Before
     public void setUp(){
-        motionTracker = new MotionTracker();
+        wandMotionPriorityBuffer = new PriorityBuffer<>(4, (o1, o2) -> Double.compare(o2.length(), o1.length()));
+        motionTracker = new MotionTracker(wandMotionPriorityBuffer);
     }
 
     @Test
@@ -50,7 +54,7 @@ public class MotionTrackerTest {
     public void testMapsTrackedClustersToExistingMotions() throws Exception {
         final PointCluster firstCluster = PointCluster.newWith(0, 0);
         final WandMotion wandMotion = new WandMotion(firstCluster);
-        motionTracker.getTrackedMotions().add(wandMotion);
+        motionTracker.getTrackedMotions().push(wandMotion);
 
         final PointCluster newCluster = PointCluster.newWith(1, 1);
         newCluster.addPoint(5, 5);

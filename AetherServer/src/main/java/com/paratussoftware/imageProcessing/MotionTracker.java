@@ -11,22 +11,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
 
-
 public class MotionTracker {
     private final PriorityBuffer<WandMotion> trackedMotions;
-    //^^^ replace with PriorityBuffer
 
-    /*
-    Now that motions are getting tracked, they need to be prioritized and eventually removed
-    for garbage collection.
-    Currently the trackedMotions list will grow infinitely.
-     */
-    public MotionTracker() {
-        this.trackedMotions = buildDefaultPriorityBuffer();
-    }
-
-    private PriorityBuffer<WandMotion> buildDefaultPriorityBuffer() {
-        return new PriorityBuffer<>(5, (o1, o2) -> Double.compare(o2.length(), o1.length()));
+    public MotionTracker(PriorityBuffer<WandMotion> prioritizedMotions) {
+        trackedMotions = prioritizedMotions;
     }
 
     public void track(final List<PointCluster> pointClusters) {
@@ -55,7 +44,7 @@ public class MotionTracker {
         return sortedMotions.getFirst();
     }
 
-    List<WandMotion> getTrackedMotions() {
-        return this.trackedMotions.asList();
+    PriorityBuffer<WandMotion> getTrackedMotions() {
+        return this.trackedMotions;
     }
 }

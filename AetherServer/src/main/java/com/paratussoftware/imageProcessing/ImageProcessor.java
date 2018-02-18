@@ -1,6 +1,7 @@
 package com.paratussoftware.imageProcessing;
 
 import com.paratussoftware.buffers.ByteArrayRingBuffer;
+import com.paratussoftware.buffers.PriorityBuffer;
 import com.paratussoftware.buffers.RingBuffer;
 import com.paratussoftware.imageProcessing.clusters.ClusterCreator;
 import com.paratussoftware.imageProcessing.clusters.PointCluster;
@@ -16,12 +17,18 @@ public class ImageProcessor implements Runnable {
     private final RingBuffer<List<PointCluster>> bufferedClusters;
     private final MotionTracker motionTracker;
     private boolean isRunning;
+    private PriorityBuffer<WandMotion> prioritizedMotions;
 
     public ImageProcessor(final ByteArrayRingBuffer ringBuffer) {
         this.ringBuffer = ringBuffer;
         this.clusterCreator = new ClusterCreator();
         this.bufferedClusters = new RingBuffer<>(32);
-        this.motionTracker = new MotionTracker();
+        this.prioritizedMotions = buildDefaultPriorityBuffer();
+        this.motionTracker = new MotionTracker(prioritizedMotions);
+    }
+
+    private PriorityBuffer<WandMotion> buildDefaultPriorityBuffer() {
+        return new PriorityBuffer<>(8, (o1, o2) -> Double.compare(o2.length(), o1.length()));
     }
 
     public void stop() {
@@ -40,7 +47,8 @@ public class ImageProcessor implements Runnable {
     void processFrame(final byte[] framePixels) {
         final LinkedList<PointCluster> pointClusters = this.clusterCreator.clusterPixels(framePixels);
         this.motionTracker.track(pointClusters);
-        List<WandMotion> trackedMotions = this.motionTracker.getTrackedMotions();//needs gesture processing
+
+
 
         try {
             this.bufferedClusters.put(pointClusters);//do i still need this?
@@ -62,5 +70,9 @@ public class ImageProcessor implements Runnable {
 
     MotionTracker getMotionTracker() {
         return this.motionTracker;
+    }
+
+    public PriorityBuffer<WandMotion> getPrioritizedMotions() {
+        return prioritizedMotions;
     }
 }
