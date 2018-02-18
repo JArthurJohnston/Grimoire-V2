@@ -1,5 +1,6 @@
 package com.paratussoftware.imageProcessing;
 
+import com.paratussoftware.buffers.PriorityBuffer;
 import com.paratussoftware.config.Settings;
 import com.paratussoftware.imageProcessing.clusters.PointCluster;
 import com.paratussoftware.imageProcessing.motions.WandMotion;
@@ -12,7 +13,8 @@ import java.util.PriorityQueue;
 
 
 public class MotionTracker {
-    private final LinkedList<WandMotion> trackedMotions;
+    private final PriorityBuffer<WandMotion> trackedMotions;
+    //^^^ replace with PriorityBuffer
 
     /*
     Now that motions are getting tracked, they need to be prioritized and eventually removed
@@ -20,7 +22,11 @@ public class MotionTracker {
     Currently the trackedMotions list will grow infinitely.
      */
     public MotionTracker() {
-        this.trackedMotions = new LinkedList<>();
+        this.trackedMotions = buildDefaultPriorityBuffer();
+    }
+
+    private PriorityBuffer<WandMotion> buildDefaultPriorityBuffer() {
+        return new PriorityBuffer<>(5, (o1, o2) -> Double.compare(o2.length(), o1.length()));
     }
 
     public void track(final List<PointCluster> pointClusters) {
@@ -30,7 +36,7 @@ public class MotionTracker {
                 if (withinRangeOfExistingWandMotion(eachCluster, wandMotion)) {
                     wandMotion.addCluster(eachCluster);
                 } else {
-                    this.trackedMotions.add(new WandMotion(eachCluster));
+                    this.trackedMotions.push(new WandMotion(eachCluster));
                 }
             }
         }
@@ -45,11 +51,11 @@ public class MotionTracker {
         if (this.trackedMotions.isEmpty()) {
             return null;
         }
-        this.trackedMotions.sort(Comparator.comparingDouble(wandMotion -> wandMotion.getCurrentCluster().distanceTo(cluster)));
-        return this.trackedMotions.getFirst();
+        LinkedList<WandMotion> sortedMotions = this.trackedMotions.sort(Comparator.comparingDouble(wandMotion -> wandMotion.getCurrentCluster().distanceTo(cluster)));
+        return sortedMotions.getFirst();
     }
 
     List<WandMotion> getTrackedMotions() {
-        return this.trackedMotions;
+        return this.trackedMotions.asList();
     }
 }
