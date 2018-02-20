@@ -9,4 +9,6 @@ public class Settings {
     public static int IMAGE_WIDTH = 848;
     public static int IMAGE_HEIGHT = 480;
     public static int CLUSTER_CONTAINTS_DISTANCE = 10;
+    public static int SPELL_COOLDOWN_TIME = 5;
+    public static int SPELL_MANA_THRESHOLD = 5;
 }
