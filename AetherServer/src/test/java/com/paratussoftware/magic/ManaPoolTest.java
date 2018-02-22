@@ -73,6 +73,21 @@ public class ManaPoolTest {
 
         manaPool.handle(Gesture.UPWARDS_RIGHT);
         assertEquals(0, manaPool.getMana());
+
+        manaPool.handle(expectedGesture);
+        assertEquals(1, manaPool.getMana());
+        manaPool.handle(expectedGesture);
+        assertEquals(2, manaPool.getMana());
+        manaPool.handle(expectedGesture);
+        assertEquals(3, manaPool.getMana());
+
+        manaPool.handle(Gesture.UPWARDS_LEFT);
+        assertEquals(2, manaPool.getMana());
+        manaPool.handle(Gesture.LEFTWARDS);
+        assertEquals(1, manaPool.getMana());
+        manaPool.handle(Gesture.UPWARDS);
+        assertEquals(0, manaPool.getMana());
+
     }
     
     @Test
@@ -83,9 +98,5 @@ public class ManaPoolTest {
 
         assertEquals(0, manaPool.getMana());
     }
-
-    
-
-
 
 }
