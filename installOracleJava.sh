@@ -8,23 +8,26 @@ if [ $EUID != 0 ]; then
 fi
 
 JDK_LOC=$(find -type f -name "jdk*.tar.gz")
-JRE_LOC=$(find -type f -name "jre*.tar.gz")
 
 echo "Found JDK: $JDK_LOC"
-echo "Found JRE: $JRE_LOC"
 
-if [ -n "$JDK_LOC" ] && [ -n "$JRE_LOC" ]; then
-	mkdir /opt/Java
-	tar xvzf $JDK_LOC -C /opt/Java
-	tar xvzf $JRE_LOC -C /opt/Java
-
-	cd /opt/Java/jdk*
-	#JDK_BIN_LOC=$(find -type d -name "bin")
-	# ^This part still needs some work
-
-	JDK_BIN_LOC="/opt/Java/jdk-9.0.4/bin"
-
-	echo "export JAVA_HOME=$JDK_BIN_LOC" > /etc/profile.d/java_home.sh
-	source /etc/profile.d/java_home.sh
+if [ -z "$JDK_LOC" ]; then
+	echo "download the JDK tar.gz file"
+	exit 2
 fi
 
+mkdir /opt/Java
+tar xvzf $JDK_LOC -C /opt/Java
+
+cd /opt/Java/jdk*
+#JDK_BIN_LOC=$(find -type d -name "bin")
+# ^This part still needs some work
+
+JDK_OPT_LOC="/opt/Java/jdk-9.0.4"
+
+echo "export JAVA_HOME=$JDK_OPT_LOC" > /etc/profile.d/java_home.sh
+source /etc/profile.d/java_home.sh
+
+echo "Done. Please restart your machine"
+
+exit 0
