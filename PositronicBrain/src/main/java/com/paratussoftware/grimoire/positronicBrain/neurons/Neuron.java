@@ -40,6 +40,10 @@ public class Neuron {
         this.dendrites.add(synapse);
     }
 
+    public void addAxon(Synapse synapse){
+        this.axons.add(synapse);
+    }
+
     void trigger() {
         double inputValues = this.sumInputValues();
         double activationValue = activationFunction.process(inputValues);

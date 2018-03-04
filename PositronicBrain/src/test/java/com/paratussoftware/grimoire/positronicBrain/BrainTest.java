@@ -22,7 +22,7 @@ public class BrainTest {
     public void setUp(){
         numberOfInputs = 2;
         numberOfOutputs = 1;
-        int [] hiddenLayerData = new int[] {3, 4};
+        int [] hiddenLayerData = new int[] {3, 2, 4};
         brain = new Brain(numberOfInputs, numberOfOutputs, hiddenLayerData);
     }
 
@@ -35,9 +35,11 @@ public class BrainTest {
         assertEquals(numberOfInputs, inputSynapses.size());
         assertEquals(numberOfOutputs, outputSynapses.size());
 
-        assertEquals(2, hiddenLayers.size());
+        assertEquals(3, hiddenLayers.size());
+
         assertEquals(3, hiddenLayers.get(0).size());
-        assertEquals(4, hiddenLayers.get(1).size());
+        assertEquals(2, hiddenLayers.get(1).size());
+        assertEquals(4, hiddenLayers.get(2).size());
     }
 
     @Test
@@ -49,7 +51,7 @@ public class BrainTest {
             assertEquals(firstHiddenLayer.size(), eachInputNeuron.getAxons().size());
             for (Neuron eachNeuron : firstHiddenLayer) {
                 assertEquals(inputNeurons.size(), eachNeuron.getDendrites().size());
-                assertTrue(connectionExistsBetween(eachInputNeuron, eachNeuron));
+                assertTrue(connectionExistsBetween(eachInputNeuron.getAxons(), eachNeuron.getDendrites()));
             }
         }
     }
@@ -61,17 +63,30 @@ public class BrainTest {
         for (OutputNeuron eachOutputNeuron : outputNeurons) {
             assertEquals(lastHiddenLayer.size(), eachOutputNeuron.getDendrites().size());
             for (Neuron neuron : lastHiddenLayer) {
-                connectionExistsBetween(eachOutputNeuron, neuron);
+                assertTrue(connectionExistsBetween(eachOutputNeuron.getDendrites(), neuron.getAxons()));
             }
         }
     }
 
-    private boolean connectionExistsBetween(InputNeuron inputNeuron, Neuron receivingNeuron){
-        return connectionExistsBetween(inputNeuron.getAxons(), receivingNeuron.getDendrites());
+    @Test
+    public void construction_setsUpHiddenLayerConnections(){
+        List<Neuron> firstLayer = brain.getHiddenLayers().get(0);
+        List<Neuron> secondLayer = brain.getHiddenLayers().get(1);
+        List<Neuron> thirdLayer = brain.getHiddenLayers().get(2);
+
+        checkConnectionsExistBetweenLayers(firstLayer, secondLayer);
+        checkConnectionsExistBetweenLayers(secondLayer, thirdLayer);
     }
 
-    private boolean connectionExistsBetween(OutputNeuron outputNeuron, Neuron receivingNeuron){
-        return connectionExistsBetween(outputNeuron.getDendrites(), receivingNeuron.getAxons());
+    private void checkConnectionsExistBetweenLayers(List<Neuron> firstLayer, List<Neuron> secondLayer) {
+        for (Neuron firstLayerNeuron : firstLayer) {
+            assertEquals(secondLayer.size(), firstLayerNeuron.getAxons().size());
+            for (Neuron secondLayerNeuron : secondLayer) {
+                assertEquals(firstLayer.size(), secondLayerNeuron.getDendrites().size());
+                assertTrue(connectionExistsBetween(firstLayerNeuron.getAxons(), secondLayerNeuron.getDendrites()));
+                assertTrue(connectionExistsBetween(secondLayerNeuron.getDendrites(), firstLayerNeuron.getAxons()));
+            }
+        }
     }
 
     private boolean connectionExistsBetween(List<Synapse> inputSynapses, List<Synapse> receivingSynapses) {

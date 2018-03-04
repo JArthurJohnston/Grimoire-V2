@@ -14,7 +14,7 @@ public class Brain {
 
     private LinkedList<InputNeuron> inputs;
     private LinkedList<OutputNeuron> outputs;
-    private List<List<Neuron>> hiddenLayers;
+    private LinkedList<List<Neuron>> hiddenLayers;
     private NeuronFunction activationFunction;
 
     public Brain(int numberOfInputs, int numberOfOutputs, int... hiddenLayerData){
@@ -53,21 +53,47 @@ public class Brain {
         }
     }
 
+    private void createConnectionsBetween(OutputNeuron outputNeuron, List<Neuron> neuronLayer) {
+        for (Neuron neuron : neuronLayer) {
+            Synapse synapse = new Synapse();
+            outputNeuron.addDendrite(synapse);
+            neuron.addAxon(synapse);
+//            neuron.addDendrite(synapse); //<^????
+        }
+    }
+
     private void initializeOutputNeurons( int numberOfOutputs){
         outputs = new LinkedList<>();
         for (int counter = 0; counter < numberOfOutputs; counter++) {
-            outputs.add(new OutputNeuron());
+            OutputNeuron outputNeuron = new OutputNeuron();
+            createConnectionsBetween(outputNeuron, this.hiddenLayers.getLast());
+            outputs.add(outputNeuron);
         }
     }
 
     private void initializeHiddenLayers(int[] hiddenLayerData){
         hiddenLayers = new LinkedList<>();
+        List<Neuron> currentLayer = null;
         for (int numberOfNeuronsInLayer : hiddenLayerData) {
             LinkedList<Neuron> neurons = new LinkedList<>();
             for (int counter = 0; counter < numberOfNeuronsInLayer; counter++) {
                 neurons.add(new Neuron(activationFunction));
             }
+            if(currentLayer != null){
+                connectHiddenLayers(currentLayer, neurons);
+            }
+            currentLayer = neurons;
             hiddenLayers.add(neurons);
+        }
+    }
+
+    private void connectHiddenLayers(List<Neuron> previousLayer, LinkedList<Neuron> newLayer) {
+        for (Neuron eachPreviousLayerNeuron : previousLayer) {
+            Synapse synapse = new Synapse();
+            for (Neuron eachNewLayerNeuron : newLayer) {
+                eachPreviousLayerNeuron.addAxon(synapse);
+                eachNewLayerNeuron.addDendrite(synapse);
+            }
         }
     }
 }
