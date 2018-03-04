@@ -1,22 +1,23 @@
-package com.paratussoftware.grimoire.positronicBrain;
+package com.paratussoftware.grimoire.positronicBrain.neurons;
 
 import com.paratussoftware.grimoire.positronicBrain.functions.NeuronFunction;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * The basic data structure of a Neural net.
  * Just like in biology, a Neuron receives data from dendrites, and sends data through axons.
  */
 public class Neuron {
-    private List<Synapse> dendrites;
-    private List<Synapse> axons;
+    private final List<Synapse> dendrites;
+    private final List<Synapse> axons;
     private final NeuronFunction activationFunction;
 
     public Neuron(NeuronFunction activationFunction) {
         this.activationFunction = activationFunction;
+        axons = new LinkedList<>();
+        dendrites = new LinkedList<>();
     }
 
     double sumInputValues(){
@@ -35,24 +36,19 @@ public class Neuron {
         return axons;
     }
 
-    public void setDendrites(List<Synapse> dendrites) {
-        this.dendrites = dendrites;
+    public void addDendrite(Synapse synapse){
+        this.dendrites.add(synapse);
     }
 
-    public void setAxons(List<Synapse> axons) {
-        this.axons = axons;
-    }
-
-    public void trigger() {
+    void trigger() {
         double inputValues = this.sumInputValues();
         double activationValue = activationFunction.process(inputValues);
         for (Synapse eachSynapse : this.axons) {
             eachSynapse.input = activationValue;
         }
-
     }
 
-    public NeuronFunction getActivationFunction() {
+    NeuronFunction getActivationFunction() {
         return activationFunction;
     }
 }

@@ -1,11 +1,11 @@
-package com.paratussoftware.grimoire.positronicBrain;
+package com.paratussoftware.grimoire.positronicBrain.neurons;
 
 /**
  * Represents a connection between Neurons
  */
 public class Synapse {
 
-    public static Synapse newWith(double weight, double input){
+    static Synapse newWith(double weight, double input){
         Synapse synapse = new Synapse();
         synapse.input = input;
         synapse.weight = weight;
@@ -15,7 +15,7 @@ public class Synapse {
     double weight;
     double input;
 
-    public double weightedValue() {
+    double weightedValue() {
         return this.input * this.weight;
     }
 }

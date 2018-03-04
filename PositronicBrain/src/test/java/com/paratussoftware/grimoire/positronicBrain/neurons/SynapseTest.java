@@ -1,4 +1,4 @@
-package com.paratussoftware.grimoire.positronicBrain;
+package com.paratussoftware.grimoire.positronicBrain.neurons;
 
 import org.junit.Test;
 
