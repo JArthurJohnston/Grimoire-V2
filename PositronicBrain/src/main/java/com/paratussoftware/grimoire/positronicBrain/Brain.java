@@ -47,7 +47,7 @@ public class Brain {
 
     private void createConnectionsBetween(InputNeuron inputNeuron, List<Neuron> neuronLayer) {
         for (Neuron neuron : neuronLayer) {
-            Synapse synapse = new Synapse();
+            Synapse synapse = Synapse.newUnTrained();
             inputNeuron.addAxon(synapse);
             neuron.addDendrite(synapse);
         }
@@ -55,10 +55,9 @@ public class Brain {
 
     private void createConnectionsBetween(OutputNeuron outputNeuron, List<Neuron> neuronLayer) {
         for (Neuron neuron : neuronLayer) {
-            Synapse synapse = new Synapse();
+            Synapse synapse = Synapse.newUnTrained();
             outputNeuron.addDendrite(synapse);
             neuron.addAxon(synapse);
-//            neuron.addDendrite(synapse); //<^????
         }
     }
 
@@ -89,7 +88,7 @@ public class Brain {
 
     private void connectHiddenLayers(List<Neuron> previousLayer, LinkedList<Neuron> newLayer) {
         for (Neuron eachPreviousLayerNeuron : previousLayer) {
-            Synapse synapse = new Synapse();
+            Synapse synapse = Synapse.newUnTrained();
             for (Neuron eachNewLayerNeuron : newLayer) {
                 eachPreviousLayerNeuron.addAxon(synapse);
                 eachNewLayerNeuron.addDendrite(synapse);

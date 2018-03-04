@@ -91,6 +91,7 @@ public class BrainTest {
 
     private boolean connectionExistsBetween(List<Synapse> inputSynapses, List<Synapse> receivingSynapses) {
         for (Synapse dendriteSynapse : receivingSynapses) {
+            assertTrue(dendriteSynapse.weight > 0);
             if(inputSynapses.contains(dendriteSynapse))
                 return true;
         }
