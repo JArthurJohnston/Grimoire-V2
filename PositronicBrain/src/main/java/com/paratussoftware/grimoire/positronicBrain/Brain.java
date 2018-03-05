@@ -64,7 +64,7 @@ public class Brain {
     private void initializeOutputNeurons( int numberOfOutputs){
         outputs = new LinkedList<>();
         for (int counter = 0; counter < numberOfOutputs; counter++) {
-            OutputNeuron outputNeuron = new OutputNeuron();
+            OutputNeuron outputNeuron = new OutputNeuron(this.activationFunction);
             createConnectionsBetween(outputNeuron, this.hiddenLayers.getLast());
             outputs.add(outputNeuron);
         }
@@ -94,5 +94,9 @@ public class Brain {
                 eachNewLayerNeuron.addDendrite(synapse);
             }
         }
+    }
+
+    public NeuronFunction getActivationFunction() {
+        return activationFunction;
     }
 }

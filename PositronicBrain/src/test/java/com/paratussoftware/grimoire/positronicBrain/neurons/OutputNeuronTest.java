@@ -1,5 +1,6 @@
 package com.paratussoftware.grimoire.positronicBrain.neurons;
 
+import com.paratussoftware.grimoire.positronicBrain.functions.Sigmoid;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,7 +12,7 @@ public class OutputNeuronTest {
 
     @Before
     public void setUp(){
-        outputNeuron = new OutputNeuron();
+        outputNeuron = new OutputNeuron(new Sigmoid());
     }
 
     @Test

@@ -1,5 +1,6 @@
 package com.paratussoftware.grimoire.positronicBrain;
 
+import com.paratussoftware.grimoire.positronicBrain.functions.Sigmoid;
 import com.paratussoftware.grimoire.positronicBrain.neurons.InputNeuron;
 import com.paratussoftware.grimoire.positronicBrain.neurons.Neuron;
 import com.paratussoftware.grimoire.positronicBrain.neurons.OutputNeuron;
@@ -40,6 +41,8 @@ public class BrainTest {
         assertEquals(3, hiddenLayers.get(0).size());
         assertEquals(2, hiddenLayers.get(1).size());
         assertEquals(4, hiddenLayers.get(2).size());
+
+        assertTrue(brain.getActivationFunction() instanceof Sigmoid);
     }
 
     @Test
@@ -61,6 +64,7 @@ public class BrainTest {
         List<OutputNeuron> outputNeurons = brain.getOutputs();
         List<Neuron> lastHiddenLayer = ((LinkedList<List<Neuron>>)brain.getHiddenLayers()).getLast();
         for (OutputNeuron eachOutputNeuron : outputNeurons) {
+            assertSame(brain.getActivationFunction(), eachOutputNeuron.getActivationFunction());
             assertEquals(lastHiddenLayer.size(), eachOutputNeuron.getDendrites().size());
             for (Neuron neuron : lastHiddenLayer) {
                 assertTrue(connectionExistsBetween(eachOutputNeuron.getDendrites(), neuron.getAxons()));
