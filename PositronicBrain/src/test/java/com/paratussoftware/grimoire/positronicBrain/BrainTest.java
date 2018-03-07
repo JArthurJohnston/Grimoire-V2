@@ -82,6 +82,30 @@ public class BrainTest {
         checkConnectionsExistBetweenLayers(secondLayer, thirdLayer);
     }
 
+    @Test
+    public void inputTrainingData() {
+        Brain brain = TestData.simpleBrain();
+
+        double inputData = 33.567;
+        brain.trainWith(inputData).andExpectOutputs(23.5);
+
+        assertEquals(inputData, brain.getInputs().get(0).getAxons().get(0).input, 0);
+        assertEquals(inputData, brain.getInputs().get(0).getAxons().get(1).input, 0);
+
+        Neuron firstHiddenLayerNeuron = brain.getHiddenLayers().get(0).get(0);
+        Neuron secondHiddenLayerNeuron = brain.getHiddenLayers().get(0).get(1);
+
+        assertEquals(1.8765, firstHiddenLayerNeuron.getAxons().get(0).input, 0);
+        assertEquals(inputData, firstHiddenLayerNeuron.getDendrites().get(0).input ,0);
+
+        assertEquals(1.0, secondHiddenLayerNeuron.getAxons().get(0).input, 0);
+        assertEquals(inputData, secondHiddenLayerNeuron.getDendrites().get(0).input ,0);
+
+
+
+
+    }
+
     private void checkConnectionsExistBetweenLayers(List<Neuron> firstLayer, List<Neuron> secondLayer) {
         for (Neuron firstLayerNeuron : firstLayer) {
             assertEquals(secondLayer.size(), firstLayerNeuron.getAxons().size());

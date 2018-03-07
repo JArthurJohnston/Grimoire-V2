@@ -24,15 +24,15 @@ public class Brain {
         initializeOutputNeurons(numberOfOutputs);
     }
 
-    List<InputNeuron> getInputs() {
+    public List<InputNeuron> getInputs() {
         return inputs;
     }
 
-    List<OutputNeuron> getOutputs() {
+    public List<OutputNeuron> getOutputs() {
         return outputs;
     }
 
-    List<List<Neuron>> getHiddenLayers() {
+    public List<List<Neuron>> getHiddenLayers() {
         return hiddenLayers;
     }
 
@@ -98,5 +98,41 @@ public class Brain {
 
     public NeuronFunction getActivationFunction() {
         return activationFunction;
+    }
+
+    public DevelopingBrain trainWith(double inputData) {
+        return new DevelopingBrain(this, inputData);
+    }
+
+    class DevelopingBrain {
+        private double[] inputData;
+        private double[] expectedOutputs;
+        private Brain brain;
+
+        DevelopingBrain(Brain brain, double... inputData){
+            this.inputData = inputData;
+            this.brain = brain;
+        }
+
+        DevelopingBrain andExpectOutputs(double... expectedOutputs){
+            this.expectedOutputs = expectedOutputs;
+            this.brain.process(this.inputData);
+            return this;
+        }
+
+    }
+
+    public void process(double... inputData) {
+        for (int index = 0; index < inputData.length; index++) {
+            this.inputs.get(index).trigger(inputData[index]);
+        }
+        for (List<Neuron> hiddenLayer : this.hiddenLayers) {
+            for (Neuron neuron : hiddenLayer) {
+                neuron.trigger();
+            }
+        }
+        for (OutputNeuron output : this.outputs) {
+            output.trigger();
+        }
     }
 }

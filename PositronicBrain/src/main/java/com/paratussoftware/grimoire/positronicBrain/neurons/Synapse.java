@@ -22,6 +22,7 @@ public class Synapse {
         return synapse;
     }
 
+    public int id;
     public double weight;
     public double input;
 

@@ -1,6 +1,7 @@
 package com.paratussoftware.grimoire.positronicBrain.serilization;
 
 import com.paratussoftware.grimoire.positronicBrain.Brain;
+import com.paratussoftware.grimoire.positronicBrain.TestData;
 import com.paratussoftware.grimoire.positronicBrain.neurons.Neuron;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,13 +14,13 @@ public class BrainWriterTest {
 
     @Before
     public void setUp(){
-        brain = new Brain(1, 1, 2);
+        brain = TestData.simpleBrain();
     }
 
     @Test
-    public void writeBrain(){
-        String brinJson = BrainWriter.write(brain);
-
+    public void writeSynapses() {
+        String synapsesJson = BrainWriter.writeSynapsesFrom(brain);
+        assertEquals(TestData.simpleBrainJson, synapsesJson);
     }
 
 }

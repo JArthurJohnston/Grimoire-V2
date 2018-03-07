@@ -44,7 +44,7 @@ public class Neuron {
         this.axons.add(synapse);
     }
 
-    void trigger() {
+    public void trigger() {
         double inputValues = this.sumInputValues();
         double activationValue = activationFunction.process(inputValues);
         for (Synapse eachSynapse : this.axons) {
