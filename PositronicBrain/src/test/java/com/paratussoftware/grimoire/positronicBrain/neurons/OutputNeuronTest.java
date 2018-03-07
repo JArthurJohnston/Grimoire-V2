@@ -39,7 +39,7 @@ public class OutputNeuronTest {
         outputNeuron.addDendrite(synapse3);
         outputNeuron.trigger();
 
-        assertEquals(-0.13439890643886018, outputNeuron.deltaOutputSum(0), 0.000001);
+        assertEquals(-0.13521795308332574, outputNeuron.deltaOutputSum(0), 0.000001);
     }
 
 }

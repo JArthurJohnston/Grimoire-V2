@@ -41,7 +41,7 @@ public class OutputNeuron {
 
     public double deltaOutputSum(double targetValue){
         double delta = targetValue - this.value;
-        double derivative = this.activationFunction.derivitave(this.value);
+        double derivative = this.activationFunction.derivitave(sumInputValues());
         return derivative * delta;
     }
 
