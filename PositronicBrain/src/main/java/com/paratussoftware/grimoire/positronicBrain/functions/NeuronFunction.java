@@ -1,6 +1,11 @@
 package com.paratussoftware.grimoire.positronicBrain.functions;
 
-public interface NeuronFunction {
+public abstract class NeuronFunction {
 
-    public double process(double input);
+    public abstract double process(double input);
+
+    public double derivitave(double value){
+        double processedValue = this.process(value);
+        return processedValue * (1 - processedValue);
+    }
 }

@@ -14,6 +14,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class BrainTest {
+    private static double DELTA = 0.00001;
 
     private Brain brain;
     private int numberOfInputs;
@@ -83,11 +84,16 @@ public class BrainTest {
     }
 
     @Test
-    public void inputTrainingData() {
+    public void process_setsValuesToEachSynapse() {
         Brain brain = TestData.simpleBrain();
 
-        double inputData = 33.567;
-        brain.trainWith(inputData).andExpectOutputs(23.5);
+        double inputData = 0.567;
+//        brain.trainWith(inputData).andExpectOutputs(0.789);
+
+        double[] outputs = brain.process(inputData);
+
+        assertEquals(1, outputs.length);
+        assertEquals(0.600534, outputs[0], DELTA);
 
         assertEquals(inputData, brain.getInputs().get(0).getAxons().get(0).input, 0);
         assertEquals(inputData, brain.getInputs().get(0).getAxons().get(1).input, 0);
@@ -95,15 +101,11 @@ public class BrainTest {
         Neuron firstHiddenLayerNeuron = brain.getHiddenLayers().get(0).get(0);
         Neuron secondHiddenLayerNeuron = brain.getHiddenLayers().get(0).get(1);
 
-        assertEquals(1.8765, firstHiddenLayerNeuron.getAxons().get(0).input, 0);
+        assertEquals(0.515729, firstHiddenLayerNeuron.getAxons().get(0).input, DELTA);
         assertEquals(inputData, firstHiddenLayerNeuron.getDendrites().get(0).input ,0);
 
-        assertEquals(1.0, secondHiddenLayerNeuron.getAxons().get(0).input, 0);
-        assertEquals(inputData, secondHiddenLayerNeuron.getDendrites().get(0).input ,0);
-
-
-
-
+        assertEquals(0.531427, secondHiddenLayerNeuron.getAxons().get(0).input, DELTA);
+        assertEquals(inputData, secondHiddenLayerNeuron.getDendrites().get(0).input ,0.0);
     }
 
     private void checkConnectionsExistBetweenLayers(List<Neuron> firstLayer, List<Neuron> secondLayer) {

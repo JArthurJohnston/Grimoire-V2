@@ -1,6 +1,6 @@
 package com.paratussoftware.grimoire.positronicBrain.functions;
 
-public class Sigmoid implements NeuronFunction {
+public class Sigmoid extends NeuronFunction {
 
     @Override
     public double process(double input) {

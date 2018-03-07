@@ -39,6 +39,12 @@ public class OutputNeuron {
         return this.value;
     }
 
+    public double deltaOutputSum(double targetValue){
+        double delta = targetValue - this.value;
+        double derivative = this.activationFunction.derivitave(this.value);
+        return derivative * delta;
+    }
+
     double sumInputValues(){
         double inputSum = 0.0;
         for (Synapse eachSynapse : this.dendrites) {

@@ -29,4 +29,17 @@ public class OutputNeuronTest {
         assertTrue(outputNeuron.getDendrites().contains(synapse));
     }
 
+    @Test
+    public void deltaOutputSum() {
+        Synapse synapse1 = Synapse.newWith(0.3, 0.73);
+        Synapse synapse2 = Synapse.newWith(0.5, 0.79);
+        Synapse synapse3 = Synapse.newWith(0.9, 0.69);
+        outputNeuron.addDendrite(synapse1);
+        outputNeuron.addDendrite(synapse2);
+        outputNeuron.addDendrite(synapse3);
+        outputNeuron.trigger();
+
+        assertEquals(-0.13439890643886018, outputNeuron.deltaOutputSum(0), 0.000001);
+    }
+
 }

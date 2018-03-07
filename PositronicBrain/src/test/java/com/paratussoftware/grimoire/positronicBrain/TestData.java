@@ -7,11 +7,11 @@ public class TestData {
                 1,
                 1,
                 2);
-        brain.getInputs().get(0).getAxons().get(0).weight = 1.111;
-        brain.getInputs().get(0).getAxons().get(1).weight = 2.222;
+        brain.getInputs().get(0).getAxons().get(0).weight = 0.111;
+        brain.getInputs().get(0).getAxons().get(1).weight = 0.222;
 
-        brain.getHiddenLayers().get(0).get(0).getAxons().get(0).weight = 3.333;
-        brain.getHiddenLayers().get(0).get(1).getAxons().get(0).weight = 4.444;
+        brain.getHiddenLayers().get(0).get(0).getAxons().get(0).weight = 0.333;
+        brain.getHiddenLayers().get(0).get(1).getAxons().get(0).weight = 0.444;
         return brain;
     }
 

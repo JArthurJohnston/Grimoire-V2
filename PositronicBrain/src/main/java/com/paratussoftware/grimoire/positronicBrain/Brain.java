@@ -7,13 +7,14 @@ import com.paratussoftware.grimoire.positronicBrain.neurons.Neuron;
 import com.paratussoftware.grimoire.positronicBrain.neurons.OutputNeuron;
 import com.paratussoftware.grimoire.positronicBrain.neurons.Synapse;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 public class Brain {
 
-    private LinkedList<InputNeuron> inputs;
-    private LinkedList<OutputNeuron> outputs;
+    private ArrayList<InputNeuron> inputs;
+    private ArrayList<OutputNeuron> outputs;
     private LinkedList<List<Neuron>> hiddenLayers;
     private NeuronFunction activationFunction;
 
@@ -36,8 +37,63 @@ public class Brain {
         return hiddenLayers;
     }
 
+    /**
+     * triggers forward propagation of input data, calculates the delta output sum, then triggers backwards propagation
+     * using the targetOutputs. Note: the delta output sum reflects the state of the neural net before
+     * backwards propagation
+     * @param inputData
+     * @param targetOutputs
+     * @return the delta output sum
+     */
+    public double train(double[] inputData, double[] targetOutputs){
+        double[] outputValues = forwardPropagation(inputData);
+        for (int index = 0; index < this.outputs.size(); index++) {
+            double delta = targetOutputs[index] - outputValues[index];
+        }
+        return 0.0;
+    }
+
+    /**
+     * triggers forward propogation of input data.
+     * @param inputData
+     * @return an array of outputs
+     */
+    public double[] process(double... inputData) {
+        return forwardPropagation(inputData);
+    }
+
+    private double[] forwardPropagation(double[] inputData) {
+        triggerInputNeurons(inputData);
+        triggerEachHiddenLayer();
+        return triggerOutputLayers();
+    }
+
+    private double[] triggerOutputLayers() {
+        double[] outputValues = new double[outputs.size()];
+        for (int outputIndex = 0; outputIndex < outputs.size(); outputIndex++) {
+            OutputNeuron outputNeuron = outputs.get(outputIndex);
+            outputNeuron.trigger();
+            outputValues[outputIndex] = outputNeuron.getValue();
+        }
+        return outputValues;
+    }
+
+    private void triggerEachHiddenLayer() {
+        for (List<Neuron> hiddenLayer : this.hiddenLayers) {
+            for (Neuron neuron : hiddenLayer) {
+                neuron.trigger();
+            }
+        }
+    }
+
+    private void triggerInputNeurons(double[] inputData) {
+        for (int index = 0; index < inputData.length; index++) {
+            this.inputs.get(index).trigger(inputData[index]);
+        }
+    }
+
     private void initializeInputNeurons(int numberOfInputs){
-        inputs = new LinkedList<>();
+        inputs = new ArrayList<>();
         for (int counter = 0; counter < numberOfInputs; counter++) {
             InputNeuron inputNeuron = new InputNeuron();
             createConnectionsBetween(inputNeuron, this.hiddenLayers.get(0));
@@ -62,7 +118,7 @@ public class Brain {
     }
 
     private void initializeOutputNeurons( int numberOfOutputs){
-        outputs = new LinkedList<>();
+        outputs = new ArrayList<>();
         for (int counter = 0; counter < numberOfOutputs; counter++) {
             OutputNeuron outputNeuron = new OutputNeuron(this.activationFunction);
             createConnectionsBetween(outputNeuron, this.hiddenLayers.getLast());
@@ -116,23 +172,10 @@ public class Brain {
 
         DevelopingBrain andExpectOutputs(double... expectedOutputs){
             this.expectedOutputs = expectedOutputs;
-            this.brain.process(this.inputData);
+            double[] outputValues = this.brain.process(this.inputData);
+
             return this;
         }
-
     }
 
-    public void process(double... inputData) {
-        for (int index = 0; index < inputData.length; index++) {
-            this.inputs.get(index).trigger(inputData[index]);
-        }
-        for (List<Neuron> hiddenLayer : this.hiddenLayers) {
-            for (Neuron neuron : hiddenLayer) {
-                neuron.trigger();
-            }
-        }
-        for (OutputNeuron output : this.outputs) {
-            output.trigger();
-        }
-    }
 }

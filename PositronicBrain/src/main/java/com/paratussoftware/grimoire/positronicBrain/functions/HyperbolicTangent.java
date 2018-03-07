@@ -1,6 +1,6 @@
 package com.paratussoftware.grimoire.positronicBrain.functions;
 
-public class HyperbolicTangent implements NeuronFunction{
+public class HyperbolicTangent extends NeuronFunction{
 
     @Override
     public double process(double input) {
