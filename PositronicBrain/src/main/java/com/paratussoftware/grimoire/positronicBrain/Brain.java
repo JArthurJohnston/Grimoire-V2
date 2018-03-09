@@ -37,6 +37,11 @@ public class Brain {
         return hiddenLayers;
     }
 
+    public NeuronFunction getActivationFunction() {
+        return activationFunction;
+    }
+
+
     /**
      * triggers forward propagation of input data, calculates the delta output sum, then triggers backwards propagation
      * using the targetOutputs. Note: the delta output sum reflects the state of the neural net before
@@ -152,9 +157,6 @@ public class Brain {
         }
     }
 
-    public NeuronFunction getActivationFunction() {
-        return activationFunction;
-    }
 
     public DevelopingBrain trainWith(double inputData) {
         return new DevelopingBrain(this, inputData);

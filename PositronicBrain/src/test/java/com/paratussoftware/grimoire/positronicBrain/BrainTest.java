@@ -108,6 +108,16 @@ public class BrainTest {
         assertEquals(inputData, secondHiddenLayerNeuron.getDendrites().get(0).input ,0.0);
     }
 
+    @Test
+    public void process_exampleBrain() {
+        Brain brain = TestData.simpleExampleBrain();
+
+        double[] outputs = brain.process(1, 1);
+
+        assertEquals(1, outputs.length);
+        assertEquals(0.77, outputs[0], 0.01);
+    }
+
     private void checkConnectionsExistBetweenLayers(List<Neuron> firstLayer, List<Neuron> secondLayer) {
         for (Neuron firstLayerNeuron : firstLayer) {
             assertEquals(secondLayer.size(), firstLayerNeuron.getAxons().size());
