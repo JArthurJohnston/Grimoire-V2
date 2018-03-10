@@ -111,11 +111,19 @@ public class BrainTest {
     @Test
     public void process_exampleBrain() {
         Brain brain = TestData.simpleExampleBrain();
+        OutputNeuron outputNeuron = brain.getOutputs().get(0);
+        final double smallDelta = 0.01;
 
         double[] outputs = brain.process(1, 1);
 
         assertEquals(1, outputs.length);
-        assertEquals(0.77, outputs[0], 0.01);
+        assertEquals(0.77, outputs[0], smallDelta);
+
+        double deltaOutputSum = outputNeuron.deltaOutputSum(0);
+
+        assertEquals(-0.13, deltaOutputSum, smallDelta);
+
+
     }
 
     private void checkConnectionsExistBetweenLayers(List<Neuron> firstLayer, List<Neuron> secondLayer) {

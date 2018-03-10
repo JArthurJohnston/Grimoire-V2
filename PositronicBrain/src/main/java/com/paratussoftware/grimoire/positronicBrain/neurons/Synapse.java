@@ -9,7 +9,7 @@ public class Synapse {
 
     private static Random weightGenerator = new Random();
 
-    public static Synapse newWith(double weight, double input){
+    static Synapse newWith(double weight, double input){
         Synapse synapse = new Synapse();
         synapse.input = input;
         synapse.weight = weight;
@@ -29,4 +29,14 @@ public class Synapse {
     double weightedValue() {
         return this.input * this.weight;
     }
+
+    double deltaWeight(double deltaOutputSum) {
+        return deltaOutputSum / this.input;
+    }
+
+    public void adjustWeight(double deltaOutpusSum) {
+        this.weight = this.weight + deltaWeight(deltaOutpusSum);
+    }
+
+
 }

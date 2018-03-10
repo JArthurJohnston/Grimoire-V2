@@ -55,4 +55,8 @@ public class Neuron {
     NeuronFunction getActivationFunction() {
         return activationFunction;
     }
+
+    double[] deltaWeights(double deltaOutputSum) {
+        return new double[0];
+    }
 }

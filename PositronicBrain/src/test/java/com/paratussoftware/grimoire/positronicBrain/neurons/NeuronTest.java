@@ -52,4 +52,19 @@ public class NeuronTest {
         assertEquals(0.80376594, axonSynapse.input, 0.0001);
     }
 
+    @Test
+    public void deltaWeights() {
+        fail("move this logic to the synapses");
+        neuron.addDendrite(Synapse.newWith(0.3, 0.73105));
+        neuron.addDendrite(Synapse.newWith(0.5, 0.78583));
+        neuron.addDendrite(Synapse.newWith(0.9, 0.69997));
+
+        double[] deltaWeights = neuron.deltaWeights(-0.1344);
+
+        assertEquals(3, deltaWeights.length);
+        assertEquals( -0.1838, deltaWeights[0], 0.0001);
+        assertEquals( -0.1710, deltaWeights[1], 0.0001);
+        assertEquals( -0.1920, deltaWeights[2], 0.0001);
+    }
+
 }
